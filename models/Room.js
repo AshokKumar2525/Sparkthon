@@ -8,17 +8,22 @@ const activitySchema = new mongoose.Schema({
     image: String,   // for product
     price: String,   // for product
     sharedBy: String, // for product
+    detail: String,  // for product
     timestamp: { type: Date, default: Date.now },
-    reactions: [String]    // Add this line for emoji reactions
+    reactions: [{
+        emoji: String,
+        by: String  // user email
+    }]
 
 });
 
 const roomSchema = new mongoose.Schema({
-    roomId: { type: String, unique: true },
+    roomId: [String],
     participants: [String],
     createdBy: String,
     activityLog: [activitySchema],
-    createdAt: { type: Date, default: Date.now }
+    createdAt: { type: Date, default: Date.now },
+    ended: { type: Boolean, default: false },
 });
 
 module.exports = mongoose.model('Room', roomSchema);
