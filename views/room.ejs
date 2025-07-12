@@ -1,63 +1,91 @@
-<h2>Room: <%= room.roomId %></h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Room - <%= room.roomId %></title>
+  <link rel="stylesheet" href="/css/five_sections.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f8ff;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+    }
+    #chat {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      margin-top: 30px;
+    }
+    .chat-message {
+      background: white;
+      padding: 10px;
+      border-radius: 8px;
+      width: fit-content;
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+    }
+    .product-item {
+      max-width: 300px;
+    }
+  </style>
+</head>
+<body>
+  <a href="/main_page"><button>Back to Main Page</button></a>
+  <h2>Room ID: <%= room.roomId %></h2>
 
-<div id="chat">
-  <% room.activityLog
-    .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp))
-    .forEach(log => { %>
-
-    <% if (log.type === 'message') { %>
-      <div>
-        <strong><%= log.sender %>:</strong> <%= log.content %>
-        <%= log.reactions?.join(' ') || '' %>
-        <div>
-          <button onclick="react('<%= log._id %>', '❤️')">❤️</button>
-          <button onclick="react('<%= log._id %>', '😂')">😂</button>
-        </div>
-      </div>
-    <% } else if (log.type === 'product') { %>
-      <div>
-        <strong><%= log.sharedBy %> shared a product:</strong>
-        <div>
-          <img src="<%= log.image %>" width="100" />
-          <p><%= log.title %></p>
-          <p>₹<%= log.price %></p>
-          <%= log.reactions?.join(' ') || '' %>
-          <div>
-            <button onclick="react('<%= log._id %>', '🔥')">🔥</button>
-            <button onclick="react('<%= log._id %>', '👍')">👍</button>
+  <div id="chat">
+    <% room.activityLog.forEach(activity => { %>
+      <% if (activity.type === 'product') { %>
+        <div class="product-item">
+          <div class="item-image-container">
+            <img src="/<%= activity.image %>" alt="Product Image" class="item-image" width="200" height = "300">
+          </div>
+          <div class="item-info">
+            <h3 class="item-name"><%= activity.title %></h3>
+            <p class="item-price"><%= activity.price %></p>
+            <% if (activity.detail) { %>
+              <p class="item-detail"><%= activity.detail %></p>
+            <% } %>
+            <span class="item-detail">Shared by <%= activity.sharedBy %></span>
           </div>
         </div>
-      </div>
-    <% } %>
+      <% } else if (activity.type === 'message') { %>
+        <div class="chat-message">
+          <strong><%= activity.sender %>:</strong> <%= activity.content %>
+        </div>
+      <% } %>
+    <% }) %>
+  </div>
 
-<% }) %>
-</div>
+  <form action="/room/<%= room.roomId %>/message" method="POST">
+    <input type="text" name="content" placeholder="Type a message" required>
+    <button type="submit">Send</button>
+  </form>
 
-<!-- Message Form -->
-<form action="/room/<%= room.roomId %>/message" method="POST">
-  <input name="content" placeholder="Type a message" required>
-  <button type="submit">Send</button>
-</form>
+  <form action="/room/<%= room.roomId %>/end" method="POST">
+    <button class="end">End Room</button>
+  </form>
 
-<!-- Share Product (fake UI for now) -->
-<form action="/room/<%= room.roomId %>/share" method="POST">
-  <input name="title" placeholder="Product Title" required />
-  <input name="image" placeholder="Image URL" required />
-  <input name="price" placeholder="Price" required />
-  <button type="submit">Share Product</button>
-</form>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const chat = document.getElementById('chat');
+      chat.scrollTop = chat.scrollHeight; // Scroll to bottom on load
+    });
+    document.querySelector('.end').addEventListener('click', (e) => {
+      if (!confirm("Are you sure you want to end this room?")) {
+        e.preventDefault();
+      }
+    }); 
+    document.querySelector()
+  </script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    const roomId = "<%= room.roomId %>";
+    socket.emit('join-room', roomId);
 
-<!-- End Room -->
-<form action="/room/<%= room.roomId %>/end" method="POST">
-  <button>End Room</button>
-</form>
-
-<!-- Voice Call Icon -->
-<a href="#" title="Voice Call">
-  <img src="/images/voice-icon.png" width="30" />
-</a>
-
-<script>
   
 function react(id, emoji) {
   fetch('/room/react', {
@@ -66,4 +94,12 @@ function react(id, emoji) {
     body: JSON.stringify({ roomId: '<%= room.roomId %>', activityId: id, emoji })
   });
 }
-</script>
+socket.on('new-activity', data => {
+      const chat = document.getElementById('chat');
+      const wrapper = document.createElement('div');
+      wrapper.innerHTML = data.html;
+      chat.appendChild(wrapper);
+    });
+  </script>
+</body>
+</html>

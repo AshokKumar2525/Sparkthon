@@ -14,12 +14,8 @@ const http = require('http').createServer(app);
 const { Server } = require('socket.io');
 const io = new Server(http);
 
-// // At the top of server.js
 
 async function sendEmail(to, message) {
-    // console.log('EMAIL_ID:', process.env.EMAIL_ID);
-    // console.log('EMAIL_PASS:', process.env.EMAIL_PASS ? '✔️ loaded' : '❌ missing');
-
     let transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -35,8 +31,6 @@ async function sendEmail(to, message) {
         html: `<p>${message}</p>`
     });
 }
-
-// const sendEmail = sendEmail();
 
 
 // Middleware
@@ -149,8 +143,6 @@ app.get('/register', (req, res) => {
 });
 
 // Register POST
-// Replace the existing register POST route with this:
-
 app.post('/register', async (req, res) => {
     try {
         console.log('Received registration data:', req.body);
@@ -251,7 +243,6 @@ app.post('/login', async (req, res) => {
         });
     }
 });
-// ... (previous code remains the same until the forgot password routes)
 
 // Forgot Password GET
 app.get('/forgot-password', (req, res) => {
@@ -401,17 +392,23 @@ app.get('/buy_page', (req, res) => {
 //five-sections routes
 
 //electronics_page route
-app.get('/electronics_page', (req, res) => {
-    if (!req.session.user) {
-        return res.redirect('/login');
-    }
+app.get('/electronics_page', async (req, res) => {
     try {
-        res.render('electronics_page');
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error loading electronics_page ');
+        if (!req.session.user || !req.session.user.email) {
+            return res.redirect('/login'); // or send 401
+        }
+
+        const userEmail = req.session.user.email;
+        const rooms = await Room.find({ participants: userEmail });
+
+        res.render('electronics_page', { rooms }); // ✅ rooms passed
+    } catch (err) {
+        console.error('Error loading electronics_page:', err);
+        res.status(500).send('Internal Server Error');
     }
-})
+
+});
+
 //fashion_page route
 app.get('/fashion_page', (req, res) => {
     if (!req.session.user) {
@@ -462,9 +459,6 @@ app.get('/kids_page', (req, res) => {
 })
 // Feedback Routes
 
-// Add these routes after your existing routes
-
-// Submit Feedback POST
 // Update the submit-feedback route with better error handling
 app.post('/submit-feedback', async (req, res) => {
     if (!req.session.user) {
@@ -1144,7 +1138,6 @@ app.post('/buy-now', async (req, res) => {
 });
 
 // creating room
-// const User = require('./models/User'); // assuming you have a User model
 
 app.post('/create-room', async (req, res) => {
     if (!req.session.user) return res.status(401).send('Login required');
@@ -1177,32 +1170,60 @@ app.post('/create-room', async (req, res) => {
 
 app.post('/shop-together/invite', async (req, res) => {
     const { emails } = req.body;
-    const emailList = emails.split(',').map(e => e.trim());
-    const roomId = crypto.randomUUID();
+    const emailList = emails.split(',').map(e => e.trim().toLowerCase());
+
+    // ✅ Include the creator's email
+    if (!req.session.user || !req.session.user.email) {
+        return res.status(401).send('User not logged in');
+    }
+    const allEmails = [...new Set([req.session.user.email.toLowerCase(), ...emailList])];
+
+    // ✅ Create roomId from usernames
+    const usernames = allEmails.map(email => email.split('@')[0]);
+    const roomId = usernames.sort().join('-');  // e.g., "ashok-jane-john"
+
+    // ✅ Check if a room with the same participants already exists
+    const existingRoom = await Room.findOne({
+        participants: { $all: allEmails, $size: allEmails.length },
+        roomId // use same name if already present
+    });
+
+    if (existingRoom) {
+        return res.redirect(`/room/${existingRoom.roomId}`);
+    }
 
     const room = new Room({
         roomId,
-        participants: emailList,
-        messages: []
+        participants: allEmails,
+        createdBy: req.session.user.email,
+        activityLog: [],
+        ended: false
     });
 
     await room.save();
 
-    // Send invite emails here
+    // ✅ Send invites to others
     emailList.forEach(email => {
         if (email !== req.session.user.email) {
-            sendEmail(email, `Join our shop room: ${req.protocol}://${req.get('host')}/room/${roomId}`);
+            sendEmail(
+                email,
+                `Join our shop room: ${req.protocol}://${req.get('host')}/room/${roomId}`
+            );
         }
     });
 
     res.redirect(`/room/${roomId}`);
 });
 
+
 app.get('/shop-together', async (req, res) => {
     const rooms = await Room.find({
         participants: req.session.user.email
+    }).sort({ createdAt: -1 });
+    res.render('shop-together', {
+        rooms,
+        userEmail: req.session.user.email // ✅ pass userEmail to EJS
     });
-    res.render('shop-together', { rooms });
 });
 
 
@@ -1237,16 +1258,29 @@ app.post('/room/:roomId/end', async (req, res) => {
     res.redirect('/shop-together');
 });
 
+
 app.post('/room/:roomId/message', async (req, res) => {
-    const room = await Room.findOne({ roomId: req.params.roomId });
-    room.activityLog.push({
+    const { roomId } = req.params;
+    const { content } = req.body;
+
+    const room = await Room.findOne({ roomId });
+    const newMessage = {
         type: 'message',
         sender: req.session.user.email,
-        content: req.body.content
-    });
+        content,
+        timestamp: new Date()
+    };
+
+    room.activityLog.push(newMessage);
     await room.save();
-    res.redirect(`/room/${req.params.roomId}`);
+
+    // Emit to all in room
+    const messageHtml = `<div><strong>${newMessage.sender}:</strong> ${newMessage.content}</div>`;
+    io.to(roomId).emit('new-activity', { html: messageHtml });
+
+    res.redirect(`/room/${roomId}`);
 });
+
 app.post('/room/:roomId/share', async (req, res) => {
     const room = await Room.findOne({ roomId: req.params.roomId });
     room.activityLog.push({
@@ -1257,20 +1291,103 @@ app.post('/room/:roomId/share', async (req, res) => {
         price: req.body.price
     });
     await room.save();
+
+    const productHtml = `
+        <div><strong>${product.sharedBy} shared a product:</strong>
+        <div><img src="${product.image}" width="100"><p>${product.title}</p><p>₹${product.price}</p></div>
+        </div>`;
+    io.to(roomId).emit('new-activity', { html: productHtml });
+
     res.redirect(`/room/${req.params.roomId}`);
 });
 
 app.post('/room/react', async (req, res) => {
     const { roomId, activityId, emoji } = req.body;
+    const userEmail = req.session.user?.email;
+    if (!userEmail) return res.status(401).send('Unauthorized');
+
     const room = await Room.findOne({ roomId });
     const activity = room.activityLog.id(activityId);
-    if (!activity.reactions) activity.reactions = [];
-    activity.reactions.push(emoji);
+
+    // Check if user already reacted with same emoji
+    const existing = activity.reactions.find(r => r.emoji === emoji && r.by === userEmail);
+    if (existing) {
+        // Remove if exists (toggle)
+        activity.reactions = activity.reactions.filter(r => !(r.emoji === emoji && r.by === userEmail));
+    } else {
+        activity.reactions.push({ emoji, by: userEmail });
+    }
+
     await room.save();
+
+    // Notify others
+    io.to(roomId).emit('reaction-updated', {
+        activityId,
+        reactions: activity.reactions
+    });
+
     res.sendStatus(200);
 });
 
-// routes/room.js or app.js
+
+app.get('/room/:roomId', async (req, res) => {
+    const room = await Room.findOne({ roomId: req.params.roomId });
+
+    if (!room) {
+        return res.status(404).send('Room not found');
+    }
+
+    res.render('room', { room });
+});
+
+app.get('/shop-together/share', async (req, res) => {
+    const email = req.session.user?.email;
+    if (!email) return res.redirect('/login');
+
+    const rooms = await Room.find({ participants: email });
+
+    res.render('shop-together-share', { rooms });
+});
+
+app.post('/shop-together/share', async (req, res) => {
+    const userEmail = req.session.user?.email;
+    const { roomIds, image, title, price,detail } = req.body;
+
+    if (!roomIds || !image || !title || !price || !userEmail) {
+        return res.status(400).send("Missing product or room data");
+    }
+
+    const roomList = Array.isArray(roomIds) ? roomIds : [roomIds];
+
+    for (const roomId of roomList) {
+        const room = await Room.findOne({ roomId });
+        if (!room) continue;
+
+        const activity = {
+            type: 'product',
+            sharedBy: userEmail,
+            image,  // ✅ for <img src="/<%= activity.image %>">
+            title,  // ✅ for <%= activity.title %>
+            price,  // ✅ for <%= activity.price %>
+            timestamp: new Date(),
+            detail,
+            reactions: []
+        };
+
+        room.activityLog.push(activity);
+        await room.save();
+
+        // OPTIONAL: also send real-time update if desired
+        // You could create product HTML here and emit it
+    }
+
+    res.redirect('/shop-together');
+});
+
+app.get('/product/:productId', async (req, res) => {
+  const product = await Product.findById(req.params.productId);
+  res.render('product_detail', { product });
+});
 
 
 // 404 Route (Keep this as the last route)
@@ -1281,39 +1398,12 @@ app.use((req, res) => {
 
 // Start server
 const PORT = process.env.PORT || 3000;
-// const http = require('http').createServer(app);
-// const { Server } = require('socket.io');
-// const io = new Server(http);
-
-// Replace app.listen with:
 
 // Socket.io logic
-io.on('connection', socket => {
-    socket.on('join-room', ({ roomId, userEmail }) => {
+io.on('connection', (socket) => {
+    socket.on('join-room', (roomId) => {
         socket.join(roomId);
-    });
-
-    socket.on('send-message', async ({ roomId, content, sender }) => {
-        const log = {
-            type: 'message',
-            sender,
-            content,
-            timestamp: new Date()
-        };
-
-        await Room.updateOne({ roomId }, { $push: { activityLog: log } });
-        io.to(roomId).emit('receive-activity', log);
-    });
-
-    socket.on('share-product', async ({ roomId, product }) => {
-        const log = {
-            type: 'product',
-            ...product,
-            timestamp: new Date()
-        };
-
-        await Room.updateOne({ roomId }, { $push: { activityLog: log } });
-        io.to(roomId).emit('receive-activity', log);
+        console.log(`User joined room ${roomId}`);
     });
 });
 

@@ -1,0 +1,31 @@
+<form action="/shop-together/share" method="POST">
+  <% rooms.forEach(room => { %>
+    <label>
+      <input type="checkbox" name="roomIds" value="<%= room.roomId %>"> <%= room.roomId %>
+    </label><br>
+  <% }) %>
+
+  <!-- Hidden inputs to carry product info -->
+  <input type="hidden" name="image" id="image">
+  <input type="hidden" name="title" id="title">
+  <input type="hidden" name="price" id="price">
+  <input type="hidden" name="detail" id="detail">>
+  <button type="submit">Share</button>
+</form>
+
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    const product = JSON.parse(sessionStorage.getItem("sharedProductObject"));
+
+    if (!product) {
+      alert("⚠️ Product data not found. Please try sharing again.");
+    } else {
+      // ✅ Ensure IDs exist
+      document.getElementById("image").value = product.image?.replace('/^\\/?/', '');
+      document.getElementById("title").value = product.title;
+      document.getElementById("price").value = product.price;
+      document.getElementById("detail").value = product.detail || "";
+      console.log("✅ Product ready to share:", product);
+    }
+  });
+</script>
