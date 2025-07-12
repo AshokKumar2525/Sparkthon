@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Friends Cart - Register</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/register.css">
+</head>
+<body>
+  <!-- Floating Bubbles -->
+  <div class="bubbles" id="bubbles"></div>
+  
+  <!-- Main Content -->
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="logo">Friends Cart</div>
+        <div class="auth-title">Join our shopping community</div>
+      </div>
+      
+      <div class="auth-form">
+        <form id="registerForm" action="/register" method="POST">
+          <!-- First Row: Name and Phone -->
+          <!-- First Row: Name and Phone -->
+<div class="form-row">
+  <div class="form-group">
+    <i class="fas fa-user form-icon"></i>
+    <input type="text" class="form-input" id="fullName" 
+          name="fullName" placeholder="Full Name" required>
+  </div>
+
+  <div class="form-group">
+    <i class="fas fa-mobile-alt form-icon"></i>
+    <input type="tel" class="form-input" id="mobile" 
+          name="phone" placeholder="Mobile Number" required maxlength="10">
+  </div>
+</div>
+  
+<!-- Second Row: Email and Address -->
+<div class="form-row">
+  <div class="form-group">
+    <i class="fas fa-envelope form-icon"></i>
+    <input type="email" name="email" class="form-input" id="email" placeholder="Email Address" required>
+  </div>
+  
+  <div class="form-group">
+    <i class="fas fa-map-marker-alt form-icon"></i>
+    <input type="text" class="form-input"  name="address" id="address" placeholder="Address" required>
+  </div>
+</div>
+          
+          <!-- Third Row: Password and Confirm Password -->
+          <div class="form-row">
+            <div class="form-group">
+              <i class="fas fa-lock form-icon"></i>
+              <input type="password" class="form-input" name="password" id="password" placeholder="Password" required>
+              <div class="password-strength">
+                <div class="strength-meter" id="strengthMeter"></div>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <i class="fas fa-lock form-icon"></i>
+              <input type="password" class="form-input" id="confirmPassword" placeholder="Confirm Password" required>
+            </div>
+          </div>
+          
+          <div class="terms">
+            <input type="checkbox" id="agreeTerms" required>
+            <label for="agreeTerms">I agree to the <a href="#">Terms & Conditions</a> and <a href="#">Privacy Policy</a></label>
+          </div>
+           
+          <button type="submit" class="submit-btn" id="registerBtn">Create Account</button>
+          
+          <div class="switch-link">
+            Already have an account? <a href="/login">Login here</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Success Animation -->
+  <div class="success-animation" id="successAnimation">
+    <div>
+      <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+        <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+        <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+      </svg>
+      <div class="success-text">Registration Successful!</div>
+    </div>
+  </div>
+
+  <script>
+    // Create floating bubbles
+    const bubblesContainer = document.getElementById('bubbles');
+    const bubbleCount = 15;
+    
+    for (let i = 0; i < bubbleCount; i++) {
+      const bubble = document.createElement('div');
+      bubble.classList.add('bubble');
+      
+      // Random size between 50px and 150px
+      const size = Math.random() * 100 + 50;
+      bubble.style.width = `${size}px`;
+      bubble.style.height = `${size}px`;
+      
+      // Random position
+      bubble.style.left = `${Math.random() * 100}%`;
+      
+      // Random animation duration and delay
+      const duration = Math.random() * 20 + 10;
+      bubble.style.animationDuration = `${duration}s`;
+      bubble.style.animationDelay = `${Math.random() * 10}s`;
+      
+      // Random opacity
+      bubble.style.opacity = Math.random() * 0.5 + 0.3;
+      
+      // Glassy gradient background
+      bubble.style.background = `linear-gradient(135deg, 
+          rgba(255, 255, 255, 0.4) 0%, 
+          rgba(255, 255, 255, 0.1) 100%)`;
+      
+      bubblesContainer.appendChild(bubble);
+    }
+    
+    // Password strength meter
+    document.getElementById('password').addEventListener('input', function() {
+      const password = this.value;
+      const strengthMeter = document.getElementById('strengthMeter');
+      let strength = 0;
+      
+      // Check password length
+      if (password.length > 7) strength += 20;
+      
+      // Check for uppercase letters
+      if (/[A-Z]/.test(password)) strength += 20;
+      
+      // Check for numbers
+      if (/[0-9]/.test(password)) strength += 20;
+      
+      // Check for special characters
+      if (/[^A-Za-z0-9]/.test(password)) strength += 20;
+      
+      // Check for consecutive characters
+      if (!/(.)\1/.test(password)) strength += 20;
+      
+      // Update meter
+      strengthMeter.style.width = `${strength}%`;
+      
+      // Update color based on strength
+      if (strength < 40) {
+        strengthMeter.style.background = '#ff4500'; // Orange for weak
+      } else if (strength < 70) {
+        strengthMeter.style.background = '#ff9e2d'; // Yellow for medium
+      } else {
+        strengthMeter.style.background = '#4CAF50'; // Green for strong
+      }
+    });
+    
+    // Ripple effect for buttons
+    document.addEventListener('click', function(e) {
+      if (e.target.classList.contains('submit-btn') || e.target.classList.contains('form-input')) {
+        const btn = e.target;
+        const rect = btn.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        const ripple = document.createElement('span');
+        ripple.classList.add('ripple');
+        ripple.style.left = `${x}px`;
+        ripple.style.top = `${y}px`;
+        
+        btn.appendChild(ripple);
+        
+        setTimeout(() => {
+          ripple.remove();
+        }, 600);
+      }
+    });
+    
+    // In register.ejs, update the form submit event listener:
+
+document.getElementById('registerForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('registerBtn');
+
+    // Validate password match
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+
+    if (password !== confirmPassword) {
+        alert('Passwords do not match!');
+        return;
+    }
+
+    // Validate terms checkbox
+    if (!document.getElementById('agreeTerms').checked) {
+        alert('You must agree to the terms and conditions!');
+        return;
+    }
+
+    // Show loading state
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
+    btn.disabled = true;
+
+    try {
+        const formData = new FormData(this);
+        const response = await fetch('/register', {
+            method: 'POST',
+            body: new URLSearchParams(formData),
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        });
+
+        const responseText = await response.text();
+
+        if (response.ok) {
+            // Show success animation
+            document.getElementById('successAnimation').classList.add('show');
+            
+            // Redirect after animation
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 2500);
+        } else {
+            // Show the error message
+            alert(responseText);
+            btn.innerHTML = 'Create Account';
+            btn.disabled = false;
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred during registration');
+        btn.innerHTML = 'Create Account';
+        btn.disabled = false;
+    }
+});
+  </script>
+</body>
+</html>

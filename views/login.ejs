@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Friends Cart - Premium Login</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/login.css">
+  <style>
+    /* Add this to your existing styles */
+    .error-popup {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        transform: translateX(150%);
+        transition: transform 0.3s ease;
+        z-index: 1000;
+        max-width: 350px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    
+    .error-popup.show {
+        transform: translateX(0);
+    }
+    
+    .error-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #ff4444;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .error-icon i {
+        color: white;
+        font-size: 20px;
+    }
+    
+    .error-content {
+        flex: 1;
+    }
+    
+    .error-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 5px;
+    }
+    
+    .error-message {
+        font-size: 14px;
+        color: #666;
+        margin: 0;
+    }
+    
+    .close-error {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: none;
+        border: none;
+        color: #999;
+        cursor: pointer;
+        font-size: 18px;
+        padding: 0;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: all 0.2s;
+    }
+    
+    .close-error:hover {
+        background: #f0f0f0;
+        color: #666;
+    }
+    
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-10px); }
+        75% { transform: translateX(10px); }
+    }
+    
+    .error-popup.shake {
+        animation: shake 0.5s ease-in-out;
+    }
+    </style>
+</head>
+
+<body>
+  <!-- Floating Particles -->
+  <div class="particles" id="particles"></div>
+  
+  <!-- Main Content -->
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="logo">Friends Cart</div>
+        <div class="auth-title">Welcome back to your shopping community</div>
+      </div>
+      
+      <div class="auth-form">
+        <form id="loginForm" method="post" action="/login">
+          <div class="form-group">
+            <i class="fas fa-envelope form-icon"></i>
+            <input type="email" name="email" class="form-input" placeholder="Email Address" required>
+          </div>
+          
+          <div class="form-group">
+            <i class="fas fa-lock form-icon"></i>
+            <input type="password" name="password" class="form-input" placeholder="Password" required>
+          </div>
+          
+          <div class="forgot-password">
+            <a href="#" id="forgotPasswordLink">Forgot your password?</a>
+          </div>
+          
+          <button type="submit" class="submit-btn" id="loginBtn">Login to Your Account</button>
+          
+          <div class="switch-link">
+            New to Friends Cart? <a href="/register">Create an account</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <!-- OTP Modal -->
+  <div class="modal-overlay" id="otpModal">
+    <div class="otp-modal">
+      <button class="close-modal" id="closeModal">&times;</button>
+      <div class="modal-header">
+        <h2 class="modal-title">Reset Password</h2>
+        <p class="modal-subtitle">Enter your email to receive OTP</p>
+      </div>
+      <div class="form-group">
+        <i class="fas fa-envelope form-icon"></i>
+        <input type="email" class="form-input" id="resetEmail" placeholder="Your email address" required>
+      </div>
+      <button type="button" class="modal-btn" id="sendOtpBtn">Send OTP</button>
+      
+      <div id="otpSection" style="display: none;">
+        <div class="modal-header">
+          <h2 class="modal-title">Enter OTP</h2>
+          <p class="modal-subtitle">We've sent a 4-digit code to your email</p>
+        </div>
+        <div class="otp-inputs">
+          <input type="text" class="otp-input" maxlength="1" pattern="[0-9]">
+          <input type="text" class="otp-input" maxlength="1" pattern="[0-9]">
+          <input type="text" class="otp-input" maxlength="1" pattern="[0-9]">
+          <input type="text" class="otp-input" maxlength="1" pattern="[0-9]">
+        </div>
+        <div class="form-group">
+          <i class="fas fa-lock form-icon"></i>
+          <input type="password" class="form-input" id="newPassword" placeholder="New Password" required>
+        </div>
+        <button type="button" class="modal-btn" id="verifyOtpBtn">Reset Password</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Success Animation -->
+  <div class="success-animation" id="successAnimation">
+    <div>
+      <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+        <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+        <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+      </svg>
+      <div class="success-text">Login Successful!</div>
+    </div>
+  </div>
+
+  <script>
+    // Bubble Particles (unchanged)
+    const particlesContainer = document.getElementById('particles');
+    const particleCount = 15;
+    
+    for (let i = 0; i < particleCount; i++) {
+      const particle = document.createElement('div');
+      particle.classList.add('particle');
+      const size = Math.random() * 100 + 50;
+      particle.style.width = `${size}px`;
+      particle.style.height = `${size}px`;
+      particle.style.left = `${Math.random() * 100}%`;
+      const duration = Math.random() * 20 + 10;
+      particle.style.animationDuration = `${duration}s`;
+      particle.style.animationDelay = `${Math.random() * 10}s`;
+      particle.style.opacity = Math.random() * 0.5 + 0.3;
+      particle.style.background = `linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.4) 0%, 
+        rgba(255, 255, 255, 0.1) 100%)`;
+      particlesContainer.appendChild(particle);
+    }
+    
+    // Ripple effect (unchanged)
+    document.addEventListener('click', function(e) {
+      if (e.target.classList.contains('submit-btn') || 
+          e.target.classList.contains('modal-btn')) {
+        const btn = e.target;
+        const rect = btn.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const ripple = document.createElement('span');
+        ripple.classList.add('ripple');
+        ripple.style.left = `${x}px`;
+        ripple.style.top = `${y}px`;
+        btn.appendChild(ripple);
+        setTimeout(() => {
+          ripple.remove();
+        }, 800);
+      }
+    });
+    
+    // Form submission (unchanged)
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const btn = document.getElementById('loginBtn');
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Authenticating...';
+      btn.disabled = true;
+      
+      try {
+          const formData = new FormData(this);
+          const response = await fetch('/login', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                  email: formData.get('email'),
+                  password: formData.get('password')
+              })
+          });
+          
+          const data = await response.json();
+          
+          if (data.success) {
+              document.getElementById('successAnimation').classList.add('show');
+              setTimeout(() => {
+                  window.location.href = data.redirectUrl;
+              }, 2500);
+          } else {
+              alert(data.message);
+              btn.innerHTML = 'Login to Your Account';
+              btn.disabled = false;
+          }
+      } catch (error) {
+          console.error('Login error:', error);
+          alert('An error occurred. Please try again.');
+          btn.innerHTML = 'Login to Your Account';
+          btn.disabled = false;
+      }
+    });
+
+    // OTP Modal functionality
+    const otpModal = document.getElementById('otpModal');
+    const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+    const closeModal = document.getElementById('closeModal');
+    const sendOtpBtn = document.getElementById('sendOtpBtn');
+    const otpSection = document.getElementById('otpSection');
+    const verifyOtpBtn = document.getElementById('verifyOtpBtn');
+    const otpInputs = document.querySelectorAll('.otp-input');
+    
+    // Show modal when forgot password is clicked
+    forgotPasswordLink.addEventListener('click', function(e) {
+      e.preventDefault();
+      otpModal.classList.add('active');
+    });
+    
+    // Close modal
+    closeModal.addEventListener('click', function() {
+      otpModal.classList.remove('active');
+      otpSection.style.display = 'none';
+      document.getElementById('resetEmail').value = '';
+      otpInputs.forEach(input => input.value = '');
+      document.getElementById('newPassword').value = '';
+    });
+    
+    // Send OTP
+    sendOtpBtn.addEventListener('click', async function() {
+      const email = document.getElementById('resetEmail').value;
+      
+      if (!email) {
+        alert('Please enter your email address');
+        return;
+      }
+      
+      sendOtpBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+      sendOtpBtn.disabled = true;
+      
+      try {
+        const response = await fetch('/forgot-password', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          sendOtpBtn.innerHTML = 'OTP Sent!';
+          otpSection.style.display = 'block';
+          otpInputs[0].focus();
+        } else {
+          alert(data.message || 'Failed to send OTP');
+          sendOtpBtn.innerHTML = 'Send OTP';
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+        sendOtpBtn.innerHTML = 'Send OTP';
+      } finally {
+        sendOtpBtn.disabled = false;
+      }
+    });
+    
+    // OTP input navigation
+    otpInputs.forEach((input, index) => {
+      input.addEventListener('input', function() {
+        if (this.value.length === 1) {
+          if (index < otpInputs.length - 1) {
+            otpInputs[index + 1].focus();
+          } else {
+            this.blur();
+          }
+        }
+      });
+      
+      input.addEventListener('keydown', function(e) {
+        if (e.key === 'Backspace' && this.value.length === 0 && index > 0) {
+          otpInputs[index - 1].focus();
+        }
+      });
+    });
+    
+    // Verify OTP and reset password
+    verifyOtpBtn.addEventListener('click', async function() {
+      const email = document.getElementById('resetEmail').value;
+      const newPassword = document.getElementById('newPassword').value;
+      let otp = '';
+      
+      otpInputs.forEach(input => {
+        otp += input.value;
+      });
+      
+      if (otp.length !== 4) {
+        alert('Please enter the complete 4-digit OTP');
+        return;
+      }
+      
+      if (!newPassword) {
+        alert('Please enter a new password');
+        return;
+      }
+      
+      verifyOtpBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
+      verifyOtpBtn.disabled = true;
+      
+      try {
+        const response = await fetch('/verify-otp', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email,
+            otp,
+            newPassword
+          })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          verifyOtpBtn.innerHTML = 'Password Reset!';
+          setTimeout(() => {
+            otpModal.classList.remove('active');
+            otpSection.style.display = 'none';
+            document.getElementById('resetEmail').value = '';
+            otpInputs.forEach(input => input.value = '');
+            document.getElementById('newPassword').value = '';
+            verifyOtpBtn.innerHTML = 'Reset Password';
+            verifyOtpBtn.disabled = false;
+            alert('Password has been reset successfully. Please login with your new password.');
+          }, 1000);
+        } else {
+          alert(data.message || 'Failed to reset password');
+          verifyOtpBtn.innerHTML = 'Reset Password';
+          verifyOtpBtn.disabled = false;
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+        verifyOtpBtn.innerHTML = 'Reset Password';
+        verifyOtpBtn.disabled = false;
+      }
+    });
+  </script>
+  
+</body>
+</html>

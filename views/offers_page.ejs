@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <!--title--> <title>15 Product Offers - 3 Rows Grid</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/offers_page.css">
+</head>
+<body>
+    <div class="page-container">
+        <!-- Back Button -->
+        <a href="/main_page" class="back-button">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        
+        <div class="offer-container">
+            <div class="offer-header">
+                <h1>Today's Special Offers</h1>
+                <p>Limited time deals - don't miss out!</p>
+            </div>
+            
+            <div class="offer-grid">
+                <!-- Row 1 -->
+                <div class="offer-item">
+                    <div class="offer-image">
+                        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80" alt="Smart Watch">
+                    </div>
+                    <div class="offer-details">
+                        <h3 class="offer-title">Smart Watch</h3>
+                        <div class="offer-price">
+                            <span class="current-price">₹15,999</span>
+                            <span class="original-price">₹22,999</span>
+                            <span class="discount">30% OFF</span>
+                        </div>
+                        <div>
+                            <a href="/buy_page" class="offer-button" onclick="return createConfetti(event, '/buy_page')">BUY NOW <i class="fas fa-shopping-cart"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="offer-item">
+                    <div class="offer-image">
+                        <img src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80" alt="Wireless Earbuds">
+                    </div>
+                    <div class="offer-details">
+                        <h3 class="offer-title">Black watch</h3>
+                        <div class="offer-price">
+                            <span class="current-price">₹8,999</span>
+                            <span class="original-price">₹12,999</span></br>
+                            <span class="discount">31% OFF</span>
+                        </div>
+                        <a href="/buy_page" class="offer-button" onclick="return createConfetti(event, '/buy_page')">BUY NOW <i class="fas fa-shopping-cart"></i></a>
+                    </div>
+                </div>
+                
+                <div class="offer-item">
+                    <div class="offer-image">
+                        <img src="https://images.unsplash.com/photo-1603302576837-37561b2e2302?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80" alt="Backpack">
+                    </div>
+                    <div class="offer-details">
+                        <h3 class="offer-title">Smart Laptop</h3>
+                        <div class="offer-price">
+                            <span class="current-price">₹89,999</span>
+                            <span class="original-price">₹119,999</span></br>
+                            <span class="discount">25% OFF</span>
+                        </div>
+                        <a href="/buy_page" class="offer-button" onclick="return createConfetti(event, '/buy_page')">BUY NOW <i class="fas fa-shopping-cart"></i></a>
+                    </div>
+                </div>
+                
+                <div class="offer-item">
+                    <div class="offer-image">
+                        <img src="https://images.unsplash.com/photo-1560343090-f0409e92791a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80" alt="Smart Speaker">
+                    </div>
+                    <div class="offer-details">
+                        <h3 class="offer-title">Italian Shoes</h3>
+                        <div class="offer-price">
+                            <span class="current-price">₹4,999</span>
+                            <span class="original-price">₹7,999</span></br>
+                            <span class="discount">38% OFF</span>
+                        </div>
+                        <a href="/buy_page" class="offer-button" onclick="return createConfetti(event, '/buy_page')">BUY NOW <i class="fas fa-shopping-cart"></i></a>
+                    </div>
+                </div>
+                
+                <div class="offer-item">
+                    <div class="offer-image">
+                        <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80" alt="Camera">
+                    </div>
+                    <div class="offer-details">
+                        <h3 class="offer-title">4K Action Camera</h3>
+                        <div class="offer-price">
+                            <span class="current-price">₹24,999</span>
+                            <span class="original-price">₹34,999</span>
+                            <span class="discount">29% OFF</span>
+                        </div>
+                        <a href="/buy_page" class="offer-button" onclick="return createConfetti(event, '/buy_page')">BUY NOW <i class="fas fa-shopping-cart"></i></a>
+                    </div>
+                </div>
+                
+                <!-- Row 2 -->
+                <div class="offer-item">
+                    <div class="offer-image">
+                        <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80" alt="Headphones">
+                    </div>
+                    <div class="offer-details">
+                        <h3 class="offer-title">Headphones</h3>
+                        <div class="offer-price">
+                            <span class="current-price">₹12,999</span>
+                            <span class="original-price">₹17,999</span>
+                            <span class="discount">28% OFF</span>
+                        </div>
+                        <a href="/buy_page" class="offer-button" onclick="return createConfetti(event, '/buy_page')">BUY NOW <i class="fas fa-shopping-cart"></i></a>
+                    </div>
+                </div>
+                
+                <div class="offer-item">
+                    <div class="offer-image">
+                        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80" alt="Sneakers">
+                    </div>
+                    <div class="offer-details">
+                        <h3 class="offer-title">Running Sneakers</h3>
+                        <div class="offer-price">
+                            <span class="current-price">₹5,999</span>
+                            <span class="original-price">₹8,999</span></br>
+                            <span class="discount">33% OFF</span>
+                        </div>
+                        <a href="/buy_page" class="offer-button" onclick="return createConfetti(event, '/buy_page')">BUY NOW <i class="fas fa-shopping-cart"></i></a>
+                    </div>
+                </div>
+                
+                <div class="offer-item">
+                    <div class="offer-image">
+                        <img src="https://images.unsplash.com/photo-1525904097878-94fb15835963?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80" alt="Smartphone">
+                    </div>
+                    <div class="offer-details">
+                        <h3 class="offer-title">Pineapple Sensation</h3>
+                        <div class="offer-price">
+                            <span class="current-price">₹69,999</span>
+                            <span class="original-price">₹99,999</span>
+                            <span class="discount">30% OFF</span>
+                        </div>
+                        <a href="/buy_page" class="offer-button" onclick="return createConfetti(event, '/buy_page')">BUY NOW <i class="fas fa-shopping-cart"></i></a>
+                    </div>
+                </div>
+                
+                <div class="offer-item">
+                    <div class="offer-image">
+                        <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80" alt="Laptop">
+                    </div>
+                    <div class="offer-details">
+                        <h3 class="offer-title">Ultrabook Laptop</h3>
+                        <div class="offer-price">
+                            <span class="current-price">₹89,999</span>
+                            <span class="original-price">₹109,999</span>
+                            <span class="discount">18% OFF</span>
+                        </div>
+                        <a href="/buy_page" class="offer-button" onclick="return createConfetti(event, '/buy_page')">BUY NOW <i class="fas fa-shopping-cart"></i></a>
+                    </div>
+                </div>
+                
+                <div class="offer-item">
+                    <div class="offer-image">
+                        <img src="https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80" alt="Smartwatch">
+                    </div>
+                    <div class="offer-details">
+                        <h3 class="offer-title">Fitness Tracker</h3>
+                        <div class="offer-price">
+                            <span class="current-price">₹3,499</span>
+                            <span class="original-price">₹5,499</span></br>
+                            <span class="discount">36% OFF</span>
+                        </div>
+                        <a href="/buy_page" class="offer-button" onclick="return createConfetti(event, '/buy_page')">BUY NOW <i class="fas fa-shopping-cart"></i></a>
+                    </div>
+                </div>
+                
+                <!-- Row 3 -->
+                <div class="offer-item">
+                    <div class="offer-image">
+                        <img src="https://images.unsplash.com/photo-1546054454-aa26e2b734c7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80" alt="Coffee Maker">
+                    </div>
+                    <div class="offer-details">
+                        <h3 class="offer-title">Iphone 14 Pro</h3>
+                        <div class="offer-price">
+                            <span class="current-price">₹89,999</span>
+                            <span class="original-price">₹99,999</span></br>
+                            <span class="discount">10% OFF</span>
+                        </div>
+                        <a href="/buy_page" class="offer-button" onclick="return createConfetti(event, '/buy_page')">BUY NOW <i class="fas fa-shopping-cart"></i></a>
+                    </div>
+                </div>
+                
+                <div class="offer-item">
+                    <div class="offer-image">
+                        <img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80" alt="Sunglasses">
+                    </div>
+                    <div class="offer-details">
+                        <h3 class="offer-title">Sunglasses</h3>
+                        <div class="offer-price">
+                            <span class="current-price">₹2,999</span>
+                            <span class="original-price">₹4,499</span>
+                            <span class="discount">33% OFF</span>
+                        </div>
+                        <a href="/buy_page" class="offer-button" onclick="return createConfetti(event, '/buy_page')">BUY NOW <i class="fas fa-shopping-cart"></i></a>
+                    </div>
+                </div>
+                
+                <div class="offer-item">
+                    <div class="offer-image">
+                        <img src="https://images.unsplash.com/photo-1526947425960-945c6e72858f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80" alt="Skincare">
+                    </div>
+                    <div class="offer-details">
+                        <h3 class="offer-title">Skincare Set</h3>
+                        <div class="offer-price">
+                            <span class="current-price">₹1,999</span>
+                            <span class="original-price">₹2,999</span></br>
+                            <span class="discount">33% OFF</span>
+                        </div>
+                        <a href="/buy_page" class="offer-button" onclick="return createConfetti(event, '/buy_page')">BUY NOW <i class="fas fa-shopping-cart"></i></a>
+                    </div>
+                </div>
+                
+                <div class="offer-item">
+                    <div class="offer-image">
+                        <img src="https://images.unsplash.com/photo-1594035910387-fea47794261f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80" alt="Watch">
+                    </div>
+                    <div class="offer-details">
+                        <h3 class="offer-title">Coco Noir</h3>
+                        <div class="offer-price">
+                            <span class="current-price">₹6,999</span>
+                            <span class="original-price">₹9,999</span>
+                            <span class="discount">30% OFF</span>
+                        </div>
+                        <a href="/buy_page" class="offer-button" onclick="return createConfetti(event, '/buy_page')">BUY NOW <i class="fas fa-shopping-cart"></i></a>
+                    </div>
+                </div>
+                
+                <div class="offer-item">
+                    <div class="offer-image">
+                        <img src="https://images.unsplash.com/photo-1520390138845-fd2d229dd553?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80" alt="Backpack">
+                    </div>
+                    <div class="offer-details">
+                        <h3 class="offer-title">Calandis Camera</h3>
+                        <div class="offer-price">
+                            <span class="current-price">₹34,999</span>
+                            <span class="original-price">₹49,999</span></br>
+                            <span class="discount">30% OFF</span>
+                        </div>
+                        <a href="/buy_page" class="offer-button" onclick="return createConfetti(event, '/buy_page')">BUY NOW <i class="fas fa-shopping-cart"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Modified Confetti effect to allow navigation
+        function createConfetti(e, targetUrl) {
+            const colors = [
+                '#ff6b6b', '#5f27cd', '#1dd1a1', '#ff9ff3', 
+                '#feca57', '#48dbfb', '#00d2d3', '#ff9ff3',
+                '#ff7979', '#badc58', '#7ed6df', '#e056fd'
+            ];
+            
+            // Create effects
+            createFallingConfetti(e);
+            createExplodingConfetti(e);
+            playConfettiSound();
+            
+            // Navigate after a small delay to allow confetti animation
+            setTimeout(() => {
+                window.location.href = targetUrl;
+            }, 500);
+
+            // Prevent immediate navigation
+            return false;
+        }
+
+        // Enhanced Confetti effect
+        function createFallingConfetti(e) {
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                
+                // Random properties
+                const size = Math.random() * 15 + 5;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const left = e.clientX - 100 + Math.random() * 200;
+                const animationDuration = Math.random() * 3 + 2;
+                const delay = Math.random() * 2;
+                
+                // Apply styles
+                confetti.style.width = `${size}px`;
+                confetti.style.height = `${size}px`;
+                confetti.style.backgroundColor = color;
+                confetti.style.left = `${left}px`;
+                confetti.style.top = `${e.clientY - 50}px`;
+                confetti.style.animation = `confetti-fall ${animationDuration}s ease-out ${delay}s forwards`;
+                
+                // Random shape (square, circle, or triangle)
+                const shape = Math.random();
+                if (shape > 0.66) {
+                    confetti.style.borderRadius = '50%';
+                } else if (shape > 0.33) {
+                    confetti.style.clipPath = 'polygon(50% 0%, 0% 100%, 100% 100%)';
+                    confetti.style.width = `${size}px`;
+                    confetti.style.height = `${size}px`;
+                }
+                
+                // Random rotation
+                confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                
+                // Add to document
+                document.body.appendChild(confetti);
+                
+                // Remove after animation
+                setTimeout(() => {
+                    confetti.remove();
+                }, (animationDuration + delay) * 1000);
+            }
+        }
+        
+        function createExplodingConfetti(e) {
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                
+                // Random properties
+                const size = Math.random() * 12 + 3;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const animationDuration = Math.random() * 1.5 + 0.5;
+                const delay = Math.random() * 0.5;
+                
+                // Random direction and distance
+                const angle = Math.random() * Math.PI * 2;
+                const distance = Math.random() * 200 + 100;
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance;
+                const rotation = Math.random() * 720 - 360;
+                
+                // Apply styles
+                confetti.style.width = `${size}px`;
+                confetti.style.height = `${size}px`;
+                confetti.style.backgroundColor = color;
+                confetti.style.left = `${e.clientX}px`;
+                confetti.style.top = `${e.clientY}px`;
+                confetti.style.setProperty('--tx', `${tx}px`);
+                confetti.style.setProperty('--ty', `${ty}px`);
+                confetti.style.setProperty('--rot', `${rotation}deg`);
+                confetti.style.animation = `confetti-explode ${animationDuration}s ease-out ${delay}s forwards`;
+                
+                // Random shape
+                if (Math.random() > 0.5) {
+                    confetti.style.borderRadius = '50%';
+                }
+                
+                // Add to document
+                document.body.appendChild(confetti);
+                
+                // Remove after animation
+                setTimeout(() => {
+                    confetti.remove();
+                }, (animationDuration + delay) * 1000);
+            }
+        }
+        
+        function playConfettiSound() {
+            // Create a simple sound effect using the Web Audio API
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                
+                oscillator.type = 'triangle';
+                oscillator.frequency.setValueAtTime(800, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.3);
+                
+                gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.3);
+            } catch (e) {
+                console.log("Audio not supported");
+            }
+        }
+        
+        const colors = [
+            '#ff6b6b', '#5f27cd', '#1dd1a1', '#ff9ff3', 
+            '#feca57', '#48dbfb', '#00d2d3', '#ff9ff3',
+            '#ff7979', '#badc58', '#7ed6df', '#e056fd'
+        ];
+
+        // Add this at the end of your existing script
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.offer-item').forEach((item, index) => {
+                item.style.setProperty('--index', index);
+            });
+        });
+    </script>
+</body>
+</html>

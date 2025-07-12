@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation | Premium Experience</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&display=swap');
+        
+        :root {
+            --primary: #6a11cb;
+            --primary-dark: #2575fc;
+            --accent: #ff3e9d;
+            --success: #00e676;
+            --text-dark: #2c3e50;
+            --text-medium: #546e7a;
+            --text-light: #90a4ae;
+            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --card-bg: rgba(255, 255, 255, 0.96);
+            --border: rgba(0, 0, 0, 0.08);
+            --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            --shadow-hover: 0 30px 60px -12px rgba(0, 0, 0, 0.2);
+            --transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+        
+        .confirmation-container {
+            background: var(--card-bg);
+            border-radius: 1.5rem;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 50rem;
+            padding: 4rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: cardEntrance 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            z-index: 10;
+        }
+        
+        .confirmation-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 0.5rem;
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            animation: progressBar 2.5s ease-in-out forwards;
+        }
+        
+        .confirmation-container::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .success-animation {
+            position: relative;
+            width: 10rem;
+            height: 10rem;
+            margin: 0 auto 2.5rem;
+            transform-style: preserve-3d;
+        }
+        
+        .success-icon {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            animation: iconEntrance 1s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+                       subtleFloat 4s ease-in-out infinite 1s;
+            box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.15);
+            transform-style: preserve-3d;
+        }
+        
+        .success-icon::before {
+            content: '';
+            position: absolute;
+            inset: -0.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 50%;
+            filter: blur(1rem);
+            opacity: 0.5;
+            z-index: -1;
+            animation: pulse 3s ease-in-out infinite;
+        }
+        
+        .success-icon i {
+            color: white;
+            font-size: 4rem;
+            animation: checkmark 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        
+        .confirmation-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: -0.05rem;
+            animation: textEntrance 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        
+        .confirmation-subtitle {
+            color: var(--text-medium);
+            font-size: 1.25rem;
+            line-height: 1.6;
+            margin-bottom: 3rem;
+            font-weight: 400;
+            max-width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out 0.4s forwards;
+        }
+        
+        .order-details {
+            background: rgba(248, 249, 250, 0.6);
+            border-radius: 1.25rem;
+            padding: 2.5rem;
+            margin: 3rem 0;
+            text-align: left;
+            border: 1px solid var(--border);
+            backdrop-filter: blur(8px);
+            transform-style: preserve-3d;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.6s forwards;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .order-details::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0.25rem;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--primary-dark));
+            animation: growHeight 1s ease-out 0.8s forwards;
+        }
+        
+        .detail-row {
+            display: flex;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px dashed rgba(0, 0, 0, 0.08);
+            transform: translateX(-1rem);
+            opacity: 0;
+            animation: slideIn 0.6s ease-out forwards;
+        }
+        
+        .detail-row:nth-child(1) { animation-delay: 0.9s; }
+        .detail-row:nth-child(2) { animation-delay: 1s; }
+        .detail-row:nth-child(3) { animation-delay: 1.1s; }
+        .detail-row:nth-child(4) { animation-delay: 1.2s; }
+        .detail-row:nth-child(5) { animation-delay: 1.3s; }
+        
+        .detail-row:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            color: var(--text-medium);
+            width: 12rem;
+            flex-shrink: 0;
+            font-size: 0.95rem;
+            position: relative;
+        }
+        
+        .detail-label::after {
+            content: ':';
+            position: absolute;
+            right: 0.5rem;
+        }
+        
+        .detail-value {
+            color: var(--text-dark);
+            font-weight: 500;
+            flex: 1;
+            font-size: 0.95rem;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            margin-top: 2.5rem;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 2.5rem;
+            border-radius: 3rem;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: var(--transition);
+            cursor: pointer;
+            border: none;
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            box-shadow: 0 1rem 1.5rem rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out 1.4s forwards;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%);
+            z-index: 1;
+            transition: var(--transition);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            border: 1px solid var(--border);
+        }
+        
+        .btn:hover {
+            transform: translateY(-0.5rem) scale(1.02);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .btn:hover::before {
+            transform: translateX(100%);
+        }
+        
+        .btn:active {
+            transform: translateY(-0.2rem);
+        }
+        
+        .confetti-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            overflow: hidden;
+            border-radius: 1.5rem;
+        }
+        
+        .confetti {
+            position: absolute;
+            opacity: 0;
+            z-index: -1;
+        }
+        
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+            border-radius: 1.5rem;
+        }
+        
+        .floating-element {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(106,17,203,0.1) 0%, rgba(37,117,252,0.1) 100%);
+            filter: blur(1px);
+            animation: float 15s infinite linear;
+        }
+        
+        /* Receipt Modal Styles */
+        .receipt-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .receipt-content {
+            background: white;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 10px;
+            padding: 2rem;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+            margin: 2rem;
+            padding-bottom: 4rem; /* Add extra padding at bottom */
+        }
+        
+        .close-receipt {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+            z-index: 2;
+        }
+        
+        .receipt-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px dashed #eee;
+        }
+        
+        .receipt-title {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .receipt-subtitle {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .receipt-details {
+            margin: 1.5rem 0;
+        }
+        
+        .receipt-row {
+            display: flex;
+            margin-bottom: 0.8rem;
+        }
+        
+        .receipt-label {
+            font-weight: 600;
+            width: 120px;
+            color: #555;
+        }
+        
+        .receipt-value {
+            flex: 1;
+        }
+        
+        .receipt-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #666;
+            font-size: 0.8rem;
+        }
+        
+        .download-btn {
+            display: block;
+            background: var(--primary);
+            color: white;
+            padding: 0.8rem;
+            border-radius: 5px;
+            text-align: center;
+            margin-top: 1.5rem;
+            cursor: pointer;
+            border: none;
+            width: 100%;
+            font-weight: 600;
+        }
+        
+        .download-btn:hover {
+            background: var(--primary-dark);
+        }
+        
+        /* Animations */
+        @keyframes cardEntrance {
+            0% {
+                opacity: 0;
+                transform: translateY(3rem) rotateX(15deg) scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) rotateX(0) scale(1);
+            }
+        }
+        
+        @keyframes iconEntrance {
+            0% {
+                transform: scale(0.5) rotate(-30deg);
+                opacity: 0;
+            }
+            70% {
+                transform: scale(1.1) rotate(10deg);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1) rotate(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes subtleFloat {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-1rem) rotate(2deg);
+            }
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 0.3;
+            }
+        }
+        
+        @keyframes checkmark {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            70% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes textEntrance {
+            0% {
+                letter-spacing: -0.5rem;
+                opacity: 0;
+            }
+            100% {
+                letter-spacing: -0.05rem;
+                opacity: 1;
+            }
+        }
+        
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+        
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(1rem);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideIn {
+            0% {
+                opacity: 0;
+                transform: translateX(-1rem);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes growHeight {
+            0% {
+                height: 0;
+            }
+            100% {
+                height: 100%;
+            }
+        }
+        
+        @keyframes progressBar {
+            0% {
+                width: 0;
+            }
+            100% {
+                width: 100%;
+            }
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+            }
+            25% {
+                transform: translateY(-5rem) translateX(2rem) rotate(90deg);
+            }
+            50% {
+                transform: translateY(-10rem) translateX(0) rotate(180deg);
+            }
+            75% {
+                transform: translateY(-5rem) translateX(-2rem) rotate(270deg);
+            }
+            100% {
+                transform: translateY(0) translateX(0) rotate(360deg);
+            }
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .confirmation-container {
+                padding: 2.5rem 1.5rem;
+                border-radius: 1rem;
+            }
+            
+            .success-animation {
+                width: 8rem;
+                height: 8rem;
+            }
+            
+            .confirmation-title {
+                font-size: 2rem;
+            }
+            
+            .confirmation-subtitle {
+                font-size: 1.1rem;
+                max-width: 100%;
+            }
+            
+            .order-details {
+                padding: 1.5rem;
+            }
+            
+            .detail-row {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .detail-label {
+                width: 100%;
+            }
+            
+            .detail-label::after {
+                content: '';
+                display: none;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .receipt-content {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="confirmation-container">
+        <div class="confetti-container" id="confetti-container"></div>
+        <div class="floating-elements" id="floating-elements"></div>
+        
+        <div class="success-animation">
+            <div class="success-icon">
+                <i class="fas fa-check"></i>
+            </div>
+        </div>
+        
+        <h1 class="confirmation-title">Order Confirmed!</h1>
+        <p class="confirmation-subtitle">Your purchase was successful. We've sent the order details to your email address.</p>
+        
+        <div class="order-details">
+            <div class="detail-row">
+                <div class="detail-label">Order Number</div>
+                <div class="detail-value" id="display-order-number"></div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">Customer Name</div>
+                <div class="detail-value"><%= fullName %></div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">Email Address</div>
+                <div class="detail-value"><%= email %></div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">Phone Number</div>
+                <div class="detail-value"><%= phone %></div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">Shipping Address</div>
+                <div class="detail-value"><%= address %></div>
+            </div>
+        </div>
+        
+        <div class="action-buttons">
+            <a href="/main_page" class="btn btn-primary" target="_blank" >
+                <i class="fas fa-home" style="margin-right: 0.5rem;"></i> Back to Home
+            </a>
+            <a href="#" class="btn btn-secondary" id="view-receipt-btn">
+                <i class="fas fa-receipt" style="margin-right: 0.5rem;"></i> View Receipt
+            </a>
+        </div>
+    </div>
+    
+    <!-- Receipt Modal -->
+    <div class="receipt-modal" id="receipt-modal">
+        <div class="receipt-content" id="receipt-content">
+            <span class="close-receipt" id="close-receipt">&times;</span>
+            
+            <div class="receipt-header">
+                <h2 class="receipt-title">Order Receipt</h2>
+                <p class="receipt-subtitle">Thank you for your purchase!</p>
+            </div>
+            
+            <div class="receipt-details">
+                <div class="receipt-row">
+                    <div class="receipt-label">Order Number:</div>
+                    <div class="receipt-value" id="receipt-order-number"></div>
+                </div>
+                <div class="receipt-row">
+                    <div class="receipt-label">Date:</div>
+                    <div class="receipt-value" id="receipt-date"></div>
+                </div>
+                <div class="receipt-row">
+                    <div class="receipt-label">Customer:</div>
+                    <div class="receipt-value" id="receipt-customer"><%= fullName %></div>
+                </div>
+                <div class="receipt-row">
+                    <div class="receipt-label">Email:</div>
+                    <div class="receipt-value" id="receipt-email"><%= email %></div>
+                </div>
+                <div class="receipt-row">
+                    <div class="receipt-label">Phone:</div>
+                    <div class="receipt-value" id="receipt-phone"><%= phone %></div>
+                </div>
+                <div class="receipt-row">
+                    <div class="receipt-label">Shipping To:</div>
+                    <div class="receipt-value" id="receipt-address"><%= address %></div>
+                </div>
+            </div>
+            
+            <div class="receipt-footer">
+                <p>If you have any questions about your order, please contact us at support@example.com</p>
+                <p>Order ID: <span id="footer-order-number"></span></p>
+            </div>
+            
+            <button class="download-btn" id="download-receipt">Download Receipt as PDF</button>
+        </div>
+    </div>
+
+    <script>
+        // Initialize jsPDF
+        const { jsPDF } = window.jspdf;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Generate random order number
+            function generateOrderNumber() {
+                const year = new Date().getFullYear();
+                const randomNum = Math.floor(Math.random() * 100000);
+                return `#ORD-${year}-${randomNum.toString().padStart(5, '0')}`;
+            }
+
+            // Set the order number in all places
+            const orderNumber = generateOrderNumber();
+            document.getElementById('display-order-number').textContent = orderNumber;
+            document.getElementById('receipt-order-number').textContent = orderNumber;
+            document.getElementById('footer-order-number').textContent = orderNumber;
+
+            // Set current date
+            const today = new Date();
+            const formattedDate = today.toLocaleDateString('en-US', {
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            document.getElementById('receipt-date').textContent = formattedDate;
+            
+            // Modal functionality
+            const modal = document.getElementById('receipt-modal');
+            const btn = document.getElementById('view-receipt-btn');
+            const closeBtn = document.getElementById('close-receipt');
+            const downloadBtn = document.getElementById('download-receipt');
+            
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                modal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            });
+            
+            closeBtn.addEventListener('click', function() {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            });
+            
+            window.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+            
+            // Download receipt as PDF
+            downloadBtn.addEventListener('click', async function() {
+                const receiptContent = document.getElementById('receipt-content');
+                const downloadBtn = document.getElementById('download-receipt');
+                const closeBtn = document.getElementById('close-receipt');
+                
+                // Hide buttons
+                downloadBtn.style.display = 'none';
+                closeBtn.style.display = 'none';
+                
+                try {
+                    const canvas = await html2canvas(receiptContent, {
+                        scale: 2,
+                        useCORS: true,
+                        allowTaint: true,
+                        scrollY: -window.scrollY,
+                        height: receiptContent.scrollHeight + 50, // Add extra height
+                        windowHeight: receiptContent.scrollHeight + 50,
+                        onclone: function(clonedDoc) {
+                            // Ensure clone has full height
+                            const clonedContent = clonedDoc.getElementById('receipt-content');
+                            clonedContent.style.height = 'auto';
+                            clonedContent.style.position = 'relative';
+                        }
+                    });
+
+                    const imgData = canvas.toDataURL('image/png');
+                    const pdf = new jsPDF({
+                        orientation: 'portrait',
+                        unit: 'mm',
+                        format: 'a4',
+                        compress: true
+                    });
+
+                    const pdfWidth = pdf.internal.pageSize.getWidth();
+                    const pdfHeight = pdf.internal.pageSize.getHeight();
+                    const margins = 10;
+                    const contentWidth = pdfWidth - (margins * 2);
+                    const aspectRatio = canvas.height / canvas.width;
+                    const contentHeight = contentWidth * aspectRatio;
+
+                    pdf.addImage(
+                        imgData, 
+                        'PNG', 
+                        margins, 
+                        margins, 
+                        contentWidth, 
+                        contentHeight, 
+                        '', 
+                        'FAST'
+                    );
+
+                    pdf.save(`Order_Receipt_${orderNumber}.pdf`);
+                } catch (error) {
+                    console.error('PDF generation error:', error);
+                } finally {
+                    // Show buttons again
+                    downloadBtn.style.display = 'block';
+                    closeBtn.style.display = 'block';
+                }
+            });
+            
+            // Confetti animation
+            const confettiContainer = document.getElementById('confetti-container');
+            const colors = ['#6a11cb', '#2575fc', '#ff3e9d', '#00e676', '#ffc107'];
+            
+            for (let i = 0; i < 150; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                
+                const size = Math.random() * 12 + 6;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const left = Math.random() * 100;
+                const delay = Math.random() * 3000;
+                const duration = Math.random() * 4000 + 2000;
+                const rotation = Math.random() * 360;
+                
+                confetti.style.width = `${size}px`;
+                confetti.style.height = `${size}px`;
+                confetti.style.backgroundColor = color;
+                confetti.style.left = `${left}%`;
+                confetti.style.top = `-20px`;
+                
+                if (Math.random() > 0.5) {
+                    confetti.style.borderRadius = '50%';
+                }
+                
+                confettiContainer.appendChild(confetti);
+                
+                const animation = confetti.animate([
+                    { 
+                        transform: `translate(${Math.random() * 200 - 100}px, ${Math.random() * 100 + 100}px) rotate(${rotation}deg)`,
+                        opacity: 1 
+                    },
+                    { 
+                        transform: `translate(${Math.random() * 400 - 200}px, ${Math.random() * 200 + 400}px) rotate(${rotation + 360}deg)`,
+                        opacity: 0 
+                    }
+                ], {
+                    duration: duration,
+                    delay: delay,
+                    easing: 'cubic-bezier(0.1, 0.8, 0.3, 1)'
+                });
+                
+                animation.onfinish = () => confetti.remove();
+            }
+            
+            // Floating background elements
+            const floatingContainer = document.getElementById('floating-elements');
+            for (let i = 0; i < 10; i++) {
+                const element = document.createElement('div');
+                element.className = 'floating-element';
+                
+                const size = Math.random() * 200 + 100;
+                const left = Math.random() * 100;
+                const top = Math.random() * 100;
+                const opacity = Math.random() * 0.1 + 0.05;
+                const delay = Math.random() * 15;
+                const duration = Math.random() * 30 + 30;
+                
+                element.style.width = `${size}px`;
+                element.style.height = `${size}px`;
+                element.style.left = `${left}%`;
+                element.style.top = `${top}%`;
+                element.style.opacity = opacity;
+                element.style.animationDelay = `${delay}s`;
+                element.style.animationDuration = `${duration}s`;
+                
+                floatingContainer.appendChild(element);
+            }
+            
+            // Card tilt effect
+            const card = document.querySelector('.confirmation-container');
+            if (card) {
+                card.addEventListener('mousemove', (e) => {
+                    const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+                    const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+                    card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'rotateY(0deg) rotateX(0deg)';
+                    card.style.transition = 'all 0.5s ease';
+                    setTimeout(() => {
+                        card.style.transition = '';
+                    }, 500);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

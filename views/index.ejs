@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Friends Cart</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="css/index.css" />
+
+    <style>
+      @media (max-width: 768px) {
+        .desktop-nav-links {
+          display: none;
+        }
+
+        .nav-links {
+          padding: 0.5rem 0;
+          display: none;
+          flex-direction: column;
+          z-index: 1000;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar-custom">
+      <a href="#" class="navbar-brand">Friends Cart</a>
+      <!-- Desktop and Mobile Links -->
+      <div class="desktop-nav-links nav-links">
+        <a href="/login" class="nav-link">Login</a>
+        <a href="/register" class="nav-link">Register</a>
+      </div>
+      <!-- Hamburger menu for mobile view -->
+      <button
+        class="hamburger"
+        aria-label="Toggle navigation"
+        aria-expanded="false"
+      >
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+      </button>
+    </nav>
+
+    <section class="hero-section" style="margin-top: 120px">
+      <div class="hero-text">
+        <h1>Friends Cart</h1>
+        <p>
+          where every cart finds a heart&nbsp;<span class="heartbeat">❤️</span>
+        </p>
+        <a href="/register">
+          <button class="btn-custom" id="magicButton">
+            <span>Get Started</span>
+          </button>
+        </a>
+      </div>
+
+      <div class="hero-image">
+        <img src="images/first_page.jpg" alt="Shopping Image" />
+      </div>
+    </section>
+
+    <section class="content-section">
+      <!-- Animated background elements -->
+      <div class="bg-particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+      </div>
+
+      <div class="container">
+        <!-- Welcome Section -->
+        <div class="content-card animate-on-scroll" data-animation="fadeInUp">
+          <div class="emoji-badge">🛍️</div>
+          <h2>Welcome to Friends Cart – Your One-Stop Shopping Destination!</h2>
+          <p>
+            Discover the best deals, exclusive collections, and a seamless
+            shopping experience—all in one place.
+          </p>
+        </div>
+
+        <!-- Trending Categories -->
+        <div
+          class="content-card animate-on-scroll"
+          data-animation="slideInLeft"
+        >
+          <div class="emoji-badge">🔥</div>
+          <h2>Trending Categories</h2>
+          <div class="category-grid">
+            <div class="category-item">
+              <div class="category-icon pulse">👗</div>
+              <h3>Fashion & Apparel</h3>
+              <p>Explore the latest styles for every season.</p>
+            </div>
+            <div class="category-item">
+              <div class="category-icon pulse">📱</div>
+              <h3>Electronics & Gadgets</h3>
+              <p>Upgrade your life with cutting-edge technology.</p>
+            </div>
+            <div class="category-item">
+              <div class="category-icon pulse">🏠</div>
+              <h3>Home & Living</h3>
+              <p>Add elegance and comfort to your home.</p>
+            </div>
+            <div class="category-item">
+              <div class="category-icon pulse">💄</div>
+              <h3>Beauty & Personal Care</h3>
+              <p>Pamper yourself with premium beauty products.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Why Shop With Us -->
+        <div
+          class="content-card animate-on-scroll"
+          data-animation="fadeInRight"
+        >
+          <div class="emoji-badge">💎</div>
+          <h2>Why Shop With Us?</h2>
+          <div class="feature-grid">
+            <div class="feature-item">
+              <div class="feature-icon">✅</div>
+              <div>
+                <h3>Wide Range of Products</h3>
+                <p>From daily essentials to luxury items.</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon">✅</div>
+              <div>
+                <h3>Secure Payments</h3>
+                <p>Safe and quick checkout with multiple payment options.</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon">✅</div>
+              <div>
+                <h3>Fast Delivery</h3>
+                <p>Get your orders delivered at lightning speed.</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon">✅</div>
+              <div>
+                <h3>24/7 Customer Support</h3>
+                <p>We're here to help, anytime you need us.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Exclusive Offers -->
+        <div class="content-card animate-on-scroll" data-animation="zoomIn">
+          <div class="emoji-badge">🌟</div>
+          <h2>Exclusive Offers Just for You</h2>
+          <div class="offer-slider">
+            <div class="offer-item shine">
+              <h3>Mega Discounts</h3>
+              <p>Up to 50% OFF on select items.</p>
+            </div>
+            <div class="offer-item shine">
+              <h3>New User Bonus</h3>
+              <p>Enjoy 10% OFF on your first purchase.</p>
+            </div>
+            <div class="offer-item shine">
+              <h3>Flash Sales</h3>
+              <p>Limited-time deals you can't miss.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shopping Features -->
+        <div class="content-card animate-on-scroll" data-animation="fadeInLeft">
+          <div class="emoji-badge">📦</div>
+          <h2>Your Shopping, Your Way</h2>
+          <div class="shopping-features">
+            <div class="feature-bubble float">Easy Returns</div>
+            <div class="feature-bubble float">Track Your Orders</div>
+            <div class="feature-bubble float">Wishlist & Save</div>
+          </div>
+        </div>
+
+        <!-- Testimonials -->
+       
+        <!-- CTA -->
+        <div class="cta-card animate-on-scroll" data-animation="bounceIn">
+          <div class="emoji-badge rocket">🚀</div>
+          <h2>Start Your Shopping Journey Today!</h2>
+          <p>
+            Browse thousands of products and elevate your shopping experience.
+          </p>
+          <a href="/register">
+            <button class="btn-custom">
+              <span>Shop Now</span>
+            </button>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- JavaScript Section -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Navbar scroll effect
+        window.addEventListener("scroll", () => {
+          const navbar = document.querySelector(".navbar-custom");
+          navbar.classList.toggle("scrolled", window.scrollY > 50);
+        });
+
+        // Button sparkle effect
+        const magicButton = document.getElementById("magicButton");
+        if (magicButton) {
+          magicButton.addEventListener("mouseover", function (e) {
+            for (let i = 0; i < 15; i++) {
+              createSparkle(e);
+            }
+          });
+        }
+
+        function createSparkle(e) {
+          const sparkle = document.createElement("div");
+          sparkle.className = "sparkle";
+
+          const size = Math.random() * 8 + 4;
+          sparkle.style.width = `${size}px`;
+          sparkle.style.height = `${size}px`;
+
+          const rect = e.target.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+
+          sparkle.style.setProperty("--tx", `${Math.random() * 100 - 50}px`);
+          sparkle.style.setProperty("--ty", `${Math.random() * 100 - 50}px`);
+          sparkle.style.left = `${x}px`;
+          sparkle.style.top = `${y}px`;
+
+          e.target.appendChild(sparkle);
+
+          setTimeout(() => {
+            sparkle.remove();
+          }, 1000);
+        }
+
+        // Hamburger menu toggle
+        const hamburger = document.querySelector(".hamburger");
+        const navLinks = document.querySelector(".nav-links");
+
+        if (hamburger && navLinks) {
+          hamburger.addEventListener("click", function () {
+            const expanded = this.getAttribute("aria-expanded") === "true";
+            this.setAttribute("aria-expanded", !expanded);
+            this.classList.toggle("active");
+            navLinks.classList.toggle("nav-links-visible");
+          });
+
+          // Close menu when clicking outside or on a menu item
+          document.addEventListener("click", function (e) {
+            if (
+              !navLinks.contains(e.target) &&
+              !hamburger.contains(e.target) &&
+              navLinks.classList.contains("nav-links-visible")
+            ) {
+              navLinks.classList.remove("nav-links-visible");
+              hamburger.classList.remove("active");
+              hamburger.setAttribute("aria-expanded", "false");
+            }
+          });
+
+          document.querySelectorAll(".nav-link").forEach((link) => {
+            link.addEventListener("click", function () {
+              navLinks.classList.remove("nav-links-visible");
+              hamburger.classList.remove("active");
+              hamburger.setAttribute("aria-expanded", "false");
+            });
+          });
+        }
+
+        // Set star delays and create intersection observer for testimonials
+        document.querySelectorAll(".star").forEach((star, index) => {
+          star.style.setProperty("--delay", index % 5);
+        });
+
+        // Intersection Observer for testimonials
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("visible");
+
+                const stars = entry.target.querySelectorAll(".star");
+                stars.forEach((star, i) => {
+                  setTimeout(() => {
+                    star.style.animation = `starPop 0.6s forwards ${i * 0.1}s`;
+                  }, i * 100);
+                });
+              } else {
+                entry.target.classList.remove("visible");
+              }
+            });
+          },
+          {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px",
+          }
+        );
+
+        document.querySelectorAll(".testimonial-item").forEach((item) => {
+          observer.observe(item);
+        });
+
+        // Resize handler
+        let resizeTimeout;
+        window.addEventListener("resize", () => {
+          clearTimeout(resizeTimeout);
+          resizeTimeout = setTimeout(() => {
+            document.querySelectorAll(".testimonial-item").forEach((item) => {
+              if (item.classList.contains("visible")) {
+                item.style.transition = "none";
+                item.offsetHeight; // Trigger reflow
+                item.style.transition = "";
+              }
+            });
+          }, 100);
+        });
+
+        // Scroll Animation Observer
+        const animateElements = document.querySelectorAll(".animate-on-scroll");
+        const scrollObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("visible");
+                scrollObserver.unobserve(entry.target);
+              }
+            });
+          },
+          {
+            threshold: 0.1,
+            rootMargin: "0px 0px -100px 0px",
+          }
+        );
+
+        animateElements.forEach((element) => {
+          scrollObserver.observe(element);
+        });
+
+        // Create background particles
+        const bgParticles = document.querySelector(".bg-particles");
+        if (bgParticles) {
+          for (let i = 0; i < 10; i++) {
+            const particle = document.createElement("div");
+            particle.classList.add("particle");
+            particle.style.width = `${Math.random() * 100 + 50}px`;
+            particle.style.height = particle.style.width;
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            particle.style.animationDuration = `${Math.random() * 20 + 10}s`;
+            particle.style.animationDelay = `${Math.random() * 10}s`;
+            particle.style.opacity = Math.random() * 0.2 + 0.05;
+            bgParticles.appendChild(particle);
+          }
+        }
+
+        // Smooth scroll behavior for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+          anchor.addEventListener("click", function (e) {
+            const targetElement = document.querySelector(
+              this.getAttribute("href")
+            );
+            if (targetElement) {
+              e.preventDefault();
+              targetElement.scrollIntoView({
+                behavior: "smooth",
+              });
+            }
+          });
+        });
+
+        // Initialize slider if it exists
+        const slider = document.querySelector(".slider");
+        const sliderContainer = document.querySelector(".slider-container");
+        if (slider && sliderContainer) {
+          let angle = 0;
+          let autoScrollInterval = null;
+          const autoScrollSpeed = 3000;
+
+          function startAutoScroll() {
+            if (!autoScrollInterval) {
+              autoScrollInterval = setInterval(() => {
+                angle -= 72;
+                slider.style.transform = `rotateY(${angle}deg)`;
+              }, autoScrollSpeed);
+            }
+          }
+
+          function stopAutoScroll() {
+            if (autoScrollInterval) {
+              clearInterval(autoScrollInterval);
+              autoScrollInterval = null;
+            }
+          }
+
+          startAutoScroll();
+          sliderContainer.addEventListener("mouseenter", stopAutoScroll);
+          sliderContainer.addEventListener("mouseleave", startAutoScroll);
+        }
+
+        // Cart icon pulse effect
+        const cartIcon = document.querySelector(".cart-icon");
+        if (cartIcon) {
+          cartIcon.addEventListener("click", function () {
+            const pulse = this.querySelector(".cart-pulse");
+            if (pulse) {
+              pulse.style.opacity = 1;
+              pulse.style.transform = "scale(1)";
+              pulse.style.transition = "all 0.5s ease-out";
+
+              setTimeout(() => {
+                pulse.style.opacity = 0;
+                pulse.style.transform = "scale(1.5)";
+              }, 50);
+            }
+          });
+        }
+
+        // Navigation link active state
+        const navigationLinks = document.querySelectorAll(".nav-link");
+        navigationLinks.forEach((link) => {
+          link.addEventListener("click", function (e) {
+            const targetId = this.getAttribute("href");
+            const targetSection = document.querySelector(targetId);
+
+            if (targetSection) {
+              e.preventDefault();
+              navigationLinks.forEach((l) => l.classList.remove("active"));
+              this.classList.add("active");
+
+              const navbarHeight =
+                document.querySelector(".navbar-custom").offsetHeight;
+              const targetPosition = targetSection.offsetTop - navbarHeight;
+
+              window.scrollTo({
+                top: targetPosition,
+                behavior: "smooth",
+              });
+
+              history.pushState(null, null, targetId);
+            }
+          });
+        });
+
+        // Contact form handling
+        const contactForm = document.getElementById("contactForm");
+        if (contactForm) {
+          contactForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const submitBtn = this.querySelector(".submit-btn");
+            const successMessage = document.getElementById("successMessage");
+
+            if (submitBtn && successMessage) {
+              submitBtn.innerHTML =
+                '<i class="fas fa-spinner fa-spin"></i> Sending...';
+              submitBtn.disabled = true;
+
+              setTimeout(() => {
+                successMessage.style.display = "block";
+                this.reset();
+                submitBtn.innerHTML =
+                  'Send Message <i class="fas fa-paper-plane"></i>';
+                submitBtn.disabled = false;
+
+                setTimeout(() => {
+                  successMessage.style.display = "none";
+                }, 5000);
+              }, 1500);
+            }
+          });
+        }
+
+        // Form control animations
+        document.querySelectorAll(".form-control").forEach((input) => {
+          input.addEventListener("focus", function () {
+            if (this.parentElement) {
+              this.parentElement.style.transform = "translateY(-3px)";
+            }
+          });
+
+          input.addEventListener("blur", function () {
+            if (this.parentElement) {
+              this.parentElement.style.transform = "translateY(0)";
+            }
+          });
+        });
+
+        // Highlight active nav link based on current hash
+        const currentHash = window.location.hash;
+        if (currentHash) {
+          const targetLink = document.querySelector(
+            `.nav-link[href="${currentHash}"]`
+          );
+          if (targetLink) {
+            document
+              .querySelectorAll(".nav-link")
+              .forEach((l) => l.classList.remove("active"));
+            targetLink.classList.add("active");
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

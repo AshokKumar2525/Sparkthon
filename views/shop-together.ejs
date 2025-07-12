@@ -1,0 +1,34 @@
+<h2>Your Rooms</h2>
+<% rooms.forEach(room => { %>
+  <div>
+    <a href="/room/<%= room.roomId %>">Room: <%= room.roomId %></a>
+    <% if (room.ended) { %> <span>(Ended)</span> <% } %>
+  </div>
+<% }) %>
+
+<hr>
+
+<h3>Create New Room</h3>
+<form action="/shop-together/invite" method="POST">
+  <input type="text" name="emails" placeholder="Enter comma-separated emails" required />
+  <button type="submit">Start Room</button>
+</form>
+
+<!-- 
+<script>
+    document.getElementById('invite-form').addEventListener('submit', async e => {
+        e.preventDefault();
+        const email = e.target.elements[0].value;
+
+        const res = await fetch('/create-room', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ emails: [email] })
+        });
+
+        const data = await res.json();
+        if (data.roomLink) {
+            window.location.href = data.roomLink;
+        }
+    });
+</script> -->

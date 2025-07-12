@@ -1,0 +1,2443 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Premium Feedback Hub | FrndsCart</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Add these in your <head> section if not already present -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+      :root {
+        --primary: #4361ee;
+        --primary-light: #e0e7ff;
+        --primary-dark: #3a0ca3;
+        --secondary: #f72585;
+        --accent: #4cc9f0;
+        --dark: #212529;
+        --light: #f8f9fa;
+        --gray: #6c757d;
+        --light-gray: #e9ecef;
+        --star: #ffd700;
+        --success: #38b000;
+        --warning: #ffaa00;
+        --danger: #ef233c;
+        --glass: rgba(255, 255, 255, 0.15);
+        --glass-border: rgba(255, 255, 255, 0.2);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+        --shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.2);
+        --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        --transition-fast: all 0.2s ease-out;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        padding-top: 80px; /* Adjust this value based on your header height */
+        font-family: "Poppins", sans-serif;
+        margin: 0;
+        padding: 80px 0 0;
+        background: linear-gradient(135deg, #f5f7ff 0%, #e0e7ff 100%);
+        color: var(--dark);
+        line-height: 1.6;
+        min-height: 100vh;
+      }
+
+      /* Premium Header */
+      header {
+        background: linear-gradient(
+          135deg,
+          var(--primary),
+          var(--primary-dark)
+        );
+        color: white;
+        padding: 1rem 0;
+        box-shadow: var(--shadow-lg);
+        margin-bottom: 0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+        animation: navReveal 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      header::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(
+          circle,
+          rgba(255, 255, 255, 0.1) 0%,
+          rgba(255, 255, 255, 0) 70%
+        );
+        transform: rotate(30deg);
+        z-index: -1;
+      }
+
+      .header-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-family: "Montserrat", sans-serif;
+        font-size: 2rem;
+        font-weight: 700;
+        color: white;
+        text-decoration: none;
+        letter-spacing: 1.2px;
+        transition: var(--transition-fast);
+      }
+
+      .logo i {
+        font-size: 2rem;
+        color: var(--accent);
+        transition: var(--transition-fast);
+      }
+
+      .logo:hover {
+        transform: translateY(-2px);
+      }
+
+      .logo:hover i {
+        transform: rotate(-15deg);
+      }
+
+      .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        background: white;
+        color: var(--primary);
+        text-decoration: none;
+        border-radius: 50px;
+        transition: var(--transition);
+        font-weight: 600;
+        box-shadow: var(--shadow-sm);
+        border: 2px solid transparent;
+      }
+
+      .back-btn:hover {
+        background: var(--primary-light);
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-md);
+        border-color: var(--primary);
+      }
+
+      .back-btn:active {
+        transform: translateY(-1px);
+      }
+
+      /* Main Container */
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem 3rem;
+      }
+
+      .page-title {
+        text-align: center;
+        margin: 2rem 0 3rem;
+        position: relative;
+        font-family: "Montserrat", sans-serif;
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--dark);
+        letter-spacing: -0.5px;
+      }
+
+      .page-title::after {
+        content: "";
+        display: block;
+        width: 100px;
+        height: 5px;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+        margin: 1rem auto;
+        border-radius: 3px;
+        animation: titleUnderline 1.5s ease infinite alternate;
+      }
+
+      @keyframes titleUnderline {
+        0% {
+          width: 100px;
+        }
+        100% {
+          width: 150px;
+        }
+      }
+
+      /* Stats Bar */
+      .stats-bar {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+        background: white;
+        padding: 1.5rem;
+        border-radius: 16px;
+        margin-bottom: 3rem;
+        box-shadow: var(--shadow-md);
+        backdrop-filter: blur(10px);
+        border: 1px solid var(--glass-border);
+        transform: translateY(0);
+        transition: var(--transition);
+        animation: floatIn 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      }
+
+      .stats-bar:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .stat-item {
+        text-align: center;
+        padding: 1rem;
+        position: relative;
+        overflow: hidden;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.7);
+        transition: var(--transition);
+      }
+
+      .stat-item:hover {
+        background: white;
+        transform: scale(1.03);
+      }
+
+      .stat-item::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(to bottom, var(--primary), var(--accent));
+      }
+
+      .stat-number {
+        font-size: 2.25rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 0.5rem;
+        font-family: "Montserrat", sans-serif;
+        background: linear-gradient(
+          135deg,
+          var(--primary),
+          var(--primary-dark)
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        transition: var(--transition);
+        animation: glowPulse 2s infinite;
+      }
+
+      .stat-item:hover .stat-number {
+        background: linear-gradient(135deg, var(--secondary), var(--danger));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .stat-label {
+        font-size: 0.9rem;
+        color: var(--gray);
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      /* Feedback Grid */
+      .feedback-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+        gap: 2rem;
+        margin: 3rem 0;
+      }
+
+      /* Feedback Card */
+      .feedback-card {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: var(--shadow-md);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid var(--light-gray);
+        opacity: 0;
+        will-change: transform, opacity;
+      }
+
+      .feedback-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 24px rgba(67, 97, 238, 0.12);
+      }
+
+      .feedback-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(to bottom, var(--primary), var(--accent));
+        transition: var(--transition);
+      }
+
+      .feedback-card:hover::before {
+        width: 6px;
+        background: linear-gradient(to bottom, var(--secondary), var(--danger));
+      }
+
+      .feedback-card::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 100px;
+        height: 100px;
+        background: radial-gradient(
+          circle at bottom right,
+          var(--primary-light),
+          transparent 70%
+        );
+        opacity: 0;
+        transition: var(--transition);
+        z-index: 0;
+      }
+
+      .feedback-card:hover::after {
+        opacity: 0.6;
+      }
+
+      .feedback-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        position: relative;
+        z-index: 1;
+      }
+
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .user-avatar {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 1.5rem;
+        box-shadow: var(--shadow-sm);
+        transition: var(--transition);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .user-avatar::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(
+          to bottom right,
+          rgba(255, 255, 255, 0.3) 0%,
+          rgba(255, 255, 255, 0) 60%
+        );
+        transform: rotate(30deg);
+      }
+
+      .feedback-card:hover .user-avatar {
+        transform: scale(1.1) rotate(5deg);
+        box-shadow: 0 8px 20px rgba(67, 97, 238, 0.3);
+      }
+
+      .user-details {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .user-name {
+        font-weight: 600;
+        font-size: 1.1rem;
+        color: var(--dark);
+        letter-spacing: -0.3px;
+      }
+
+      .user-role {
+        font-size: 0.8rem;
+        color: var(--gray);
+        margin-top: 0.25rem;
+        display: inline-block;
+        background: var(--light-gray);
+        padding: 0.2rem 0.5rem;
+        border-radius: 50px;
+        font-weight: 500;
+      }
+
+      .rating {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .rating-stars {
+        color: var(--star);
+        font-size: 1.2rem;
+        display: flex;
+        gap: 0.2rem;
+        text-shadow: 0 2px 4px rgba(255, 215, 0, 0.3);
+      }
+
+      .rating-number {
+        font-weight: 700;
+        color: var(--dark);
+        font-size: 1rem;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .feedback-content {
+        color: #444;
+        line-height: 1.7;
+        margin: 1.5rem 0;
+        font-size: 1rem;
+        padding-right: 1rem;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Feedback Footer - Updated for better alignment */
+      .feedback-footer {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px dashed var(--light-gray);
+        position: relative;
+        z-index: 1;
+      }
+
+      .feedback-date-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      .feedback-date {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--gray);
+        font-size: 0.85rem;
+        padding: 0.5rem 1rem;
+        background: var(--light-gray);
+        border-radius: 50px;
+        transition: all 0.3s ease;
+      }
+
+      .feedback-date i {
+        color: var(--primary);
+        font-size: 0.9rem;
+      }
+
+      .feedback-actions-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+      }
+
+      .feedback-actions {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .action-btn {
+        padding: 0.6rem 1.2rem;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: white;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        min-width: 100px;
+        justify-content: center;
+      }
+
+      .action-btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+      }
+
+      .action-btn:hover::before {
+        transform: translateX(0);
+      }
+
+      .action-btn.edit {
+        background: linear-gradient(135deg, #4361ee, #3a0ca3);
+      }
+
+      .action-btn.delete {
+        background: linear-gradient(135deg, #ef233c, #d90429);
+      }
+
+      .action-btn.like {
+        background: linear-gradient(135deg, #f72585, #b5179e);
+      }
+
+      .action-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      }
+
+      .action-btn:active {
+        transform: translateY(-1px);
+      }
+
+      .action-btn i {
+        font-size: 1rem;
+        transition: transform 0.3s ease;
+      }
+
+      .action-btn:hover i {
+        transform: rotate(10deg) scale(1.2);
+      }
+
+      .action-btn span {
+        font-size: 0.85rem;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+
+      /* Custom hover effects */
+      .action-btn.edit:hover {
+        background: linear-gradient(135deg, #3a0ca3, #4361ee);
+        box-shadow: 0 6px 20px rgba(67, 97, 238, 0.3);
+      }
+
+      .action-btn.delete:hover {
+        background: linear-gradient(135deg, #d90429, #ef233c);
+        box-shadow: 0 6px 20px rgba(239, 35, 60, 0.3);
+      }
+
+      .action-btn.like:hover {
+        background: linear-gradient(135deg, #b5179e, #f72585);
+        box-shadow: 0 6px 20px rgba(247, 37, 133, 0.3);
+      }
+
+      /* Active state for like button */
+      .action-btn.like.active {
+        background: linear-gradient(135deg, #f72585, #b5179e);
+        color: white;
+      }
+
+      /* No Feedbacks State */
+      .no-feedbacks {
+        text-align: center;
+        padding: 4rem 2rem;
+        grid-column: 1 / -1;
+        background: white;
+        border-radius: 20px;
+        box-shadow: var(--shadow-md);
+        margin: 2rem 0;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .no-feedbacks::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          135deg,
+          rgba(67, 97, 238, 0.05),
+          rgba(76, 201, 240, 0.05)
+        );
+        z-index: 0;
+      }
+
+      .no-feedbacks i {
+        font-size: 5rem;
+        color: var(--light-gray);
+        margin-bottom: 1.5rem;
+        position: relative;
+        z-index: 1;
+        animation: float 3s ease-in-out infinite;
+      }
+
+      .no-feedbacks h3 {
+        font-size: 1.75rem;
+        color: var(--dark);
+        margin-bottom: 1rem;
+        position: relative;
+        z-index: 1;
+        font-family: "Montserrat", sans-serif;
+      }
+
+      .no-feedbacks p {
+        color: var(--gray);
+        max-width: 500px;
+        margin: 0 auto 2rem;
+        position: relative;
+        z-index: 1;
+        font-size: 1.1rem;
+      }
+
+      .add-feedback-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1rem 2rem;
+        background: linear-gradient(
+          135deg,
+          var(--primary),
+          var(--primary-dark)
+        );
+        color: white;
+        text-decoration: none;
+        border-radius: 50px;
+        transition: var(--transition);
+        font-weight: 600;
+        box-shadow: 0 5px 15px rgba(67, 97, 238, 0.4);
+        border: none;
+        cursor: pointer;
+        position: relative;
+        z-index: 1;
+        overflow: hidden;
+      }
+
+      .add-feedback-btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, var(--secondary), var(--danger));
+        opacity: 0;
+        transition: var(--transition);
+        z-index: -1;
+      }
+
+      .add-feedback-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(67, 97, 238, 0.5);
+      }
+
+      .add-feedback-btn:hover::before {
+        opacity: 1;
+      }
+
+      .add-feedback-btn:active {
+        transform: translateY(-1px);
+      }
+
+      /* Modal Styles - Ultra Premium */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(8px);
+        z-index: 2000;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .modal.active {
+        display: flex;
+        opacity: 1;
+      }
+
+      .modal-content {
+        background: white;
+        padding: 2.5rem;
+        border-radius: 20px;
+        width: 90%;
+        max-width: 500px;
+        box-shadow: var(--shadow-xl);
+        transform: translateY(20px) scale(0.95);
+        opacity: 0;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+        overflow: hidden;
+        border: 1px solid var(--glass-border);
+      }
+
+      .modal.active .modal-content {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+
+      .modal-content::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 8px;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+      }
+
+      .modal-content::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 150px;
+        height: 150px;
+        background: radial-gradient(
+          circle at bottom right,
+          var(--primary-light),
+          transparent 70%
+        );
+        z-index: 0;
+        opacity: 0.5;
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        position: relative;
+        z-index: 1;
+      }
+
+      .modal-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--dark);
+        font-family: "Montserrat", sans-serif;
+        background: linear-gradient(
+          135deg,
+          var(--primary),
+          var(--primary-dark)
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .close-btn {
+        background: none;
+        border: none;
+        font-size: 1.75rem;
+        cursor: pointer;
+        color: var(--gray);
+        transition: var(--transition-fast);
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+      }
+
+      .close-btn:hover {
+        color: var(--danger);
+        background: rgba(239, 35, 60, 0.1);
+        transform: rotate(90deg);
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+        position: relative;
+        z-index: 1;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0.75rem;
+        font-weight: 600;
+        color: var(--dark);
+        font-size: 1rem;
+      }
+
+      .form-control {
+        width: 100%;
+        padding: 1rem 1.25rem;
+        border: 1px solid var(--light-gray);
+        border-radius: 12px;
+        font-family: inherit;
+        font-size: 1rem;
+        transition: var(--transition);
+        background: rgba(255, 255, 255, 0.7);
+      }
+
+      .form-control:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        background: white;
+      }
+
+      textarea.form-control {
+        min-height: 150px;
+        resize: vertical;
+      }
+
+      .rating-input {
+        display: flex;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+        justify-content: center;
+      }
+
+      .rating-input i {
+        font-size: 2rem;
+        color: var(--light-gray);
+        cursor: pointer;
+        transition: var(--transition-fast);
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .rating-input i.hovered {
+        color: var(--star);
+        transform: scale(1.2);
+      }
+
+      .rating-input i.active {
+        color: var(--star);
+        transform: scale(1.1);
+        filter: drop-shadow(0 2px 4px rgba(255, 215, 0, 0.4));
+      }
+
+      .modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 2rem;
+        position: relative;
+        z-index: 1;
+      }
+
+      .btn {
+        padding: 0.75rem 1.75rem;
+        border-radius: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        border: none;
+        font-size: 1rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.2);
+        opacity: 0;
+        transition: var(--transition-fast);
+      }
+
+      .btn:hover::before {
+        opacity: 1;
+      }
+
+      .btn-primary {
+        background: linear-gradient(
+          135deg,
+          var(--primary),
+          var(--primary-dark)
+        );
+        color: white;
+        box-shadow: 0 4px 15px rgba(67, 97, 238, 0.4);
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(67, 97, 238, 0.5);
+      }
+
+      .btn-primary:active {
+        transform: translateY(-1px);
+      }
+
+      .btn-secondary {
+        background: white;
+        color: var(--gray);
+        border: 1px solid var(--light-gray);
+        box-shadow: var(--shadow-sm);
+      }
+
+      .btn-secondary:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-md);
+        color: var(--dark);
+        border-color: var(--gray);
+      }
+
+      .btn-danger {
+        background: linear-gradient(135deg, var(--danger), #d90429);
+        color: white;
+        box-shadow: 0 4px 15px rgba(239, 35, 60, 0.4);
+      }
+
+      .btn-danger:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(239, 35, 60, 0.5);
+      }
+
+      /* Confirmation Modal */
+      .confirmation-modal .modal-content {
+        text-align: center;
+      }
+
+      .confirmation-modal .modal-body {
+        margin: 2rem 0;
+        font-size: 1.1rem;
+        color: var(--dark);
+        line-height: 1.7;
+        position: relative;
+        z-index: 1;
+      }
+
+      .confirmation-modal .modal-body i {
+        font-size: 3rem;
+        color: var(--danger);
+        margin-bottom: 1.5rem;
+        display: inline-block;
+        animation: pulse 1.5s infinite;
+      }
+
+      /* Toast Notification - Premium */
+      .toast {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        background: linear-gradient(
+          135deg,
+          var(--primary),
+          var(--primary-dark)
+        );
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        box-shadow: var(--shadow-lg);
+        transform: translateY(100px) scale(0.9);
+        opacity: 0;
+        transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        z-index: 3000;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        max-width: 350px;
+        pointer-events: none;
+        backdrop-filter: blur(10px);
+        border: 1px solid var(--glass-border);
+      }
+
+      .toast.show {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .toast i {
+        font-size: 1.5rem;
+        flex-shrink: 0;
+      }
+
+      .toast .toast-content {
+        flex-grow: 1;
+      }
+
+      .toast .toast-title {
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+        font-size: 1.1rem;
+      }
+
+      .toast .toast-message {
+        font-size: 0.9rem;
+        opacity: 0.9;
+      }
+
+      .toast.success {
+        background: linear-gradient(135deg, var(--success), #2b9348);
+      }
+
+      .toast.error {
+        background: linear-gradient(135deg, var(--danger), #d90429);
+      }
+
+      .toast.warning {
+        background: linear-gradient(135deg, var(--warning), #ff9500);
+      }
+
+      .toast .close-toast {
+        background: none;
+        border: none;
+        color: white;
+        opacity: 0.7;
+        cursor: pointer;
+        transition: var(--transition-fast);
+        margin-left: 0.5rem;
+      }
+
+      .toast .close-toast:hover {
+        opacity: 1;
+        transform: scale(1.1);
+      }
+
+      /* Ultra Premium Animations */
+      @keyframes floatIn {
+        0% { opacity: 0; transform: translateY(-50px) scale(0.9); }
+        70% { transform: translateY(10px) scale(1.02); }
+        100% { opacity: 1; transform: translateY(0) scale(1); }
+      }
+
+      @keyframes navReveal {
+        from { transform: translateY(-100%); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+      }
+
+      @keyframes glowPulse {
+        0% { box-shadow: 0 0 5px rgba(67, 97, 238, 0.3); }
+        50% { box-shadow: 0 0 20px rgba(67, 97, 238, 0.5); }
+        100% { box-shadow: 0 0 5px rgba(67, 97, 238, 0.3); }
+      }
+
+      /* Apply Animations */
+      header {
+        animation: navReveal 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      .stats-bar {
+        animation: floatIn 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      }
+
+      .feedback-card {
+        opacity: 0;
+        transform-style: preserve-3d;
+        animation: none;
+        will-change: transform, opacity;
+      }
+
+      .feedback-card.animate {
+        animation: cardEntrance 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      }
+
+      @keyframes cardEntrance {
+        0% {
+          opacity: 0;
+          transform: 
+            perspective(800px)
+            translateY(50px)
+            rotateX(-10deg)
+            scale(0.9);
+        }
+        100% {
+          opacity: 1;
+          transform:
+            perspective(800px)
+            translateY(0)
+            rotateX(0)
+            scale(1);
+        }
+      }
+
+      /* Scroll Animations */
+      [data-aos] {
+        opacity: 0;
+        transition-property: transform, opacity;
+      }
+
+      [data-aos].aos-animate {
+        opacity: 1;
+      }
+
+      /* Ultra Hover Effects */
+      .feedback-card:hover {
+        transform: 
+          perspective(800px)
+          translateY(-10px)
+          rotateX(5deg)
+          scale(1.02) !important;
+        box-shadow: 
+          0 20px 40px rgba(0,0,0,0.1),
+          0 0 20px rgba(67, 97, 238, 0.2);
+      }
+
+      /* Stats Counter Animation */
+      .stat-number {
+        animation: glowPulse 2s infinite;
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 992px) {
+        .stats-bar {
+          grid-template-columns: 1fr;
+        }
+
+        .stat-item {
+          padding: 1.5rem;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .header-content {
+          flex-direction: column;
+          gap: 1rem;
+          text-align: center;
+        }
+
+        .page-title {
+          font-size: 2rem;
+          margin: 1.5rem 0;
+        }
+
+        .feedback-container {
+          grid-template-columns: 1fr;
+        }
+
+        .modal-content {
+          padding: 1.5rem;
+        }
+
+        .feedback-footer {
+          gap: 1rem;
+        }
+
+        .feedback-actions {
+          flex-wrap: wrap;
+          justify-content: flex-start;
+        }
+
+        .action-btn {
+          min-width: auto;
+          flex: 1;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .container {
+          padding: 0 1rem 2rem;
+        }
+
+        .modal-content {
+          width: 95%;
+          padding: 1.25rem;
+        }
+
+        .modal-footer {
+          flex-direction: column;
+          gap: 0.75rem;
+        }
+
+        .btn {
+          width: 100%;
+          justify-content: center;
+        }
+
+        .feedback-date-container {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .feedback-actions {
+          width: 100%;
+          justify-content: space-between;
+        }
+
+        .action-btn {
+          padding: 0.6rem 0.8rem;
+          font-size: 0.8rem;
+        }
+      }
+
+      /* Mini Toast Styles */
+      .mini-toast {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: white;
+        color: #333;
+        padding: 12px 24px;
+        border-radius: 50px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        transform: translateY(100px);
+        opacity: 0;
+        transition: all 0.3s ease;
+        z-index: 9999;
+      }
+
+      .mini-toast.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      .mini-toast.success i {
+        color: #38b000;
+      }
+
+      .mini-toast.info i {
+        color: #3a86ff;
+      }
+
+      .ripple {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.4);
+        transform: scale(0);
+        animation: rippleEffect 0.6s linear;
+        pointer-events: none;
+      }
+
+      @keyframes rippleEffect {
+        to {
+          transform: scale(4);
+          opacity: 0;
+        }
+      }
+
+      .user-feedback {
+        border: none;
+        transform: scale(1.01);
+        background: linear-gradient(to right, #ffffff, #f8f9fa);
+        position: relative;
+        overflow: visible !important;
+        box-shadow: 0 4px 15px rgba(67, 97, 238, 0.1);
+      }
+
+      .user-feedback::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(to bottom, var(--primary), var(--accent));
+        border-radius: 20px 0 0 20px;
+        transition: var(--transition);
+      }
+
+      .user-feedback:hover::before {
+        width: 6px;
+        background: linear-gradient(to bottom, var(--secondary), var(--danger));
+      }
+
+      .user-feedback-badge {
+        position: absolute;
+        top: -12px;
+        right: 10px;
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        color: white;
+        padding: 4px 12px;
+        border-radius: 30px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        z-index: 10;
+        box-shadow: 0 2px 8px rgba(67, 97, 238, 0.25);
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        white-space: nowrap;
+        transform: translateY(0);
+        transition: transform 0.3s ease;
+      }
+
+      .user-feedback-badge i {
+        font-size: 0.9rem;
+        margin-right: 2px;
+      }
+
+      .user-feedback:hover .user-feedback-badge {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+      }
+
+      @media (max-width: 576px) {
+        .user-feedback-badge {
+          font-size: 0.75rem;
+          padding: 3px 10px;
+          right: 8px;
+        }
+      }
+    </style>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  </head>
+  <body>
+    <!-- Premium Header -->
+    <header>
+      <div class="header-content">
+        <a href="/main_page" class="logo">
+          <i class="fas fa-shopping-cart"></i>
+          <span>Friends Cart</span>
+        </a>
+        <a href="/main_page" class="back-btn">
+          <i class="fas fa-arrow-left"></i>
+          Back to Home
+        </a>
+      </div>
+    </header>
+
+    <div class="container">
+      <h1 class="page-title">Customer Feedbacks</h1>
+
+      <!-- Stats Bar with Hover Effects -->
+      <div class="stats-bar">
+        <div class="stat-item">
+          <div class="stat-number" id="total-feedbacks">
+            <%= feedbacks.length %>
+          </div>
+          <div class="stat-label">Total Feedbacks</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" id="avg-rating">
+            <%= (feedbacks.reduce((sum, feedback) => sum + feedback.rating, 0) /
+            feedbacks.length || 0).toFixed(1) %>
+          </div>
+          <div class="stat-label">Average Rating</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" id="positive-feedbacks">
+            <%= feedbacks.filter(feedback => feedback.rating >= 4).length %>
+          </div>
+          <div class="stat-label">Positive Feedbacks</div>
+        </div>
+      </div>
+
+      <% if (feedbacks.length === 0) { %>
+      <!-- Enhanced Empty State -->
+      <div class="no-feedbacks">
+        <i class="fas fa-comment-slash"></i>
+        <h3>No Feedbacks Yet</h3>
+        <p>
+          Your voice matters! Be the first to share your shopping experience
+          with FrndsCart.
+        </p>
+        <button class="add-feedback-btn" onclick="openAddModal()">
+          <i class="fas fa-plus"></i>
+          Share Your Feedback
+        </button>
+      </div>
+      <% } else { %>
+      <!-- Sort feedbacks to prioritize current user's feedbacks -->
+      <div class="feedback-container">
+        <% 
+          // Sort feedbacks to show user's feedbacks first
+          const sortedFeedbacks = feedbacks.sort((a, b) => {
+            const aIsUser = a.userId && a.userId._id.toString() === user.id.toString();
+            const bIsUser = b.userId && b.userId._id.toString() === user.id.toString();
+            if (aIsUser && !bIsUser) return -1;
+            if (!aIsUser && bIsUser) return 1;
+            return new Date(b.createdAt) - new Date(a.createdAt);
+          });
+        %>
+
+        <% sortedFeedbacks.forEach(feedback => { 
+          const isUserFeedback = feedback.userId && feedback.userId._id.toString() === user.id.toString();
+        %>
+          <div class="feedback-card <%= isUserFeedback ? 'user-feedback' : '' %>" data-feedback-id="<%= feedback._id %>">
+            <!-- Add highlight for user's feedback -->
+            <% if (isUserFeedback) { %>
+              <div class="user-feedback-badge">
+                <i class="fas fa-user-check"></i> Your Feedback
+              </div>
+            <% } %>
+            <div class="feedback-header">
+              <div class="user-info">
+                <div class="user-avatar">
+                  <%= feedback.userId.fullName.charAt(0).toUpperCase() %>
+                </div>
+                <div class="user-details">
+                  <span class="user-name"><%= feedback.userId.fullName %></span>
+                  <span class="user-role">Verified Buyer</span>
+                </div>
+              </div>
+              <div class="rating">
+                <div class="rating-stars">
+                  <% for(let i = 0; i < 5; i++) { %> <% if (i < feedback.rating) {
+                  %>
+                  <i class="fas fa-star"></i>
+                  <% } else { %>
+                  <i class="far fa-star"></i>
+                  <% } %> <% } %>
+                </div>
+                <span class="rating-number"><%= feedback.rating %></span>
+              </div>
+            </div>
+            <div class="feedback-content"><%= feedback.description %></div>
+            <div class="feedback-footer">
+              <div class="feedback-date">
+                <i class="far fa-clock"></i>
+                <%= new Date(feedback.createdAt).toLocaleDateString('en-US', {
+                year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit',
+                minute: '2-digit' }) %>
+              </div>
+              <div class="feedback-actions">
+                <% if (feedback.userId && user && feedback.userId._id.toString()
+                === user.id.toString()) { %>
+                <!-- Replace the existing edit button with this -->
+                <!-- Replace the existing edit button inside the feedback card loop -->
+                <!-- Replace the current edit button HTML -->
+                <button class="action-btn edit" onclick="openEditModal(this)">
+                  <i class="fas fa-edit"></i>
+                  <span>Edit</span>
+                </button>
+                <button
+                  class="action-btn delete"
+                  onclick="handleDelete('<%= feedback._id %>')"
+                >
+                  <i class="fas fa-trash"></i>
+                  <span>Delete</span>
+                </button>
+                <% } %>
+                <button class="action-btn like" onclick="toggleLike(this)">
+                  <i class="far fa-thumbs-up"></i>
+                  <span>Helpful</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <% }) %>
+      </div>
+      <% } %>
+    </div>
+
+    <!-- Premium Edit Modal -->
+    <div class="modal" id="editModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">Edit Your Feedback</h3>
+          <button class="close-btn" onclick="closeModal('editModal')">
+            &times;
+          </button>
+        </div>
+        <form id="editFeedbackForm">
+          <input type="hidden" id="feedbackId" />
+          <div class="form-group">
+            <label>Your Rating</label>
+            <div class="rating-input" id="ratingStars">
+              <i class="far fa-star" data-rating="1"></i>
+              <i class="far fa-star" data-rating="2"></i>
+              <i class="far fa-star" data-rating="3"></i>
+              <i class="far fa-star" data-rating="4"></i>
+              <i class="far fa-star" data-rating="5"></i>
+            </div>
+            <input type="hidden" id="ratingValue" name="rating" />
+          </div>
+          <div class="form-group">
+            <label for="description">Your Feedback</label>
+            <textarea
+              class="form-control"
+              id="description"
+              name="description"
+              required
+            ></textarea>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              onclick="closeModal('editModal')"
+            >
+              <i class="fas fa-times"></i> Cancel
+            </button>
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-save"></i> Update Feedback
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Premium Delete Confirmation Modal -->
+    <div class="modal confirmation-modal" id="deleteModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">Confirm Deletion</h3>
+          <button class="close-btn" onclick="closeModal('deleteModal')">
+            &times;
+          </button>
+        </div>
+        <div class="modal-body">
+          <i class="fas fa-exclamation-triangle"></i>
+          <p>
+            Are you sure you want to delete this feedback? This action cannot be
+            undone.
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            onclick="closeModal('deleteModal')"
+          >
+            <i class="fas fa-times"></i> Cancel
+          </button>
+          <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+            <i class="fas fa-trash"></i> Delete Permanently
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Premium Toast Notification -->
+    <div class="toast" id="toast">
+      <i class="fas fa-check-circle"></i>
+      <div class="toast-content">
+        <div class="toast-title">Success</div>
+        <div class="toast-message" id="toast-message">
+          Operation completed successfully
+        </div>
+      </div>
+      <button class="close-toast" onclick="hideToast()">&times;</button>
+    </div>
+
+    <!-- Add Feedback Modal -->
+    <div class="modal" id="addModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">Share Your Feedback</h3>
+          <button class="close-btn" onclick="closeModal('addModal')">
+            &times;
+          </button>
+        </div>
+        <form id="addFeedbackForm">
+          <div class="form-group">
+            <label>Your Rating</label>
+            <div class="rating-input" id="addRatingStars">
+              <i class="far fa-star" data-rating="1"></i>
+              <i class="far fa-star" data-rating="2"></i>
+              <i class="far fa-star" data-rating="3"></i>
+              <i class="far fa-star" data-rating="4"></i>
+              <i class="far fa-star" data-rating="5"></i>
+            </div>
+            <input type="hidden" id="addRatingValue" name="rating" required />
+          </div>
+          <div class="form-group">
+            <label for="addDescription">Your Feedback</label>
+            <textarea
+              class="form-control"
+              id="addDescription"
+              name="description"
+              required
+              placeholder="Share your experience with us..."
+            ></textarea>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              onclick="closeModal('addModal')"
+            >
+              <i class="fas fa-times"></i> Cancel
+            </button>
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-paper-plane"></i> Submit Feedback
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+      // Current user ID from server-side
+      const currentUserId = "<%= user._id %>";
+      let toastTimeout;
+      let feedbacksData = [];
+      try {
+        const sanitizedJSON = `<%- JSON.stringify(feedbacks)
+        .replace(/[\u0000-\u001F\u007F-\u009F\u2028\u2029]/g, "") // Remove control characters
+        .replace(/\\/g, '\\\\') // Escape backslashes
+        .replace(/\"/g, '\\"') // Escape quotes
+        .replace(/\n/g, '\\n') // Handle newlines
+        .replace(/\r/g, '\\r') // Handle carriage returns
+        .replace(/\t/g, '\\t') // Handle tabs
+        .replace(/\f/g, '\\f') // Handle form feeds
+        %>`;
+        feedbacksData = JSON.parse(sanitizedJSON.trim());
+      } catch (e) {
+        console.error("Error parsing feedbacks data:", e);
+        feedbacksData = []; // Fallback to empty array
+        // Don't show error toast to user unless necessary
+        if (feedbacks && feedbacks.length > 0) {
+          showToast("Error loading feedback data", "error");
+        }
+      }
+      let feedbackToDelete = null;
+      let currentRating = 0;
+      function setRating(rating) {
+        if (!rating) return;
+
+        const stars = document.querySelectorAll("#ratingStars i");
+        currentRating = parseInt(rating);
+        document.getElementById("ratingValue").value = currentRating;
+
+        stars.forEach((star, index) => {
+          if (index < rating) {
+            star.classList.remove("far");
+            star.classList.add("fas", "active");
+          } else {
+            star.classList.remove("fas", "active");
+            star.classList.add("far");
+          }
+        });
+      }
+
+      // Initialize when DOM is loaded
+      document.addEventListener("DOMContentLoaded", function () {
+        // Initialize rating stars in edit modal
+        const stars = document.querySelectorAll("#ratingStars i");
+        stars.forEach((star) => {
+          star.addEventListener("click", function () {
+            const rating = parseInt(this.getAttribute("data-rating"));
+            setRating(rating);
+          });
+
+          star.addEventListener("mouseover", function () {
+            const rating = parseInt(this.getAttribute("data-rating"));
+            highlightStars(rating);
+          });
+
+          star.addEventListener("mouseout", function () {
+            highlightStars(currentRating);
+          });
+        });
+
+        // Edit feedback form submission
+        document
+          .getElementById("editFeedbackForm")
+          .addEventListener("submit", function (e) {
+            e.preventDefault();
+            updateFeedback();
+          });
+
+        // Initialize like buttons
+        document.querySelectorAll(".action-btn.like").forEach((btn) => {
+          btn.addEventListener("click", function (e) {
+            e.stopPropagation();
+          });
+        });
+
+        // Staggered card animations
+        const cards = document.querySelectorAll('.feedback-card');
+        cards.forEach((card, index) => {
+          setTimeout(() => {
+            card.classList.add('animate');
+          }, index * 100);
+        });
+
+        // Enhance scroll animations
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('aos-animate');
+            }
+          });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.feedback-card').forEach(card => {
+          observer.observe(card);
+        });
+      });
+
+      // Open edit modal with feedback data
+
+      // Highlight stars up to the given rating
+      function highlightStars(rating) {
+        const stars = document.querySelectorAll("#ratingStars i");
+        stars.forEach((star, index) => {
+          if (index < rating) {
+            star.classList.add("hovered");
+          } else {
+            star.classList.remove("hovered");
+          }
+        });
+      }
+
+      // Set rating stars
+      // Update the setRating function
+
+      // Close modal with animation
+      function closeModal(modalId) {
+        const modal = document.getElementById(modalId);
+        modal.classList.remove("active");
+
+        // Remove escape listener
+        document.removeEventListener("keydown", modalEscapeHandler);
+
+        setTimeout(() => {
+          modal.style.display = "none";
+        }, 300);
+      }
+
+      // Handle ESC key for modals
+      function modalEscapeHandler(e) {
+        if (e.key === "Escape") {
+          closeModal("editModal");
+          closeModal("deleteModal");
+        }
+      }
+
+      // Confirm delete action with animation
+
+      // Update feedback via AJAX with animations
+      function updateFeedback() {
+        const feedbackId = document.getElementById("feedbackId").value;
+        const rating = document.getElementById("ratingValue").value;
+        const description = document.getElementById("description").value;
+
+        // Show loading state
+        const submitBtn = document.querySelector(
+          '#editFeedbackForm button[type="submit"]'
+        );
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML =
+          '<i class="fas fa-spinner fa-spin"></i> Updating...';
+        submitBtn.disabled = true;
+
+        fetch(`/update-feedback/${feedbackId}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            rating: rating,
+            description: description,
+          }),
+          credentials: "same-origin",
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              closeModal("editModal");
+              showToast("Feedback updated successfully!", "success");
+
+              // Update the feedback card in the DOM
+              const feedbackCard = document.querySelector(
+                `.feedback-card[data-feedback-id="${feedbackId}"]`
+              );
+              if (feedbackCard) {
+                // Add update animation
+                feedbackCard.style.transform = "scale(0.98)";
+                feedbackCard.style.boxShadow =
+                  "0 5px 15px rgba(67, 97, 238, 0.3)";
+
+                setTimeout(() => {
+                  feedbackCard.style.transform = "";
+                  feedbackCard.style.boxShadow = "";
+
+                  // Update rating stars
+                  const starsContainer =
+                    feedbackCard.querySelector(".rating-stars");
+                  starsContainer.innerHTML = "";
+                  for (let i = 0; i < 5; i++) {
+                    const star = document.createElement("i");
+                    star.className = i < rating ? "fas fa-star" : "far fa-star";
+                    starsContainer.appendChild(star);
+                  }
+
+                  // Update rating number
+                  feedbackCard.querySelector(".rating-number").textContent =
+                    rating;
+
+                  // Update description
+                  feedbackCard.querySelector(".feedback-content").textContent =
+                    description;
+
+                  // Update local data
+                  const feedbackIndex = feedbacksData.findIndex(
+                    (f) => f._id === feedbackId
+                  );
+                  if (feedbackIndex !== -1) {
+                    feedbacksData[feedbackIndex].rating = parseInt(rating);
+                    feedbacksData[feedbackIndex].description = description;
+                    updateStats();
+                  }
+                }, 300);
+              }
+            } else {
+              showToast(data.message || "Error updating feedback", "error");
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            showToast("Error updating feedback", "error");
+          })
+          .finally(() => {
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+          });
+      }
+
+      // Delete feedback via AJAX with animations
+      function deleteFeedback() {
+        const deleteBtn = document.getElementById("confirmDeleteBtn");
+        const originalText = deleteBtn.innerHTML;
+        deleteBtn.innerHTML =
+          '<i class="fas fa-spinner fa-spin"></i> Deleting...';
+        deleteBtn.disabled = true;
+
+        fetch(`/delete-feedback/${feedbackToDelete}`, {
+          method: "POST",
+          credentials: "same-origin",
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              closeModal("deleteModal");
+              showToast("Feedback deleted successfully!", "success");
+
+              const feedbackCard = document.querySelector(
+                `.feedback-card[data-feedback-id="${feedbackToDelete}"]`
+              );
+              if (feedbackCard) {
+                feedbackCard.style.transform = "scale(0.95)";
+                feedbackCard.style.opacity = "0";
+
+                setTimeout(() => {
+                  feedbackCard.style.transform =
+                    "translateX(100%) rotate(10deg)";
+                  feedbackCard.style.opacity = "0";
+
+                  setTimeout(() => {
+                    feedbackCard.remove();
+
+                    // If this was the last feedback, show the empty state
+                    if (data.isLastFeedback) {
+                      const container = document.querySelector(
+                        ".feedback-container"
+                      );
+                      container.innerHTML = `
+                                <div class="no-feedbacks">
+                                    <i class="fas fa-comment-slash"></i>
+                                    <h3>No Feedbacks Yet</h3>
+                                    <p>Your voice matters! Be the first to share your shopping experience with FrndsCart.</p>
+                                    <button class="add-feedback-btn" onclick="openAddModal()">
+                                        <i class="fas fa-plus"></i>
+                                        Share Your Feedback
+                                    </button>
+                                </div>
+                            `;
+                    }
+
+                    updateStats();
+                  }, 300);
+                }, 200);
+              }
+            } else {
+              showToast(data.message || "Error deleting feedback", "error");
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            showToast("Error deleting feedback", "error");
+          })
+          .finally(() => {
+            deleteBtn.innerHTML = originalText;
+            deleteBtn.disabled = false;
+          });
+      }
+      // Toggle like button
+
+      /* filepath: c:\Users\Sajid\Desktop\E-commerce\views\show_feedbacks.ejs */
+      // Replace the existing toggleLike function with this one
+      function toggleLike(button) {
+        const icon = button.querySelector("i");
+        const span = button.querySelector("span");
+
+        if (!button.classList.contains("active")) {
+          // Activate
+          button.classList.add("active");
+          icon.classList.remove("far");
+          icon.classList.add("fas");
+          span.textContent = "Helpful!";
+
+          // Add ripple effect
+          const ripple = document.createElement("div");
+          ripple.className = "ripple";
+          button.appendChild(ripple);
+
+          // Remove ripple after animation
+          setTimeout(() => ripple.remove(), 1000);
+
+          // Show mini toast
+          showMiniToast("Thanks for your feedback!", "success");
+        } else {
+          // Deactivate
+          button.classList.remove("active");
+          icon.classList.remove("fas");
+          icon.classList.add("far");
+          span.textContent = "Helpful";
+        }
+      }
+
+      // Add this new function for mini toasts
+      function showMiniToast(message, type = "success") {
+        const toast = document.createElement("div");
+        toast.className = `mini-toast ${type}`;
+        toast.innerHTML = `
+        <i class="fas ${
+          type === "success" ? "fa-check-circle" : "fa-info-circle"
+        }"></i>
+        <span>${message}</span>
+    `;
+
+        document.body.appendChild(toast);
+
+        // Trigger animation
+        setTimeout(() => toast.classList.add("show"), 10);
+
+        // Remove after 2 seconds
+        setTimeout(() => {
+          toast.classList.remove("show");
+          setTimeout(() => toast.remove(), 300);
+        }, 2000);
+      }
+
+      // Add styles for mini toast
+      const style = document.createElement("style");
+      style.textContent = `
+    .mini-toast {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: white;
+        color: #333;
+        padding: 12px 24px;
+        border-radius: 50px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        transform: translateY(100px);
+        opacity: 0;
+        transition: all 0.3s ease;
+        z-index: 9999;
+    }
+    
+    .mini-toast.show {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    
+    .mini-toast.success i {
+        color: #38b000;
+    }
+    
+    .mini-toast.info i {
+        color: #3a86ff;
+    }
+    
+    .ripple {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.4);
+        transform: scale(0);
+        animation: rippleEffect 0.6s linear;
+        pointer-events: none;
+    }
+    
+    @keyframes rippleEffect {
+        to {
+            transform: scale(4);
+            opacity: 0;
+        }
+    }
+`;
+      document.head.appendChild(style);
+      // Update statistics display
+      // Add this to your existing script section in show_feedbacks.ejs
+      // Add or update this function in your script section
+      function openEditModal(button) {
+        // Get the feedback card
+        const feedbackCard = button.closest(".feedback-card");
+        const feedbackId = feedbackCard.dataset.feedbackId;
+        const rating = feedbackCard.querySelector(".rating-number").textContent;
+        const description = feedbackCard
+          .querySelector(".feedback-content")
+          .textContent.trim();
+
+        // Set values in modal
+        document.getElementById("feedbackId").value = feedbackId;
+        document.getElementById("ratingValue").value = rating;
+        document.getElementById("description").value = description;
+
+        // Initialize currentRating before setting it
+        currentRating = parseInt(rating);
+
+        // Set rating stars
+        setRating(currentRating);
+
+        // Show modal
+        const modal = document.getElementById("editModal");
+        modal.style.display = "flex";
+        setTimeout(() => {
+          modal.classList.add("active");
+        }, 10);
+      }
+
+      function confirmDelete(feedbackId) {
+        feedbackToDelete = feedbackId;
+        const modal = document.getElementById("deleteModal");
+        modal.style.display = "flex";
+        setTimeout(() => modal.classList.add("active"), 10);
+
+        document.getElementById("confirmDeleteBtn").onclick = async () => {
+          try {
+            const response = await fetch(`/delete-feedback/${feedbackId}`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+              const feedbackCard = document.querySelector(
+                `[data-feedback-id="${feedbackId}"]`
+              );
+              feedbackCard.style.transform = "scale(0.9)";
+              feedbackCard.style.opacity = "0";
+
+              setTimeout(() => {
+                feedbackCard.remove();
+                updateStats(data.stats);
+                showToast("Feedback deleted successfully", "success");
+                closeModal("deleteModal");
+
+                if (data.isLastFeedback) {
+                  location.reload();
+                }
+              }, 300);
+            } else {
+              showToast(data.message, "error");
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            showToast("Error deleting feedback", "error");
+          }
+        };
+      }
+
+      // Add these functions to your existing script section
+      function handleEdit(feedbackId, rating, description) {
+        // Set values in edit modal
+        document.getElementById("feedbackId").value = feedbackId;
+        document.getElementById("ratingValue").value = rating;
+        document.getElementById("description").value = description;
+
+        // Set rating stars
+        setRating(parseInt(rating));
+
+        // Show modal
+        const modal = document.getElementById("editModal");
+        modal.style.display = "flex";
+        setTimeout(() => modal.classList.add("active"), 10);
+
+        // Add escape key listener
+        document.addEventListener("keydown", modalEscapeHandler);
+      }
+
+      function handleDelete(feedbackId) {
+        Swal.fire({
+          title: "Are you sure?",
+          text: "You won't be able to revert this!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#d33",
+          cancelButtonColor: "#3085d6",
+          confirmButtonText: "Yes, delete it!",
+          showClass: {
+            popup: "animate__animated animate__fadeInDown",
+          },
+          hideClass: {
+            popup: "animate__animated animate__fadeOutUp",
+          },
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // Call delete API
+            fetch(`/delete-feedback/${feedbackId}`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.success) {
+                  // Remove feedback card with animation
+                  const feedbackCard = document.querySelector(
+                    `[data-feedback-id="${feedbackId}"]`
+                  );
+                  feedbackCard.style.transform = "scale(0.9)";
+                  feedbackCard.style.opacity = "0";
+
+                  setTimeout(() => {
+                    feedbackCard.remove();
+                    updateStats(data.stats);
+
+                    // Show success message
+                    Swal.fire(
+                      "Deleted!",
+                      "Your feedback has been deleted.",
+                      "success"
+                    );
+
+                    // Reload if no feedbacks left
+                    if (data.isLastFeedback) {
+                      setTimeout(() => location.reload(), 1500);
+                    }
+                  }, 300);
+                } else {
+                  throw new Error(data.message || "Error deleting feedback");
+                }
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+                Swal.fire(
+                  "Error!",
+                  error.message || "Failed to delete feedback",
+                  "error"
+                );
+              });
+          }
+        });
+      }
+
+      // Add updateStats function if not already present
+      function updateStats(stats) {
+        if (!stats) return;
+
+        ["total-feedbacks", "avg-rating", "positive-feedbacks"].forEach(
+          (id) => {
+            const element = document.getElementById(id);
+            if (element) {
+              const targetValue =
+                id === "avg-rating"
+                  ? parseFloat(stats.average)
+                  : id === "total-feedbacks"
+                  ? stats.total
+                  : stats.positive;
+              animateCounter(id, targetValue);
+            }
+          }
+        );
+      }
+
+      // Animate counter values
+      function animateCounter(elementId, targetValue) {
+        const element = document.getElementById(elementId);
+        const currentValue = parseFloat(element.textContent);
+        const duration = 800; // ms
+        const startTime = performance.now();
+
+        function updateCounter(timestamp) {
+          const progress = Math.min((timestamp - startTime) / duration, 1);
+          const value = currentValue + (targetValue - currentValue) * progress;
+
+          if (elementId === "avg-rating") {
+            element.textContent = value.toFixed(1);
+          } else {
+            element.textContent = Math.floor(value);
+          }
+
+          if (progress < 1) {
+            requestAnimationFrame(updateCounter);
+          }
+        }
+
+        requestAnimationFrame(updateCounter);
+      }
+
+      // Show no feedbacks message
+      function showNoFeedbacksMessage() {
+        const feedbackContainer = document.querySelector(".feedback-container");
+
+        // Create new empty state with animation
+        const emptyState = document.createElement("div");
+        emptyState.className = "no-feedbacks";
+        emptyState.style.gridColumn = "1 / -1";
+        emptyState.style.opacity = "0";
+        emptyState.style.transform = "translateY(20px)";
+        emptyState.innerHTML = `
+                <i class="fas fa-comment-slash"></i>
+                <h3>No Feedbacks Yet</h3>
+                <p>Your voice matters! Be the first to share your shopping experience with FrndsCart.</p>
+                <a href="/submit-feedback" class="add-feedback-btn">
+                    <i class="fas fa-plus"></i>
+                    Share Your Feedback
+                </a>
+            `;
+
+        feedbackContainer.appendChild(emptyState);
+
+        // Animate in
+        setTimeout(() => {
+          emptyState.style.opacity = "1";
+          emptyState.style.transform = "translateY(0)";
+        }, 50);
+      }
+
+      // Show toast notification with animation
+      function showToast(message, type = "success") {
+        clearTimeout(toastTimeout);
+
+        const toast = document.getElementById("toast");
+        const toastIcon = toast.querySelector("i");
+        const toastTitle = toast.querySelector(".toast-title");
+        const toastMessage = toast.querySelector(".toast-message");
+
+        // Set content based on type
+        let icon, title;
+        switch (type) {
+          case "success":
+            icon = "fa-check-circle";
+            title = "Success";
+            break;
+          case "error":
+            icon = "fa-times-circle";
+            title = "Error";
+            break;
+          case "warning":
+            icon = "fa-exclamation-triangle";
+            title = "Warning";
+            break;
+          default:
+            icon = "fa-info-circle";
+            title = "Info";
+        }
+
+        toastIcon.className = `fas ${icon}`;
+        toastTitle.textContent = title;
+        toastMessage.textContent = message;
+
+        // Set type class
+        toast.className = `toast ${type} show`;
+
+        // Auto-hide after 5 seconds
+        toastTimeout = setTimeout(() => {
+          hideToast();
+        }, 5000);
+      }
+
+      // Hide toast with animation
+      function hideToast() {
+        const toast = document.getElementById("toast");
+        toast.classList.remove("show");
+      }
+
+      // Add these functions to your existing script section
+      function openAddModal() {
+        const modal = document.getElementById("addModal");
+        document.getElementById("addRatingValue").value = "";
+        document.getElementById("addDescription").value = "";
+        resetRatingStars();
+
+        modal.style.display = "flex";
+        setTimeout(() => modal.classList.add("active"), 10);
+      }
+
+      function resetRatingStars() {
+        const stars = document.querySelectorAll("#addRatingStars i");
+        stars.forEach((star) => {
+          star.className = "far fa-star";
+        });
+      }
+
+      // Add this to your DOMContentLoaded event listener
+      document.addEventListener("DOMContentLoaded", function () {
+        // ... existing code ...
+
+        // Initialize rating stars in add modal
+        const addStars = document.querySelectorAll("#addRatingStars i");
+        addStars.forEach((star) => {
+          star.addEventListener("click", function () {
+            const rating = parseInt(this.getAttribute("data-rating"));
+            setAddRating(rating);
+          });
+
+          star.addEventListener("mouseover", function () {
+            const rating = parseInt(this.getAttribute("data-rating"));
+            highlightAddStars(rating);
+          });
+
+          star.addEventListener("mouseout", function () {
+            const currentRating =
+              document.getElementById("addRatingValue").value;
+            highlightAddStars(currentRating ? parseInt(currentRating) : 0);
+          });
+        });
+
+        // Add feedback form submission
+        document
+          .getElementById("addFeedbackForm")
+          .addEventListener("submit", function (e) {
+            e.preventDefault();
+            submitFeedback();
+          });
+      });
+
+      function setAddRating(rating) {
+        const stars = document.querySelectorAll("#addRatingStars i");
+        document.getElementById("addRatingValue").value = rating;
+
+        stars.forEach((star, index) => {
+          if (index < rating) {
+            star.classList.remove("far");
+            star.classList.add("fas", "active");
+          } else {
+            star.classList.remove("fas", "active");
+            star.classList.add("far");
+          }
+        });
+      }
+
+      function highlightAddStars(rating) {
+        const stars = document.querySelectorAll("#addRatingStars i");
+        stars.forEach((star, index) => {
+          if (index < rating) {
+            star.classList.add("hovered");
+          } else {
+            star.classList.remove("hovered");
+          }
+        });
+      }
+
+      // In the script section of show_feedbacks.ejs
+      function submitFeedback() {
+        const rating = document.getElementById("addRatingValue").value;
+        const description = document.getElementById("addDescription").value;
+
+        if (!rating || !description) {
+          showToast("Please provide both rating and description", "error");
+          return;
+        }
+
+        const submitBtn = document.querySelector(
+          '#addFeedbackForm button[type="submit"]'
+        );
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML =
+          '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+        submitBtn.disabled = true;
+
+        fetch("/submit-feedback", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            rating: parseInt(rating),
+            description: description,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              closeModal("addModal");
+              showToast("Feedback submitted successfully!", "success");
+              // Reload the page after a short delay
+              setTimeout(() => window.location.reload(), 1500);
+            } else {
+              showToast(data.message || "Error submitting feedback", "error");
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            showToast("Error submitting feedback", "error");
+          })
+          .finally(() => {
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+          });
+      }
+    </script>
+  </body>
+</html>

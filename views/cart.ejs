@@ -1,0 +1,1945 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Cart - Friends Cart</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <style>
+      :root {
+        --primary-color: #4e73df;
+        --secondary-color: #f8f9fc;
+        --accent-color: #2e59d9;
+      }
+      .navbar-custom {
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.6rem 2rem;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+        background: rgba(255, 255, 255, 0.95);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08),
+          0 2px 8px rgba(0, 0, 0, 0.03);
+        transition: all 0.3s ease;
+      }
+
+      .left-section {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        min-width: 200px;
+      }
+
+      .navbar-brand {
+        cursor: pointer;
+        font-size: 2rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(to right, #0061ff, #60efff, #0061ff);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        background-size: 200% auto;
+        animation: professionalShine 5s linear infinite;
+        text-decoration: none;
+        margin: 0;
+        transition: all 0.5s ease;
+      }
+
+      @keyframes professionalShine {
+        0% {
+          background-position: -100% center;
+        }
+        100% {
+          background-position: 100% center;
+        }
+      }
+
+      .navbar-brand::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.4),
+          transparent
+        );
+        transform: skewX(-25deg);
+        animation: professionalShineOverlay 5s infinite;
+      }
+
+      @keyframes professionalShineOverlay {
+        0% {
+          left: -100%;
+        }
+        20% {
+          left: 150%;
+        }
+        100% {
+          left: 150%;
+        }
+      }
+
+      .navbar-brand:hover {
+        transform: scale(1.05);
+        text-shadow: 0 0 15px rgba(0, 97, 255, 0.3);
+        color: transparent;
+        background: linear-gradient(to right, #60efff, #0061ff, #60efff);
+        -webkit-background-clip: text;
+        background-clip: text;
+        background-size: 200% auto;
+        animation: professionalShine 4s linear infinite;
+      }
+
+      @keyframes shine {
+        0% {
+          left: -100%;
+          opacity: 0.6;
+        }
+        20% {
+          left: 100%;
+          opacity: 0.6;
+        }
+        100% {
+          left: 100%;
+          opacity: 0;
+        }
+      }
+
+      .navbar-brand:hover {
+        transform: scale(1.05);
+        background: linear-gradient(to right, #60efff, #0061ff);
+        -webkit-background-clip: text;
+        background-clip: text;
+        text-shadow: 0 0 15px rgba(0, 97, 255, 0.5);
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-left: auto;
+      }
+
+      .nav-btn {
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        font-size: 1.1rem;
+        white-space: nowrap;
+      }
+
+      .btn-outline-light {
+        border: 2px solid #004aad;
+        color: #004aad;
+        transition: all 0.3s ease;
+      }
+
+      .btn-outline-light:hover {
+        background: #004aad;
+        color: white;
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 74, 173, 0.3);
+      }
+
+      .btn-danger {
+        background: linear-gradient(45deg, #dc3545, #ff6b6b);
+        border: none;
+        color: white;
+        transition: all 0.3s ease;
+      }
+
+      .btn-danger:hover {
+        background: linear-gradient(45deg, #ff6b6b, #dc3545);
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+      }
+
+      @media (max-width: 768px) {
+        .navbar-custom {
+          padding: 0.5rem 1rem;
+        }
+
+        .navbar-brand {
+          font-size: 1.4rem;
+        }
+
+        .nav-links {
+          gap: 0.5rem;
+        }
+
+        .nav-btn {
+          padding: 0.4rem 0.8rem;
+          font-size: 0.85rem;
+        }
+
+        .nav-link span {
+          display: none;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .navbar-custom {
+          padding: 0.4rem 0.8rem;
+        }
+
+        .navbar-brand {
+          font-size: 1.2rem;
+        }
+
+        .nav-links {
+          gap: 0.4rem;
+        }
+
+        .nav-btn {
+          padding: 0.35rem 0.6rem;
+          font-size: 0.8rem;
+        }
+
+        .btn-outline-light i,
+        .btn-danger i {
+          margin-right: 0;
+        }
+
+        .btn-outline-light span,
+        .btn-danger span {
+          display: none;
+        }
+      }
+
+      body {
+        background-color: #f8f9fa;
+        padding-top: 60px;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      .navbar {
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
+      }
+
+      .user-profile-card {
+        border-radius: 15px;
+        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+        transition: all 0.3s;
+        border: none;
+        background: linear-gradient(to right, #ffffff, #f8f9fc);
+      }
+
+      .user-profile-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.15);
+      }
+
+      .cart-container {
+        border-radius: 15px;
+        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+        background: white;
+        overflow: hidden;
+      }
+      .container {
+        margin-top: 40px;
+      }
+
+      .cart-item {
+        transition: all 0.3s;
+        border-bottom: 1px solid #eee;
+      }
+
+      .cart-item:hover {
+        background-color: rgba(78, 115, 223, 0.05);
+        transform: translateX(5px);
+      }
+
+      .cart-item-img {
+        width: 100px;
+        height: 100px;
+        object-fit: contain;
+        border-radius: 10px;
+        transition: all 0.3s;
+      }
+
+      .cart-item-img:hover {
+        transform: scale(1.05);
+      }
+
+      .quantity-input {
+        width: 60px;
+        text-align: center;
+        border-radius: 5px;
+        border: 1px solid #ced4da;
+      }
+
+      .btn-friends {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        transition: all 0.3s;
+      }
+
+      .btn-friends:hover {
+        background-color: var(--accent-color);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .empty-cart {
+        min-height: 350px;
+        width: 100%;
+        max-width: 800px; /* increased from 600px to match profile width */
+        margin: 1rem auto; /* reduced from 2rem to tighten spacing */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(145deg, #ffffff, #f6f8fd);
+        border-radius: 15px; /* matched to profile card radius */
+        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1); /* matched to profile card shadow */
+        padding: 2.5rem 2rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .empty-cart::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: linear-gradient(90deg, #4e73df, #224abe);
+      }
+
+      .empty-cart-icon {
+        font-size: clamp(4rem, 6vw, 6rem);
+        color: #4e73df;
+        margin-bottom: 2rem;
+        opacity: 0.9;
+        animation: floatIcon 3s ease-in-out infinite;
+      }
+
+      @keyframes floatIcon {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-15px);
+        }
+      }
+
+      .empty-cart h3 {
+        font-size: clamp(1.5rem, 4vw, 2rem);
+        color: #2c3e50;
+        margin-bottom: 1rem;
+        font-weight: 600;
+      }
+
+      .empty-cart p {
+        font-size: clamp(1rem, 2.5vw, 1.2rem);
+        color: #666;
+        margin-bottom: 2rem;
+        max-width: 80%;
+        line-height: 1.6;
+      }
+
+      .empty-cart .btn-friends {
+        padding: 1rem 2.5rem;
+        font-size: 1.1rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        background: linear-gradient(45deg, #4e73df, #224abe);
+        border: none;
+        border-radius: 50px;
+        box-shadow: 0 5px 15px rgba(78, 115, 223, 0.3);
+      }
+
+      .empty-cart .btn-friends:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(78, 115, 223, 0.4);
+        background: linear-gradient(45deg, #224abe, #4e73df);
+      }
+
+      @media (max-width: 768px) {
+        .empty-cart {
+          min-height: 300px;
+          margin: 1rem auto;
+          padding: 2rem 1rem;
+        }
+
+        .empty-cart .btn-friends {
+          padding: 0.8rem 2rem;
+          font-size: 1rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .empty-cart {
+          min-height: 250px;
+          margin: 1rem;
+          padding: 1.5rem 1rem;
+        }
+
+        .empty-cart-icon {
+          font-size: 3.5rem;
+          margin-bottom: 1.5rem;
+        }
+
+        .empty-cart p {
+          max-width: 95%;
+        }
+
+        .empty-cart .btn-friends {
+          padding: 0.7rem 1.8rem;
+          font-size: 0.9rem;
+        }
+      }
+
+      .total-section {
+        background-color: var(--secondary-color);
+        border-radius: 10px;
+        padding: 20px;
+      }
+
+      .pulse-animation {
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0% {
+          box-shadow: 0 0 0 0 rgba(78, 115, 223, 0.4);
+        }
+        70% {
+          box-shadow: 0 0 0 10px rgba(78, 115, 223, 0);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(78, 115, 223, 0);
+        }
+      }
+
+      .swal2-popup {
+        border-radius: 15px !important;
+        box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.2) !important;
+      }
+
+      /* Navbar Animation */
+      @keyframes navbarSlideIn {
+        0% {
+          transform: translateY(-100%);
+          opacity: 0;
+        }
+        100% {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .navbar-custom {
+        animation: navbarSlideIn 0.6s ease-out forwards;
+      }
+
+      /* Profile Card Animation */
+      @keyframes profileCardEntrance {
+        0% {
+          transform: translateX(-30px) scale(0.95);
+          opacity: 0;
+          box-shadow: 0 0 0 rgba(58, 59, 69, 0);
+        }
+        100% {
+          transform: translateX(0) scale(1);
+          opacity: 1;
+          box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+        }
+      }
+
+      .user-profile-card {
+        animation: profileCardEntrance 0.8s ease-out forwards;
+      }
+
+      /* Profile Section Hover Effect */
+      .user-profile-card:hover {
+        transform: translateY(-5px) scale(1.01);
+        box-shadow: 0 0.5rem 2rem rgba(58, 59, 69, 0.15);
+        transition: all 0.3s ease;
+      }
+
+      .user-profile-card .card-body {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .user-profile-card .card-body::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, #4e73df, #224abe);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.3s ease;
+      }
+
+      .user-profile-card:hover .card-body::before {
+        transform: scaleX(1);
+      }
+
+      .cart-item {
+        animation: slideIn 0.5s ease-out forwards;
+      }
+
+      .buy-all-summary {
+        padding: 1rem;
+      }
+
+      .summary-icon {
+        animation: bounce 2s infinite;
+      }
+
+      .summary-details {
+        max-height: 400px;
+        overflow-y: auto;
+      }
+
+      .swal2-popup {
+        width: 32em !important;
+        padding: 2em !important;
+      }
+
+      .badge {
+        font-size: 1rem;
+        padding: 0.5rem 1rem;
+      }
+
+      .card {
+        border: none;
+        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+      }
+
+      .card-body {
+        padding: 1.5rem;
+      }
+
+      .btn-success {
+        background-color: #28a745;
+        border: none;
+        transition: all 0.3s;
+      }
+
+      .btn-success:hover {
+        background-color: #218838;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .buy-item-summary {
+        padding: 1rem;
+        text-align: center;
+      }
+
+      .summary-icon {
+        color: #28a745;
+        animation: bounce 1s infinite;
+      }
+
+      .coupon-success {
+        color: #28a745;
+        font-weight: bold;
+      }
+
+      .coupon-error {
+        color: #dc3545;
+        font-weight: bold;
+      }
+
+      .edit-profile-modal .modal-content {
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);
+      }
+
+      .edit-profile-modal .modal-header {
+        background: linear-gradient(
+          135deg,
+          var(--primary-color) 0%,
+          var(--accent-color) 100%
+        );
+        color: white;
+        border-radius: 15px 15px 0 0;
+      }
+
+      .edit-profile-modal .btn-close {
+        filter: invert(1);
+      }
+
+      @media (max-width: 992px) {
+        .container {
+          padding: 0 15px;
+          margin-top: 20px;
+        }
+
+        .user-profile-card .row {
+          flex-direction: column;
+        }
+
+        .user-profile-card .col-md-4 {
+          margin-top: 20px;
+          justify-content: flex-start;
+        }
+
+        .navbar-custom {
+          padding: 0.6rem 1rem;
+        }
+
+        .nav-links {
+          gap: 1rem;
+        }
+
+        .btn-outline-light,
+        .btn-danger {
+          padding: 0.4rem 0.8rem;
+          font-size: 0.9rem;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .cart-item {
+          position: relative;
+        }
+
+        .table th,
+        .table td {
+          padding: 0.5rem;
+        }
+
+        .cart-item-img {
+          width: 60px;
+          height: 60px;
+        }
+
+        .quantity-controls {
+          flex-wrap: nowrap;
+        }
+
+        .quantity-input {
+          width: 40px !important;
+          padding: 0.2rem !important;
+        }
+
+        .btn-group {
+          display: flex;
+          gap: 0.3rem;
+        }
+
+        .total-section {
+          margin-top: 20px;
+          float: none !important;
+        }
+
+        .btn-lg {
+          padding: 0.5rem 1rem;
+          font-size: 1rem;
+        }
+      }
+
+      @media (max-width: 576px) {
+        body {
+          padding-top: 50px;
+        }
+
+        .navbar-brand {
+          font-size: 1.5rem;
+        }
+
+        .cart-container {
+          border-radius: 10px;
+          margin: 0 -15px;
+        }
+
+        .table-responsive {
+          margin: 0;
+        }
+
+        .cart-item td:first-child {
+          min-width: 200px;
+        }
+
+        .cart-item h6 {
+          font-size: 0.9rem;
+          margin-bottom: 0.2rem;
+        }
+
+        .cart-item small {
+          font-size: 0.75rem;
+        }
+
+        .empty-cart {
+          height: 200px;
+          padding: 1rem;
+        }
+
+        .empty-cart-icon {
+          font-size: 3rem;
+        }
+
+        .btn-group .btn-sm {
+          padding: 0.2rem 0.4rem;
+          font-size: 0.8rem;
+        }
+
+        .total-section {
+          padding: 15px;
+        }
+
+        .input-group {
+          flex-direction: column;
+        }
+
+        .input-group .form-control,
+        .input-group .btn {
+          width: 100%;
+          margin: 5px 0;
+        }
+
+        .modal-dialog {
+          margin: 0.5rem;
+        }
+
+        .edit-profile-modal .modal-header {
+          padding: 0.8rem;
+        }
+
+        .edit-profile-modal .modal-body {
+          padding: 1rem;
+        }
+
+        .buy-all-summary .card-body {
+          padding: 0.8rem;
+        }
+
+        .summary-details {
+          max-height: 300px;
+        }
+      }
+
+      @media (min-width: 577px) and (max-width: 991px) {
+        .cart-item-img {
+          width: 80px;
+          height: 80px;
+        }
+
+        .navbar-custom {
+          padding: 0.6rem 2rem;
+        }
+
+        .container {
+          max-width: 95%;
+        }
+
+        .user-profile-card .col-md-6 {
+          margin-bottom: 1rem;
+        }
+
+        .total-section {
+          width: 100%;
+          max-width: 400px;
+          margin: 0 auto;
+        }
+
+        .buy-all-summary .card {
+          max-width: 500px;
+          margin: 0 auto;
+        }
+      }
+
+      @media (max-height: 576px) and (orientation: landscape) {
+        body {
+          padding-top: 40px;
+        }
+
+        .empty-cart {
+          height: 150px;
+        }
+
+        .modal-dialog {
+          max-height: 90vh;
+          overflow-y: auto;
+        }
+      }
+
+      .custom-logout-popup {
+        border-radius: 20px !important;
+        background: rgba(255, 255, 255, 0.95) !important;
+        backdrop-filter: blur(10px) !important;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+      }
+
+      .custom-logout-title {
+        font-size: 1.8rem !important;
+        color: #dc3545 !important;
+        font-weight: 600 !important;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+      }
+
+      .custom-logout-icon {
+        border: 3px solid #dc3545 !important;
+        border-radius: 50% !important;
+        padding: 1rem !important;
+        font-size: 2.5rem !important;
+        color: #dc3545 !important;
+        margin-bottom: 1rem !important;
+      }
+
+      .custom-logout-confirm-button {
+        background: linear-gradient(45deg, #dc3545, #ff6b6b) !important;
+        border: none !important;
+        padding: 12px 30px !important;
+        font-weight: 600 !important;
+        letter-spacing: 0.5px !important;
+        text-transform: uppercase !important;
+      }
+
+      .custom-logout-cancel-button {
+        background: linear-gradient(45deg, #3085d6, #63b3ed) !important;
+        border: none !important;
+        padding: 12px 30px !important;
+        font-weight: 600 !important;
+        letter-spacing: 0.5px !important;
+        text-transform: uppercase !important;
+      }
+
+      .custom-logout-content {
+        padding: 1.5rem !important;
+      }
+
+      /* Add these new styles for user name display */
+      .user-display {
+        padding: 0.5rem 1rem;
+        background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+        border-radius: 8px;
+        color: white;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 2px 8px rgba(78, 115, 223, 0.2);
+        transition: all 0.3s ease;
+      }
+
+      .user-display:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(78, 115, 223, 0.3);
+        background: linear-gradient(135deg, #224abe 0%, #4e73df 100%);
+      }
+
+      .user-display i {
+        font-size: 1.1rem;
+        color: #fff;
+      }
+
+      .user-display span {
+        color: #fff;
+        font-size: 0.95rem;
+      }
+
+      @media (max-width: 768px) {
+        .user-display {
+          padding: 0.4rem 0.8rem;
+        }
+
+        .user-display span {
+          font-size: 0.85rem;
+        }
+      }
+
+      /* Advanced Page Entry Animations */
+      @keyframes pageEntry {
+        0% {
+          opacity: 0;
+          transform: scale(0.98) translateY(-20px);
+          filter: blur(8px);
+        }
+        50% {
+          filter: blur(4px);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1) translateY(0);
+          filter: blur(0);
+        }
+      }
+
+      @keyframes staggerChild {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+          filter: blur(5px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+          filter: blur(0);
+        }
+      }
+
+      .page-content {
+        animation: pageEntry 0.8s cubic-bezier(0.17, 0.84, 0.44, 1) forwards;
+        transform-origin: center top;
+        will-change: transform, opacity;
+      }
+
+      .stagger-item {
+        opacity: 0;
+        animation: staggerChild 0.5s cubic-bezier(0.17, 0.84, 0.44, 1) forwards;
+      }
+
+      .stagger-item:nth-child(1) { animation-delay: 0.1s; }
+      .stagger-item:nth-child(2) { animation-delay: 0.2s; }
+      .stagger-item:nth-child(3) { animation-delay: 0.3s; }
+      .stagger-item:nth-child(4) { animation-delay: 0.4s; }
+      .stagger-item:nth-child(5) { animation-delay: 0.5s; }
+
+      /* Advanced Animation Effects */
+      .navbar-custom {
+        animation: slideInDown 0.6s cubic-bezier(0.17, 0.84, 0.44, 1);
+      }
+
+      @keyframes slideInDown {
+        from {
+          transform: translateY(-100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .user-profile-card {
+        animation: cardReveal 0.8s cubic-bezier(0.17, 0.84, 0.44, 1) 0.3s both;
+      }
+
+      @keyframes cardReveal {
+        from {
+          opacity: 0;
+          transform: translateX(-30px) scale(0.95);
+          box-shadow: 0 0 0 rgba(0,0,0,0);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0) scale(1);
+          box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+        }
+      }
+
+      .cart-container {
+        perspective: 1000px;
+        animation: containerReveal 0.8s cubic-bezier(0.17, 0.84, 0.44, 1) 0.5s both;
+      }
+
+      @keyframes containerReveal {
+        from {
+          opacity: 0;
+          transform: rotateX(-10deg) translateY(50px);
+        }
+        to {
+          opacity: 1;
+          transform: rotateX(0) translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <div class="navbar-custom">
+        <div class="left-section">
+          <a class="navbar-brand">
+            <i class="fas fa-shopping-cart me-2"></i>Friends Cart
+          </a>
+        </div>
+        <div class="nav-links">
+          <span class="nav-link d-none d-md-block user-display">
+            <i class="fas fa-user-circle"></i>
+            <span class="ms-1 text-uppercase"><%= user.fullName %></span>
+          </span>
+          <a class="nav-btn btn-outline-light" href="/main_page">
+            <i class="fas fa-home"></i>
+            <span class="ms-1">Home</span>
+          </a>
+          <a
+            class="nav-btn btn-danger"
+            href="javascript:void(0)"
+            onclick="confirmLogout()"
+          >
+            <i class="fas fa-sign-out-alt"></i>
+            <span class="ms-1">Logout</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mb-5 page-content">
+      <div class="card user-profile-card mb-4 stagger-item">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-8">
+              <h4 class="card-title text-primary">
+                <i class="fas fa-user-circle me-2"></i>Your Profile Details
+              </h4>
+              <div class="row mt-3">
+                <div class="col-md-6">
+                  <p>
+                    <strong><i class="fas fa-user me-2"></i>Name:</strong>
+                    <span class="text-uppercase"><%= user.fullName %></span>
+                  </p>
+                  <p>
+                    <strong><i class="fas fa-envelope me-2"></i>Email:</strong>
+                    <span class="text-uppercase"><%= user.email %></span>
+                  </p>
+                </div>
+                <div class="col-md-6">
+                  <p>
+                    <strong><i class="fas fa-phone me-2"></i>Phone:</strong>
+                    <span class="text-uppercase"><%= user.phone %></span>
+                  </p>
+                  <p>
+                    <strong
+                      ><i class="fas fa-map-marker-alt me-2"></i
+                      >Address:</strong
+                    >
+                    <span class="text-uppercase"><%= user.address %></span>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 d-flex align-items-center justify-content-end">
+              <button
+                class="btn btn-friends btn-lg"
+                data-bs-toggle="modal"
+                data-bs-target="#editProfileModal"
+              >
+                <i class="fas fa-edit me-2"></i>Edit Profile
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="mb-4 stagger-item">
+        <i class="fas fa-shopping-cart me-2"></i>Your Shopping Cart
+      </h2>
+
+      <% if (cartItems.length === 0) { %>
+      <div class="empty-cart animate__animated animate__fadeIn">
+        <div class="empty-cart-icon">
+          <i class="fas fa-cart-arrow-down"></i>
+        </div>
+        <h3 class="text-muted mb-3">Your cart is empty</h3>
+        <p class="text-muted mb-4">
+          Looks like you haven't added any items yet
+        </p>
+        <a href="#" onclick="goToRandomPage(event)" class="btn btn-friends btn-lg">
+          <i class="fas fa-shopping-bag me-2"></i>Start Shopping
+        </a>
+      </div>
+      <% } else { %>
+      <div class="cart-container stagger-item">
+        <div class="table-responsive">
+          <table class="table mb-0">
+            <thead class="table-light">
+              <tr>
+                <th style="width: 40%">Product</th>
+                <th style="width: 15%">Price</th>
+                <th style="width: 20%">Quantity</th>
+                <th style="width: 15%">Total</th>
+                <th style="width: 10%">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% cartItems.forEach(item => { const price =
+              parseFloat(item.productPrice.replace(/[^0-9.-]+/g, "")); const
+              itemTotal = price * item.quantity; %>
+              <tr class="cart-item animate__animated animate__fadeIn">
+                <td>
+                  <div class="d-flex align-items-center">
+                    <img
+                      src="<%= item.productImage %>"
+                      alt="<%= item.productTitle %>"
+                      class="cart-item-img me-3 shadow-sm"
+                    />
+                    <div>
+                      <h6 class="mb-1"><%= item.productTitle %></h6>
+                      <small class="text-muted"
+                        >Item ID: <%= item._id.toString().slice(-6) %></small
+                      >
+                    </div>
+                  </div>
+                </td>
+                <td class="align-middle"><%= item.productPrice %></td>
+                <td class="align-middle">
+                  <div class="d-flex align-items-center quantity-controls">
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-outline-secondary minus-btn"
+                    >
+                      <i class="fas fa-minus"></i>
+                    </button>
+                    <input
+                      type="number"
+                      name="quantity"
+                      value="<%= item.quantity %>"
+                      min="1"
+                      class="form-control quantity-input mx-2"
+                      data-item-id="<%= item._id %>"
+                      style="width: 60px"
+                    />
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-outline-secondary plus-btn"
+                    >
+                      <i class="fas fa-plus"></i>
+                    </button>
+                  </div>
+                </td>
+                <td class="align-middle fw-bold">
+                  ₹<%= itemTotal.toFixed(2) %>
+                </td>
+                <td class="align-middle">
+                  <div class="btn-group">
+                    <button
+                      onclick="removeCartItem('<%= item._id %>')"
+                      class="btn btn-sm btn-outline-danger me-2"
+                    >
+                      <i class="fas fa-trash-alt"></i>
+                    </button>
+                    <button
+                      onclick="buyItem('<%= item._id %>')"
+                      class="btn btn-sm btn-success"
+                    >
+                      <i class="fas fa-shopping-bag"></i> Buy
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="p-4 bg-light">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="input-group mb-3">
+                <input
+                  type="text"
+                  id="couponCode"
+                  class="form-control"
+                  placeholder="Coupon code"
+                />
+                <button
+                  class="btn btn-friends"
+                  type="button"
+                  onclick="applyCoupon()"
+                >
+                  Apply
+                </button>
+              </div>
+              <div id="couponMessage" class="mb-3"></div>
+            </div>
+            <div class="col-md-6">
+              <div class="total-section float-md-end">
+                <div class="d-flex justify-content-between mb-2">
+                  <span>Subtotal:</span>
+                  <span id="subtotal">₹<%= total %></span>
+                </div>
+                <div class="d-flex justify-content-between mb-3">
+                  <span>Shipping:</span>
+                  <span id="shipping" class="text-success">FREE</span>
+                </div>
+                <div
+                  class="d-flex justify-content-between mb-3"
+                  id="discountRow"
+                  style="display: none"
+                >
+                  <span>Discount:</span>
+                  <span id="discount" class="text-danger">-₹0.00</span>
+                </div>
+                <hr />
+                <div class="d-flex justify-content-between">
+                  <h5>Total:</h5>
+                  <h5 id="grandTotal" class="text-primary">₹<%= total %></h5>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="d-flex justify-content-between mt-4 animate__animated animate__fadeIn"
+      >
+        <a href="#" onclick="goToRandomPage(event)" class="btn btn-outline-secondary btn-lg">
+          <i class="fas fa-arrow-left me-2"></i>Continue Shopping
+        </a>
+        <div>
+          <button
+            onclick="showBuyAllConfirmation()"
+            class="btn btn-success btn-lg"
+          >
+            <i class="fas fa-bolt me-2"></i>Buy All
+          </button>
+        </div>
+      </div>
+      <% } %>
+    </div>
+
+    <div
+      class="modal fade edit-profile-modal"
+      id="editProfileModal"
+      tabindex="-1"
+      aria-labelledby="editProfileModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="editProfileForm">
+              <div class="mb-3">
+                <label for="editFullName" class="form-label">Full Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="editFullName"
+                  value="<%= user.fullName %>"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="editEmail" class="form-label">Email</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="editEmail"
+                  value="<%= user.email %>"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="editPhone" class="form-label">Phone</label>
+                <input
+                  type="tel"
+                  class="form-control"
+                  id="editPhone"
+                  value="<%= user.phone %>"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="editAddress" class="form-label">Address</label>
+                <textarea
+                  class="form-control"
+                  id="editAddress"
+                  rows="3"
+                  required
+                >
+<%= user.address %></textarea
+                >
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="btn btn-friends"
+              onclick="updateProfile()"
+            >
+              Save Changes
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+      const couponCodes = {
+        FRIENDS10: 10,
+        WELCOME20: 20,
+        SAVE50: 50,
+      };
+
+      let appliedCoupon = null;
+      let originalTotal = parseFloat("<%= total %>");
+
+      function applyCoupon() {
+        const couponCode = document
+          .getElementById("couponCode")
+          .value.trim()
+          .toUpperCase();
+        const couponMessage = document.getElementById("couponMessage");
+
+        if (!couponCode) {
+          couponMessage.innerHTML =
+            '<span class="coupon-error">Please enter a coupon code</span>';
+          return;
+        }
+
+        if (appliedCoupon === couponCode) {
+          couponMessage.innerHTML =
+            '<span class="coupon-error">This coupon is already applied</span>';
+          return;
+        }
+
+        if (couponCodes[couponCode]) {
+          appliedCoupon = couponCode;
+          const discountPercent = couponCodes[couponCode];
+          const discountAmount = (
+            (originalTotal * discountPercent) /
+            100
+          ).toFixed(2);
+          const newTotal = (originalTotal - discountAmount).toFixed(2);
+
+          document.getElementById(
+            "discount"
+          ).textContent = `-₹${discountAmount}`;
+          document.getElementById("discountRow").style.display = "flex";
+          document.getElementById("grandTotal").textContent = `₹${newTotal}`;
+
+          couponMessage.innerHTML = `<span class="coupon-success">Coupon applied! ${discountPercent}% discount</span>`;
+        } else {
+          couponMessage.innerHTML =
+            '<span class="coupon-error">Invalid coupon code</span>';
+        }
+      }
+
+      function removeCoupon() {
+        appliedCoupon = null;
+        document.getElementById("discountRow").style.display = "none";
+        document.getElementById(
+          "grandTotal"
+        ).textContent = `₹${originalTotal.toFixed(2)}`;
+        document.getElementById("couponMessage").innerHTML = "";
+        document.getElementById("couponCode").value = "";
+      }
+
+      function updateProfile() {
+        const fullName = document.getElementById("editFullName").value;
+        const email = document.getElementById("editEmail").value;
+        const phone = document.getElementById("editPhone").value;
+        const address = document.getElementById("editAddress").value;
+
+        fetch("/update-profile", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            fullName,
+            email,
+            phone,
+            address,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              Swal.fire({
+                title: "Success!",
+                text: "Profile updated successfully",
+                icon: "success",
+                confirmButtonText: "OK",
+              }).then(() => {
+                location.reload();
+              });
+            } else {
+              Swal.fire({
+                title: "Error!",
+                text: data.message || "Failed to update profile",
+                icon: "error",
+                confirmButtonText: "OK",
+              });
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            Swal.fire({
+              title: "Error!",
+              text: "Failed to update profile",
+              icon: "error",
+              confirmButtonText: "OK",
+            });
+          });
+      }
+
+      async function showBuyAllConfirmation() {
+        try {
+          const response = await fetch("/cart-data");
+          const data = await response.json();
+
+          if (!data.cartItems || data.cartItems.length === 0) {
+            Swal.fire("Error", "Your cart is empty", "error");
+            return;
+          }
+
+          const total = appliedCoupon
+            ? (
+                originalTotal -
+                (originalTotal * couponCodes[appliedCoupon]) / 100
+              ).toFixed(2)
+            : originalTotal.toFixed(2);
+
+          const result = await Swal.fire({
+            title: "Confirm Purchase",
+            html: `
+                <div class="buy-all-summary">
+                    <div class="summary-icon mb-4">
+                        <i class="fas fa-shopping-bag fa-3x text-success"></i>
+                    </div>
+                    <div class="summary-details">
+                        <h5 class="mb-4">Order Summary</h5>
+                        <div class="card">
+                            <div class="card-body">
+                                ${data.cartItems
+                                  .map(
+                                    (item) => `
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <small>${item.productTitle} × ${
+                                      item.quantity
+                                    }</small>
+                                        <small>₹${(
+                                          parseFloat(
+                                            item.productPrice.replace(
+                                              /[^0-9.-]+/g,
+                                              ""
+                                            )
+                                          ) * item.quantity
+                                        ).toFixed(2)}</small>
+                                    </div>
+                                `
+                                  )
+                                  .join("")}
+                                <hr>
+                                <div class="d-flex justify-content-between">
+                                    <strong>Total Amount:</strong>
+                                    <strong class="text-success">₹${total}</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `,
+            showCancelButton: true,
+            confirmButtonText: "Proceed to Buy",
+            cancelButtonText: "Cancel",
+            confirmButtonColor: "#28a745",
+            cancelButtonColor: "#dc3545",
+          });
+
+          if (result.isConfirmed) {
+            const loadingResult = await Swal.fire({
+              title: "Processing",
+              html: "Preparing your order...",
+              timer: 2000,
+              timerProgressBar: true,
+              didOpen: () => {
+                Swal.showLoading();
+              },
+            });
+
+            const clearResponse = await fetch("/clear-cart", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            });
+
+            const clearData = await clearResponse.json();
+
+            if (clearData.success) {
+              window.location.href = "/buy_page";
+            } else {
+              throw new Error("Failed to process order");
+            }
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          Swal.fire("Error", "Failed to process order", "error");
+        }
+      }
+      function buyItem(itemId) {
+        Swal.fire({
+          title: "Confirm Purchase",
+          html: `
+                    <div class="buy-item-summary">
+                        <div class="summary-icon mb-3">
+                            <i class="fas fa-shopping-bag fa-2x text-success"></i>
+                        </div>
+                        <p>Are you sure you want to buy this item?</p>
+                    </div>
+                `,
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonText: "Yes, buy now",
+          cancelButtonText: "Cancel",
+          confirmButtonColor: "#28a745",
+          cancelButtonColor: "#dc3545",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            fetch(`/buy-single-item/${itemId}`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.success) {
+                  window.location.href = "/buy_page";
+                } else {
+                  throw new Error("Failed to process purchase");
+                }
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+                Swal.fire({
+                  icon: "error",
+                  title: "Error",
+                  text: "Failed to process purchase",
+                });
+              });
+          }
+        });
+      }
+
+      function removeCartItem(itemId) {
+        Swal.fire({
+          title: "Are you sure?",
+          text: "You won't be able to revert this!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, remove it!",
+          background: "white",
+          backdrop: `
+                    rgba(78, 115, 223, 0.4)
+                    url("/images/nyan-cat.gif")
+                    left top
+                    no-repeat
+                `,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            fetch(`/remove-cart-item/${itemId}`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.success) {
+                  Swal.fire({
+                    title: "Deleted!",
+                    text: data.message,
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1500,
+                    timerProgressBar: true,
+                    willClose: () => {
+                      refreshCart();
+                    },
+                  });
+                } else {
+                  Swal.fire("Error", data.message, "error");
+                }
+              })
+              .catch((error) => {
+                Swal.fire("Error", "Failed to remove item", "error");
+              });
+          }
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const quantityControls =
+          document.querySelectorAll(".quantity-controls");
+
+        quantityControls.forEach((control) => {
+          const input = control.querySelector(".quantity-input");
+          const minusBtn = control.querySelector(".minus-btn");
+          const plusBtn = control.querySelector(".plus-btn");
+          const itemId = input.dataset.itemId;
+
+          minusBtn.addEventListener("click", async () => {
+            const currentValue = parseInt(input.value);
+            if (currentValue > 1) {
+              input.value = currentValue - 1;
+              await updateQuantityDynamic(itemId, currentValue - 1);
+            }
+          });
+
+          plusBtn.addEventListener("click", async () => {
+            const currentValue = parseInt(input.value);
+            input.value = currentValue + 1;
+            await updateQuantityDynamic(itemId, currentValue + 1);
+          });
+
+          input.addEventListener("change", async () => {
+            let value = parseInt(input.value);
+            if (isNaN(value) || value < 1) value = 1;
+            input.value = value;
+            await updateQuantityDynamic(itemId, value);
+          });
+        });
+      });
+
+      async function updateQuantityDynamic(itemId, quantity) {
+        try {
+          const response = await fetch(`/update-cart-item/${itemId}`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ quantity: quantity }),
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            const row = document
+              .querySelector(`input[data-item-id="${itemId}"]`)
+              .closest("tr");
+            const priceText = row.querySelector("td:nth-child(2)").textContent;
+            const price = parseFloat(priceText.replace(/[^0-9.-]+/g, ""));
+            const newTotal = price * quantity;
+
+            row.querySelector(
+              "td:nth-child(4)"
+            ).textContent = `₹${newTotal.toFixed(2)}`;
+
+            originalTotal = parseFloat(data.total);
+            document.getElementById("subtotal").textContent = `₹${data.total}`;
+            document.getElementById(
+              "grandTotal"
+            ).textContent = `₹${data.total}`;
+
+            if (appliedCoupon) {
+              const discountPercent = couponCodes[appliedCoupon];
+              const discountAmount = (
+                (originalTotal * discountPercent) /
+                100
+              ).toFixed(2);
+              const discountedTotal = (originalTotal - discountAmount).toFixed(
+                2
+              );
+              document.getElementById(
+                "discount"
+              ).textContent = `-₹${discountAmount}`;
+              document.getElementById(
+                "grandTotal"
+              ).textContent = `₹${discountedTotal}`;
+            }
+
+            const Toast = Swal.mixin({
+              toast: true,
+              position: "top-end",
+              showConfirmButton: false,
+              timer: 1000,
+              timerProgressBar: true,
+            });
+
+            Toast.fire({
+              icon: "success",
+              title: "Quantity updated",
+            });
+          } else {
+            throw new Error(data.message || "Failed to update quantity");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: error.message || "Failed to update quantity",
+            timer: 2000,
+            showConfirmButton: false,
+          });
+        }
+      }
+
+      function updateCartTotals() {
+        document.getElementById(
+          "subtotal"
+        ).textContent = `₹${originalTotal.toFixed(2)}`;
+
+        if (appliedCoupon) {
+          const discountPercent = couponCodes[appliedCoupon];
+          const discountAmount = (
+            (originalTotal * discountPercent) /
+            100
+          ).toFixed(2);
+          const newTotal = (originalTotal - discountAmount).toFixed(2);
+
+          document.getElementById(
+            "discount"
+          ).textContent = `-₹${discountAmount}`;
+          document.getElementById("grandTotal").textContent = `₹${newTotal}`;
+        } else {
+          document.getElementById(
+            "grandTotal"
+          ).textContent = `₹${originalTotal.toFixed(2)}`;
+        }
+      }
+
+      function refreshCart() {
+        fetch("/cart-data")
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.cartItems.length === 0) {
+              window.location.reload();
+            } else {
+              updateCartTable(data.cartItems, data.total);
+            }
+          })
+          .catch((error) => {
+            console.error("Error refreshing cart:", error);
+            Swal.fire("Error", "Failed to refresh cart", "error");
+          });
+      }
+
+      function updateCartTable(cartItems, total) {
+        const tbody = document.querySelector("tbody");
+        tbody.innerHTML = "";
+
+        cartItems.forEach((item) => {
+          const price = parseFloat(item.productPrice.replace(/[^0-9.-]+/g, ""));
+          const itemTotal = price * item.quantity;
+
+          const row = `
+            <tr class="cart-item animate__animated animate__fadeIn">
+                <td>
+                    <div class="d-flex align-items-center">
+                        <img src="${item.productImage}" alt="${
+            item.productTitle
+          }" 
+                            class="cart-item-img me-3 shadow-sm">
+                        <div>
+                            <h6 class="mb-1">${item.productTitle}</h6>
+                            <small class="text-muted">Item ID: ${item._id
+                              .toString()
+                              .slice(-6)}</small>
+                        </div>
+                    </div>
+                </td>
+                <td class="align-middle">${item.productPrice}</td>
+                <td class="align-middle">
+                    <div class="d-flex align-items-center quantity-controls">
+                        <button type="button" class="btn btn-sm btn-outline-secondary minus-btn">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <input type="number" name="quantity" value="${
+                          item.quantity
+                        }" 
+                            min="1" class="form-control quantity-input mx-2" 
+                            data-item-id="${item._id}" style="width: 60px;">
+                        <button type="button" class="btn btn-sm btn-outline-secondary plus-btn">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </td>
+                <td class="align-middle fw-bold">₹${itemTotal.toFixed(2)}</td>
+                <td class="align-middle">
+                    <div class="btn-group">
+                        <button onclick="removeCartItem('${
+                          item._id
+                        }')" class="btn btn-sm btn-outline-danger me-2">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                        <button onclick="buyItem('${
+                          item._id
+                        }')" class="btn btn-sm btn-success">
+                            <i class="fas fa-shopping-bag"></i> Buy
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `;
+          tbody.insertAdjacentHTML("beforeend", row);
+        });
+
+        originalTotal = parseFloat(total);
+        document.getElementById("subtotal").textContent = `₹${total}`;
+        document.getElementById("grandTotal").textContent = `₹${total}`;
+
+        if (appliedCoupon) {
+          applyCoupon();
+        }
+
+        initializeQuantityControls();
+      }
+
+      function initializeQuantityControls() {
+        const quantityControls =
+          document.querySelectorAll(".quantity-controls");
+
+        quantityControls.forEach((control) => {
+          const input = control.querySelector(".quantity-input");
+          const minusBtn = control.querySelector(".minus-btn");
+          const plusBtn = control.querySelector(".plus-btn");
+          const itemId = input.dataset.itemId;
+
+          minusBtn.addEventListener("click", () => {
+            const currentValue = parseInt(input.value);
+            if (currentValue > 1) {
+              input.value = currentValue - 1;
+              updateQuantityDynamic(itemId, currentValue - 1);
+            }
+          });
+
+          plusBtn.addEventListener("click", () => {
+            const currentValue = parseInt(input.value);
+            input.value = currentValue + 1;
+            updateQuantityDynamic(itemId, currentValue + 1);
+          });
+
+          input.addEventListener("change", () => {
+            let value = parseInt(input.value);
+            if (isNaN(value) || value < 1) value = 1;
+            input.value = value;
+            updateQuantityDynamic(itemId, value);
+          });
+        });
+      }
+
+      function confirmLogout() {
+        Swal.fire({
+          title: '<span class="custom-logout-title">Ready to Leave?</span>',
+          html: `
+            <div class="custom-logout-content">
+                <div class="custom-logout-icon">
+                    <i class="fas fa-sign-out-alt"></i>
+                </div>
+                <p class="mb-4" style="font-size: 1.1rem; color: #666;">
+                    You are about to logout from your account.<br>
+                    Would you like to continue?
+                </p>
+            </div>
+          `,
+          showCancelButton: true,
+          confirmButtonText:
+            '<i class="fas fa-sign-out-alt me-2"></i>Yes, Logout',
+          cancelButtonText: '<i class="fas fa-times me-2"></i>Stay Here',
+          customClass: {
+            popup: "custom-logout-popup animate__animated animate__fadeInDown",
+            confirmButton: "custom-logout-confirm-button",
+            cancelButton: "custom-logout-cancel-button",
+          },
+          showClass: {
+            popup: "animate__animated animate__fadeInDown",
+          },
+          hideClass: {
+            popup: "animate__animated animate__fadeOutUp",
+          },
+          buttonsStyling: true,
+          reverseButtons: true,
+          background: "rgba(255, 255, 255, 0.95)",
+          backdrop: `
+            rgba(0,0,0,0.4)
+            url('/images/nyan-cat.gif')
+            left top
+            no-repeat
+          `,
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          allowEnterKey: false,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            Swal.fire({
+              title: "Logging Out...",
+              html: "You will be redirected in a moment",
+              timer: 1500,
+              timerProgressBar: true,
+              showConfirmButton: false,
+              customClass: {
+                popup: "custom-logout-popup",
+              },
+              didOpen: () => {
+                Swal.showLoading();
+              },
+            }).then(() => {
+              window.location.href = "/logout";
+            });
+          }
+        });
+      }
+
+      function goToRandomPage(event) {
+        event.preventDefault();
+        const pages = [
+          '/offers_page',
+          '/electronics_page',
+          '/fashion_page',
+          '/groceries_page',
+          '/health_beauty_page',
+          '/kids_page'
+        ];
+        const randomPage = pages[Math.floor(Math.random() * pages.length)];
+        window.location.href = randomPage;
+      }
+    </script>
+  </body>
+</html>

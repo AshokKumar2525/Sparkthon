@@ -1,0 +1,2897 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Project FrndsCart</title>
+  <style>
+    @media screen and (max-width: 768px) {
+
+      html,
+      body {
+        overflow-x: hidden;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        position: relative;
+      }
+
+      .section,
+      /* .contact-section, */
+      .feedback-section {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 15px !important;
+        box-sizing: border-box !important;
+      }
+
+      .product-grid {
+        width: 100% !important;
+        padding: 0 15px !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
+      }
+    }
+  </style>
+  <!-- Add these in the <head> section -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <link rel="stylesheet" href="css/main_page.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    /* Premium Modal Styles */
+    .product-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 9999;
+      overflow-y: auto;
+      animation: fadeIn 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+      backdrop-filter: blur(8px);
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .modal-content {
+      background: white;
+      margin: 5% auto;
+      padding: 40px;
+      width: 85%;
+      max-width: 1400px;
+      border-radius: 20px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      position: relative;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      overflow: hidden;
+    }
+
+    #contact {
+      display: none;
+    }
+
+    .modal-content::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg,
+          rgba(0, 97, 255, 0.03) 0%,
+          rgba(96, 239, 255, 0.03) 100%);
+      z-index: -1;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 25px;
+      right: 25px;
+      width: 40px;
+      height: 40px;
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: #333;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+    }
+
+    .close-modal:hover {
+      background: #ff4500;
+      color: white;
+      transform: rotate(90deg);
+    }
+
+    /* Premium Product Display */
+    .product-view-container {
+      display: flex;
+      gap: 50px;
+      margin-bottom: 60px;
+    }
+
+    .product-images {
+      flex: 1;
+      min-width: 500px;
+      position: relative;
+    }
+
+    .main-image {
+      width: 100%;
+      height: 600px;
+      object-fit: cover;
+      border-radius: 15px;
+      cursor: zoom-in;
+      transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+      box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .main-image.zoomed {
+      transform: scale(1.8);
+      cursor: zoom-out;
+      z-index: 10;
+      position: relative;
+    }
+
+    .thumbnail-container {
+      display: flex;
+      gap: 15px;
+      margin-top: 25px;
+      flex-wrap: wrap;
+    }
+
+    .thumbnail {
+      width: 90px;
+      height: 90px;
+      object-fit: cover;
+      border-radius: 8px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+      filter: brightness(0.95);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .thumbnail:hover,
+    .thumbnail.active {
+      border-color: #0061ff;
+      transform: translateY(-5px) scale(1.05);
+      filter: brightness(1);
+      box-shadow: 0 8px 20px rgba(0, 97, 255, 0.2);
+    }
+
+    /* Premium Product Details */
+    .product-details {
+      flex: 1;
+      min-width: 500px;
+      padding: 20px 0;
+    }
+
+    .product-title {
+      font-size: 2.8rem;
+      color: #1a1a1a;
+      margin-bottom: 15px;
+      font-weight: 700;
+      line-height: 1.2;
+      font-family: "Playfair Display", serif;
+    }
+
+    .product-price {
+      font-size: 2.2rem;
+      color: #ff4500;
+      margin-bottom: 25px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .original-price {
+      font-size: 1.5rem;
+      color: #999;
+      text-decoration: line-through;
+      font-weight: 400;
+    }
+
+    .discount-badge {
+      background: #ff4500;
+      color: white;
+      padding: 3px 12px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .product-rating {
+      display: flex;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .stars {
+      color: #ffc107;
+      font-size: 1.2rem;
+      letter-spacing: 2px;
+      margin-right: 15px;
+    }
+
+    .review-count {
+      color: #666;
+      font-size: 0.95rem;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    .product-description {
+      margin-bottom: 30px;
+      line-height: 1.8;
+      color: #555;
+      font-size: 1.1rem;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eee;
+    }
+
+    /* Premium Options Section */
+    .options-section {
+      display: none;
+    }
+
+    .options-title {
+      display: none;
+    }
+
+    .color-options,
+    .size-options {
+      display: none;
+    }
+
+    .color-option,
+    .size-option {
+      display: none;
+    }
+
+    /* Premium Action Buttons */
+    .action-section {
+      margin-top: 40px;
+    }
+
+    .quantity-selector {
+      display: flex;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .quantity-btn {
+      width: 45px;
+      height: 45px;
+      background: #f8f8f8;
+      border: none;
+      font-size: 1.3rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      transition: all 0.3s;
+    }
+
+    .quantity-btn:hover {
+      background: #0061ff;
+      color: white;
+    }
+
+    .quantity-input {
+      width: 70px;
+      height: 45px;
+      text-align: center;
+      margin: 0 10px;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .add-to-cart,
+    .buy-now,
+    .wishlist {
+      padding: 16px 35px;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.1rem;
+    }
+
+    .add-to-cart {
+      background: #0061ff;
+      color: white;
+      box-shadow: 0 5px 20px rgba(0, 97, 255, 0.3);
+    }
+
+    .add-to-cart:hover {
+      background: #004aad;
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(0, 97, 255, 0.4);
+    }
+
+    .buy-now {
+      background: #ff4500;
+      color: white;
+      box-shadow: 0 5px 20px rgba(255, 69, 0, 0.3);
+    }
+
+    .buy-now:hover {
+      background: #e03d00;
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(255, 69, 0, 0.4);
+    }
+
+    .wishlist {
+      background: white;
+      color: #333;
+      border: 1px solid #ddd;
+    }
+
+    .wishlist:hover {
+      background: #f8f8f8;
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      color: #ff4500;
+      border-color: #ff4500;
+    }
+
+    /* Premium Recommendations */
+    .recommendations {
+      margin-top: 60px;
+      border-top: 1px solid #eee;
+      padding-top: 50px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      margin-top: 0;
+      padding: 0;
+    }
+
+    .view-all {
+      color: #0061ff;
+      font-weight: 600;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s;
+    }
+
+    .view-all:hover {
+      color: #ff4500;
+      transform: translateX(5px);
+    }
+
+    .recommendation-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 30px;
+    }
+
+    .recommendation-item {
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
+      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+      position: relative;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .recommendation-item::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(transparent 60%, rgba(0, 0, 0, 0.5));
+      z-index: 1;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .recommendation-item:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.2);
+    }
+
+    .recommendation-item:hover::before {
+      opacity: 1;
+    }
+
+    .recommendation-img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      transition: transform 0.5s;
+    }
+
+    .recommendation-item:hover .recommendation-img {
+      transform: scale(1.05);
+    }
+
+    .recommendation-details {
+      padding: 20px;
+      position: relative;
+      z-index: 2;
+      background: white;
+    }
+
+    .recommendation-title {
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+      color: #333;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .recommendation-price {
+      color: #ff4500;
+      font-weight: 700;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .recommendation-original-price {
+      font-size: 0.9rem;
+      color: #999;
+      text-decoration: line-through;
+    }
+
+    .quick-view {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, 20px);
+      background: white;
+      color: #0061ff;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-weight: 600;
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 3;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .recommendation-item:hover .quick-view {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 1200px) {
+      .product-view-container {
+        flex-direction: column;
+      }
+
+      .product-images,
+      .product-details {
+        min-width: 100%;
+      }
+
+      .recommendation-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .modal-content {
+        width: 95%;
+        padding: 30px 20px;
+      }
+
+      .main-image {
+        height: 400px;
+      }
+
+      .recommendation-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .main-image {
+        height: 300px;
+      }
+
+      .thumbnail {
+        width: 70px;
+        height: 70px;
+      }
+
+      .product-title {
+        font-size: 2rem;
+      }
+
+      .product-price {
+        font-size: 1.8rem;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+      }
+
+      .add-to-cart,
+      .buy-now,
+      .wishlist {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .recommendation-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Mobile & Tablet Modal Styles - Preserving Desktop */
+    @media (max-width: 1024px) and (min-width: 320px) {
+      .modal-content {
+        margin: 0;
+        width: 100%;
+        height: 100vh;
+        border-radius: 0;
+        padding: 15px;
+        overflow-y: auto;
+      }
+
+      .product-view-container {
+        flex-direction: column;
+      }
+
+      .product-images {
+        min-width: unset;
+        width: 100%;
+      }
+
+      .product-details {
+        min-width: unset;
+        width: 100%;
+      }
+
+      .main-image {
+        height: auto;
+        max-height: 45vh;
+        width: 100%;
+        object-fit: contain;
+      }
+
+      .thumbnail-container {
+        justify-content: center;
+      }
+
+      .recommendation-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 15px;
+      }
+
+      .recommendation-img {
+        height: 180px;
+      }
+
+      .close-modal {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        background: rgba(255, 255, 255, 0.9);
+        z-index: 100;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+      }
+
+      .add-to-cart,
+      .buy-now {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    /* Enhanced Mobile & Tablet Modal Styles - Preserving Desktop */
+    @media (max-width: 1024px) and (min-width: 320px) {
+      .product-modal {
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        height: 100dvh;
+      }
+
+      .modal-content {
+        margin: 0;
+        padding: 45px 10px 80px;
+        width: 100%;
+        min-height: 100dvh;
+        border-radius: 0;
+        box-sizing: border-box;
+      }
+
+      .product-view-container {
+        gap: 15px;
+        padding-top: 10px;
+      }
+
+      .product-images {
+        width: 100%;
+        min-width: unset;
+        max-width: 100%;
+      }
+
+      .main-image {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1;
+        max-height: 35vh;
+        object-fit: contain;
+        border-radius: 6px;
+      }
+
+      .thumbnail-container {
+        display: flex;
+        overflow-x: auto;
+        padding: 8px 0;
+        gap: 8px;
+        margin: 8px 0;
+        justify-content: flex-start;
+        -webkit-overflow-scrolling: touch;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
+
+      .thumbnail-container::-webkit-scrollbar {
+        display: none;
+      }
+
+      .thumbnail {
+        width: 45px;
+        height: 45px;
+        flex: 0 0 auto;
+        scroll-snap-align: start;
+      }
+
+      .product-details {
+        width: 100%;
+        min-width: unset;
+        padding: 0;
+      }
+
+      .product-title {
+        font-size: clamp(1rem, 4vw, 1.5rem);
+        margin-bottom: 8px;
+      }
+
+      .product-price {
+        font-size: clamp(0.9rem, 3.5vw, 1.3rem);
+        margin-bottom: 12px;
+      }
+
+      .product-description {
+        font-size: 0.9rem;
+        line-height: 1.5;
+        margin-bottom: 15px;
+      }
+
+      .action-section {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 10px;
+        background: white;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        z-index: 100;
+      }
+
+      .quantity-selector {
+        justify-content: center;
+        gap: 8px;
+        margin-bottom: 10px;
+      }
+
+      .quantity-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
+      }
+
+      .quantity-input {
+        width: 45px;
+        height: 35px;
+        font-size: 0.9rem;
+      }
+
+      .action-buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+
+      .add-to-cart,
+      .buy-now {
+        padding: 10px;
+        font-size: 0.9rem;
+        height: 40px;
+      }
+
+      .close-modal {
+        position: fixed;
+        top: 8px;
+        right: 8px;
+        width: 32px;
+        height: 32px;
+        font-size: 18px;
+        background: white;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+      }
+
+      .recommendations {
+        margin-top: 20px;
+        padding-top: 20px;
+        padding-bottom: 80px;
+      }
+
+      .recommendation-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .recommendation-img {
+        height: 120px;
+      }
+
+      .recommendation-details {
+        padding: 10px;
+      }
+
+      .recommendation-title {
+        font-size: 0.9rem;
+      }
+
+      .recommendation-price {
+        font-size: 0.95rem;
+      }
+    }
+
+    /* Portrait Mode Specific */
+    @media screen and (orientation: portrait) and (max-width: 1024px) {
+      .main-image {
+        max-height: 30vh;
+      }
+    }
+
+    /* Landscape Mode Specific */
+    @media screen and (orientation: landscape) and (max-width: 1024px) {
+      .modal-content {
+        padding: 45px 15px 15px;
+      }
+
+      .product-view-container {
+        display: grid;
+        grid-template-columns: 45% 55%;
+        gap: 15px;
+      }
+
+      .main-image {
+        max-height: 45vh;
+      }
+
+      .action-section {
+        position: sticky;
+        bottom: 0;
+      }
+
+      .recommendations {
+        padding-bottom: 20px;
+      }
+    }
+
+    /* Recommendation Section Header Styles for Mobile View */
+    @media (max-width: 1024px) and (min-width: 320px) {
+      .recommendations {
+        margin-top: 15px;
+        padding-top: 15px;
+      }
+
+      .recommendations .section-header {
+        margin-bottom: 10px;
+        padding: 0 5px;
+      }
+
+      .recommendations .section-title {
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin: 0;
+      }
+
+      .recommendations .view-all {
+        font-size: 0.8rem;
+        gap: 4px;
+      }
+
+      .recommendations .view-all i {
+        font-size: 0.7rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg-particles">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+  <nav class="navbar-custom">
+    <div class="left-section">
+      <div class="profile-btn">
+        <!-- User icon without dropdown functionality -->
+        <div class="user-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="user-svg">
+            <path
+              d="M12 4a4 4 0 0 1 4 4 4 4 0 0 1-4 4 4 4 0 0 1-4-4 4 4 0 0 1 4-4m0 10c4.42 0 8 1.79 8 4v2H4v-2c0-2.21 3.58-4 8-4z" />
+          </svg>
+        </div>
+        <!-- Add this dropdown menu -->
+        <div class="profile-dropdown">
+          <div class="dropdown-header">
+            <div class="user-info">
+              <h4>
+                <i class="fas fa-user-circle"></i>
+                <span class="user-name">
+                  <%= fullName %>
+                </span>
+              </h4>
+            </div>
+          </div>
+          <div class="dropdown-body">
+            <a href="#" class="dropdown-item">
+              <i class="fas fa-envelope"></i>
+              <span>Email: <%=email%></span>
+            </a>
+            <a href="#" class="dropdown-item">
+              <i class="fas fa-phone"></i>
+              <span>Phone: <%= phone%></span>
+            </a>
+            <a href="#" class="dropdown-item">
+              <i class="fas fa-map-marker-alt"></i>
+              <span>Address: <%= address %></span>
+            </a>
+            <a href="javascript:void(0)" onclick="confirmLogout()" class="dropdown-item logout">
+              <i class="fas fa-sign-out-alt"></i>
+              <span>Logout</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <a href="#" class="navbar-brand">Friends Cart </a>
+    </div>
+    <div class="nav-links">
+      <a href="#home" class="nav-link">HOME</a>
+      <a href="#about" class="nav-link">ABOUT</a>
+      <!-- <a href="#contact" class="nav-link">CONTACT</a> -->
+      <a href="/shop-together" class="nav-link" id="shopTogetherLink">SHOP TOGETHER</a>
+      <a href="/offers_page" class="nav-link">OFFERS</a>
+      <a href="#feedback" class="nav-link">FEEDBACK</a>
+      <!-- Replace the cart icon in your navbar with this -->
+      <div class="cart-icon-wrapper">
+        <div class="cart-icon" onclick="window.location.href='/cart'" style="cursor: pointer">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="cart-svg">
+            <path
+              d="M17 18a2 2 0 0 1 2 2 2 2 0 0 1-2 2 2 2 0 0 1-2-2c0-1.11.89-2 2-2M1 2h3.27l.94 2H20a1 1 0 0 1 1 1c0 .17-.05.34-.12.5l-3.58 6.47c-.34.61-1 1.03-1.79 1.03H8.1l-.9 1.63-.03.12a.25.25 0 0 0 .25.25H19v2H7a2 2 0 0 1-2-2c0-.35.09-.68.24-.96l1.36-2.45L3 4H1V2m6 16a2 2 0 0 1 2 2 2 2 0 0 1-2 2 2 2 0 0 1-2-2c0-1.11.89-2 2-2m9-7l2.78-5H6.14l2.36 5H16z" />
+          </svg>
+          <div class="cart-pulse"></div>
+        </div>
+      </div>
+    </div>
+    <!-- Hamburger Menu Button -->
+    <div class="hamburger-menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </nav>
+
+  <!-- Mobile Sidebar Navigation -->
+  <div class="mobile-nav">
+    <div class="mobile-nav-header">
+      <div class="mobile-nav-close">&times;</div>
+    </div>
+    <div class="mobile-nav-content">
+      <a href="#home" class="mobile-nav-link">HOME</a>
+      <a href="#about" class="mobile-nav-link">ABOUT</a>
+      <!-- <a href="#contact" class="mobile-nav-link">CONTACT</a> -->
+      <a href="/offers_page" class="mobile-nav-link">OFFERS</a>
+      <a href="#feedback" class="mobile-nav-link">FEEDBACK</a>
+      <a href="/cart" class="mobile-nav-link">
+        <i class="fas fa-shopping-cart"></i> CART
+      </a>
+    </div>
+  </div>
+
+  <div class="slider-container">
+    <div class="slider" id="home">
+      <div class="slide" style="
+            transform: translate(-50%, -50%) rotateY(0deg) translateZ(400px);
+          ">
+        <img
+          src="https://images.pexels.com/photos/3802510/pexels-photo-3802510.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+          alt="Slide 1" />
+      </div>
+      <div class="slide" style="
+            transform: translate(-50%, -50%) rotateY(72deg) translateZ(400px);
+          ">
+        <img
+          src="https://images.pexels.com/photos/404280/pexels-photo-404280.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+          alt="Slide 2" />
+      </div>
+      <div class="slide" style="
+            transform: translate(-50%, -50%) rotateY(144deg) translateZ(400px);
+          ">
+        <img
+          src="https://images.pexels.com/photos/356056/pexels-photo-356056.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+          alt="Slide 3" />
+      </div>
+      <div class="slide" style="
+            transform: translate(-50%, -50%) rotateY(216deg) translateZ(400px);
+          ">
+        <img
+          src="https://images.pexels.com/photos/5632402/pexels-photo-5632402.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+          alt="Slide 4" />
+      </div>
+      <div class="slide" style="
+            transform: translate(-50%, -50%) rotateY(288deg) translateZ(400px);
+          ">
+        <img
+          src="https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+          alt="Slide 5" />
+      </div>
+    </div>
+  </div>
+  <div class="controls">
+    <button class="slider-btn prev" onclick="nextSlide()" aria-label="Previous slide">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+    <button class="slider-btn next" onclick="prevSlide()" aria-label="Next slide">
+      <i class="fas fa-chevron-right"></i>
+    </button>
+  </div>
+
+  <section class="section">
+    <div class="section-header">
+      <div class="headline-container">
+        <h1 class="headline">Fashion</h1>
+        <button class="arrow-btn" aria-label="View collection" onclick="window.location.href='/fashion_page';">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path class="arrow-path" d="M5 12h17m0 0l-7-7m7 7l-7 7" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="product-grid">
+      <div class="product-item">
+        <div class="item-image-container">
+          <img src="fashion-pics/mens/m5.jpeg" alt="Fashion Item 1" class="item-image" />
+        </div>
+        <div class="item-info">
+          <h3 class="item-name">Black shirt</h3>
+          <p class="item-price">₹699</p>
+          <span class="item-detail">Dresses</span>
+        </div>
+      </div>
+
+      <div class="product-item">
+        <div class="item-image-container">
+          <img
+            src="https://images.pexels.com/photos/1598507/pexels-photo-1598507.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+            alt="Fashion Item 2" class="item-image" />
+        </div>
+        <div class="item-info">
+          <h3 class="item-name">Jeans</h3>
+          <p class="item-price">₹999</p>
+          <span class="item-detail">Outerwear</span>
+        </div>
+      </div>
+
+      <div class="product-item">
+        <div class="item-image-container">
+          <img src="images/Fashion/img3.png" alt="Designer Watch" class="item-image" />
+        </div>
+        <div class="item-info">
+          <h3 class="item-name">Saaree</h3>
+          <p class="item-price">₹1050</p>
+          <span class="item-detail">Womenswear</span>
+        </div>
+      </div>
+
+      <div class="product-item">
+        <div class="item-image-container">
+          <img src="images/Fashion/img4.png" alt="Designer Shoes" class="item-image" />
+        </div>
+        <div class="item-info">
+          <h3 class="item-name">Kurthas</h3>
+          <p class="item-price">₹1999</p>
+          <span class="item-detail">dress</span>
+        </div>
+      </div>
+
+      <div class="product-item">
+        <div class="item-image-container">
+          <img src="images/Fashion/img5.png" alt="Designer Handbag" class="item-image" />
+        </div>
+        <div class="item-info">
+          <h3 class="item-name">Shoes</h3>
+          <p class="item-price">₹1500</p>
+          <span class="item-detail">Footwear</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-header">
+      <div class="headline-container">
+        <h1 class="headline">Electronics</h1>
+        <button class="arrow-btn" aria-label="View collection" onclick="window.location.href='/electronics_page';">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path class="arrow-path" d="M5 12h17m0 0l-7-7m7 7l-7 7" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="product-grid">
+      <div class="product-item">
+        <div class="item-image-container">
+          <img src="images/electronics/img1.png" alt="MacBook Pro" class="item-image" />
+        </div>
+        <div class="item-info">
+          <h3 class="item-name">iphone pro max"</h3>
+          <p class="item-price">₹74,999</p>
+          <span class="item-detail">iphone</span>
+        </div>
+      </div>
+
+      <div class="product-item">
+        <div class="item-image-container">
+          <img src="images/electronics/img2.png" alt="iPhone" class="item-image" />
+        </div>
+        <div class="item-info">
+          <h3 class="item-name">galaxy macBook5 pro</h3>
+          <p class="item-price">₹1,29,999</p>
+          <span class="item-detail">Laptops</span>
+        </div>
+      </div>
+
+      <div class="product-item">
+        <div class="item-image-container">
+          <img src="images/electronics/img3.png" alt="Smart Watch" class="item-image" />
+        </div>
+        <div class="item-info">
+          <h3 class="item-name">keyboards</h3>
+          <p class="item-price">₹999</p>
+          <span class="item-detail">components</span>
+        </div>
+      </div>
+
+      <div class="product-item">
+        <div class="item-image-container">
+          <img src="images/electronics/img4.png" alt="Wireless Earbuds" class="item-image" />
+        </div>
+        <div class="item-info">
+          <h3 class="item-name">Sperakers</h3>
+          <p class="item-price">₹6,499</p>
+          <span class="item-detail">Audio</span>
+        </div>
+      </div>
+
+      <div class="product-item">
+        <div class="item-image-container">
+          <img src="images/electronics/img5.png" alt="Gaming Console" class="item-image" />
+        </div>
+        <div class="item-info">
+          <h3 class="item-name">Mouse</h3>
+          <p class="item-price">₹499</p>
+          <span class="item-detail">Gaming</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-header">
+      <div class="headline-container">
+        <h1 class="headline">Groceries</h1>
+        <button class="arrow-btn" aria-label="View collection" onclick="window.location.href='/groceries_page';">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path class="arrow-path" d="M5 12h17m0 0l-7-7m7 7l-7 7" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="product-grid">
+      <div class="product-item">
+        <div class="item-image-container">
+          <img src="images/grocery/img1.png" alt="Organic Fruits" class="item-image" />
+        </div>
+        <div class="item-info">
+          <h3 class="item-name">Basmati Rice</h3>
+          <p class="item-price">₹1,299</p>
+          <span class="item-detail">per kg</span>
+        </div>
+      </div>
+
+      <div class="product-item">
+        <div class="item-image-container">
+          <img src="images/grocery/img2.png" alt="Fresh Vegetables" class="item-image" />
+        </div>
+        <div class="item-info">
+          <h3 class="item-name">Safola active oil</h3>
+          <p class="item-price">₹99</p>
+          <span class="item-detail">per bunch</span>
+        </div>
+      </div>
+
+      <div class="product-item">
+        <div class="item-image-container">
+          <img src="images/grocery/img3.png" alt="Dairy Products" class="item-image" />
+        </div>
+        <div class="item-info">
+          <h3 class="item-name">sugar</h3>
+          <p class="item-price">₹90</p>
+          <span class="item-detail">1 kg</span>
+        </div>
+      </div>
+
+      <div class="product-item">
+        <div class="item-image-container">
+          <img src="images/grocery/img4.png" alt="Bakery Items" class="item-image" />
+        </div>
+        <div class="item-info">
+          <h3 class="item-name">Aashirvad Roti</h3>
+          <p class="item-price">₹120</p>
+          <span class="item-detail">1 loaf</span>
+        </div>
+      </div>
+
+      <div class="product-item">
+        <div class="item-image-container">
+          <img src="images/grocery/img5.png" alt="Meat Products" class="item-image" />
+        </div>
+        <div class="item-info">
+          <h3 class="item-name">Bombay Biryani Masala</h3>
+          <p class="item-price">₹199</p>
+          <span class="item-detail">per kg</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-header">
+      <div class="headline-container">
+        <h1 class="headline">Health & Beauty</h1>
+        <button class="arrow-btn" aria-label="View collection" onclick="window.location.href='/health_beauty_page';">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path class="arrow-path" d="M5 12h17m0 0l-7-7m7 7l-7 7" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="product-grid">
+      <div class="product-item">
+        <div class="item-image-container">
+          <img src="images/Health &beauty/img1.png" alt="Perfume" class="item-image" />
+        </div>
+        <div class="item-info">
+          <h3 class="item-name">mamaearth face glow cream</h3>
+          <p class="item-price">₹299</p>
+          <span class="item-detail">100ml</span>
+        </div>
+      </div>
+
+      <div class="product-item">
+        <div class="item-image-container">
+          <img src="images/Health &beauty/img2.png" alt="Skincare" class="item-image" />
+        </div>
+        <div class="item-info">
+          <h3 class="item-name">Clinic Plus Shampoo</h3>
+          <p class="item-price">₹199</p>
+          <span class="item-detail">30ml</span>
+        </div>
+      </div>
+
+      <div class="product-item">
+        <div class="item-image-container">
+          <img src="images/Health &beauty/img3.png" alt="Makeup" class="item-image" />
+        </div>
+        <div class="item-info">
+          <h3 class="item-name">Luxury Lipstick Set</h3>
+          <p class="item-price">₹399</p>
+          <span class="item-detail">3.5g x 6</span>
+        </div>
+      </div>
+
+      <div class="product-item">
+        <div class="item-image-container">
+          <img src="images/Health &beauty/img4.png" alt="Haircare" class="item-image" />
+        </div>
+        <div class="item-info">
+          <h3 class="item-name">Keratin Hair Mask</h3>
+          <p class="item-price">₹2,649</p>
+          <span class="item-detail">200ml</span>
+        </div>
+      </div>
+
+      <div class="product-item">
+        <div class="item-image-container">
+          <img src="images/Health &beauty/img5.png" alt="Vitamins" class="item-image" />
+        </div>
+        <div class="item-info">
+          <h3 class="item-name">Multivitamin Complex</h3>
+          <p class="item-price">₹2,299</p>
+          <span class="item-detail">60 capsules</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-header">
+      <div class="headline-container">
+        <h1 class="headline">Kids Zone</h1>
+        <button class="arrow-btn" aria-label="View collection" onclick="window.location.href='/kids_page';">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path class="arrow-path" d="M5 12h17m0 0l-7-7m7 7l-7 7" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="product-grid">
+      <div class="product-item">
+        <div class="item-image-container">
+          <img src="images/kids zone/img1.png" alt="Teddy Bear" class="item-image" />
+        </div>
+        <div class="item-info">
+          <h3 class="item-name">Baby Toys</h3>
+          <p class="item-price">₹999</p>
+          <span class="item-detail">0-3 years</span>
+        </div>
+      </div>
+
+      <div class="product-item">
+        <div class="item-image-container">
+          <img src="images/kids zone/img2.png" alt="Building Blocks" class="item-image" />
+        </div>
+        <div class="item-info">
+          <h3 class="item-name">Baby Dress</h3>
+          <p class="item-price">₹699</p>
+          <span class="item-detail">3-6 years</span>
+        </div>
+      </div>
+
+      <div class="product-item">
+        <div class="item-image-container">
+          <img src="images/kids zone/img3.png" alt="Bicycle" class="item-image" />
+        </div>
+        <div class="item-info">
+          <h3 class="item-name">Story book</h3>
+          <p class="item-price">₹99</p>
+          <span class="item-detail">5-8 years</span>
+        </div>
+      </div>
+
+      <div class="product-item">
+        <div class="item-image-container">
+          <img src="images/kids zone/img4.png" alt="Art Set" class="item-image" />
+        </div>
+        <div class="item-info">
+          <h3 class="item-name">Baby Shoe</h3>
+          <p class="item-price">₹349</p>
+          <span class="item-detail">4+ years</span>
+        </div>
+      </div>
+
+      <div class="product-item">
+        <div class="item-image-container">
+          <img src="images/kids zone/img5.png" alt="Story Books" class="item-image" />
+        </div>
+        <div class="item-info">
+          <h3 class="item-name">Bycicle</h3>
+          <p class="item-price">₹2,499</p>
+          <span class="item-detail">2-5 years</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact-section" id="contact">
+    <div class="contact-container">
+      <div class="contact-info">
+        <h2>Connect With Us</h2>
+        <p>
+          We're here to help! Reach out for any inquiries about your orders,
+          products, or partnerships.
+        </p>
+
+        <div class="info-item">
+          <div class="info-icon">
+            <i class="fas fa-map-marker-alt"></i>
+          </div>
+          <div class="info-content">
+            <h3>Our Location</h3>
+            <p>Tech Park, Sector V<br />Kadapa 516380</p>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <div class="info-icon">
+            <i class="fas fa-envelope"></i>
+          </div>
+          <div class="info-content">
+            <h3>Email Us</h3>
+            <a href="mailto:support@frndscart.com">support@frndscart.com</a>
+            <a href="mailto:careers@frndscart.com">nsurendra423@gmail.com</a>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <div class="info-icon">
+            <i class="fas fa-phone-alt"></i>
+          </div>
+          <div class="info-content">
+            <h3>Call Us</h3>
+            <a href="tel:+9118001234567">+91 7671853956</a>
+            <a href="tel:+919876543210">+91 9876543210</a>
+          </div>
+        </div>
+
+        <div class="social-links-contact">
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://www.instagram.com/surendra_naik_098?igsh=MTJkejM5N3Z3azQ3bA==" aria-label="Instagram"><i
+              class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+          <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+
+      <div class="contact-form">
+        <h2>Send a Message</h2>
+        <form id="contactForm" class="contact-form">
+          <div class="form-group">
+            <input type="text" id="name" name="name" class="form-control" placeholder=" " required />
+            <label for="name" class="floating-label">Full Name</label>
+          </div>
+
+          <div class="form-group">
+            <input type="email" id="email" name="email" class="form-control" placeholder=" " required />
+            <label for="email" class="floating-label">Email Address</label>
+          </div>
+
+          <div class="form-group">
+            <select id="subject" name="subject" class="form-control" required>
+              <option value="" disabled selected>Select Inquiry Type</option>
+              <option value="order">Order Support</option>
+              <option value="returns">Returns & Refunds</option>
+              <option value="products">Product Questions</option>
+              <option value="business">Business Inquiry</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <textarea id="message" name="message" class="form-control" placeholder=" " required></textarea>
+            <label for="message" class="floating-label">Your Message</label>
+          </div>
+
+          <div class="privacy-check">
+            <input type="checkbox" id="privacy" required />
+            <label for="privacy">I agree to the <a href="#">Privacy Policy</a> and
+              <a href="#">Terms of Service</a></label>
+          </div>
+
+          <button type="submit" class="submit-btn">
+            Send Message <i class="fas fa-paper-plane"></i>
+          </button>
+
+          <div id="successMessage" class="success-message">
+            <i class="fas fa-check-circle"></i> Thank you! We'll respond
+            within 24 hours.
+          </div>
+        </form>
+
+
+      </div>
+    </div>
+  </section>
+  <!-- Add this JavaScript code after your existing scripts -->
+  <script>
+    document
+      .getElementById("contactForm")
+      .addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        // Get form data
+        const formData = {
+          name: document.getElementById("name").value,
+          email: document.getElementById("email").value,
+          subject: document.getElementById("subject").value,
+          message: document.getElementById("message").value,
+        };
+
+        // Update UI to show loading state
+        const submitBtn = this.querySelector(".submit-btn");
+        const originalBtnText = submitBtn.innerHTML;
+        submitBtn.innerHTML =
+          '<i class="fas fa-spinner fa-spin"></i> Sending...';
+        submitBtn.disabled = true;
+
+        try {
+          const response = await fetch("/submit-contact", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            // Show success message
+            const successMessage =
+              document.getElementById("successMessage");
+            successMessage.style.display = "block";
+
+            // Reset form
+            this.reset();
+
+            // Hide success message after 5 seconds
+            setTimeout(() => {
+              successMessage.style.display = "none";
+            }, 5000);
+          } else {
+            // Show error message
+            alert(
+              data.message || "An error occurred. Please try again."
+            );
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          alert("An error occurred. Please try again.");
+        } finally {
+          // Restore button state
+          submitBtn.innerHTML = originalBtnText;
+          submitBtn.disabled = false;
+        }
+      });
+  </script>
+  <section class="feedback-section" id="feedback">
+    <div class="feedback-content">
+      <h2>Share Your Experience</h2>
+      <p>
+        Your feedback helps us improve and serve you better. Tell us what you
+        think!
+      </p>
+      <form class="feedback-form" id="feedbackForm" action="/submit-feedback" method="POST">
+        <select class="feedback-input animate-select" name="rating" required>
+          <option value="" disabled selected>
+            How was your experience? ⭐
+          </option>
+          <option value="5">⭐⭐⭐⭐⭐ Outstanding</option>
+          <option value="4">⭐⭐⭐⭐ Very Good</option>
+          <option value="3">⭐⭐⭐ Good</option>
+          <option value="2">⭐⭐ Fair</option>
+          <option value="1">⭐ Needs Improvement</option>
+        </select>
+        <textarea class="feedback-input animate-input" name="description"
+          placeholder="Tell us about your shopping experience..." required></textarea>
+        <div class="feedback-buttons">
+          <button type="submit" class="feedback-submit pulse">
+            Share Feedback
+            <i class="fas fa-paper-plane"></i>
+          </button>
+          <a href="/show-feedbacks" class="show-feedbacks-btn">
+            Show Feedbacks
+            <i class="fas fa-comments"></i>
+          </a>
+        </div>
+      </form>
+
+      <!-- Add this JavaScript at the bottom of main_page.ejs -->
+      <script>
+        // Add this to your feedback form JavaScript
+        document
+          .getElementById("feedbackForm")
+          .addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.innerHTML;
+
+            try {
+              // Show loading state
+              submitBtn.disabled = true;
+              submitBtn.innerHTML =
+                '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+
+              const response = await fetch("/submit-feedback", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  rating: this.rating.value,
+                  description: this.description.value,
+                }),
+              });
+
+              const data = await response.json();
+
+              if (data.success) {
+                // Show success popup
+                await Swal.fire({
+                  title: data.title,
+                  text: data.message,
+                  icon: data.icon,
+                  confirmButtonColor: "#28a745",
+                  showClass: {
+                    popup: "animate__animated animate__fadeInDown",
+                  },
+                  hideClass: {
+                    popup: "animate__animated animate__fadeOutUp",
+                  },
+                });
+
+                // Reset form
+                this.reset();
+
+                // Optional: Show confetti effect
+                if (data.showConfetti) {
+                  confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                  });
+                }
+              } else {
+                throw new Error(data.message);
+              }
+            } catch (error) {
+              // Show error popup
+              await Swal.fire({
+                title: error.title || "Error",
+                text: error.message || "Something went wrong",
+                icon: "error",
+                confirmButtonColor: "#dc3545",
+              });
+            } finally {
+              // Reset button state
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = originalBtnText;
+            }
+          });
+      </script>
+    </div>
+    <div class="feedback-image">
+      <img
+        src="https://img.freepik.com/free-vector/reviews-concept-landing-page_52683-18630.jpg?w=1380&t=st=1695812366~exp=1695812966~hmac=778f8fa0709f0eb5957ead0abd3fbd024e915f450d427f0ae5dd376fcecfdc8d"
+        alt="Feedback illustration" class="floating-image" />
+    </div>
+  </section>
+
+  <footer class="footer" id="about">
+    <div class="footer-about" id="about">
+      <h3>About Us</h3>
+      <p>
+        FrndsCart is your one-stop online shopping destination, offering a
+        wide range of products from fashion to electronics, groceries, health
+        & beauty, and kids' items. We are committed to providing quality
+        products at affordable prices with a seamless shopping experience. Our
+        mission is to bring convenience and joy to your doorstep!
+      </p>
+    </div>
+    <div class="footer-columns">
+      <div class="footer-column">
+        <h4>Our Services</h4>
+        <ul>
+          <li><a href="#">Fast Delivery</a></li>
+          <li><a href="#">Easy Returns</a></li>
+          <li><a href="#">24/7 Support</a></li>
+          <li><a href="#">Secure Payments</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <!-- <li><a href="#contact">Contact</a></li> -->
+          <li><a href="#offers">Offers</a></li>
+          <li><a href="#feedback">Feedback</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h4>Social Media Links</h4>
+        <ul>
+          <li><a href="https://facebook.com" target="_blank">Facebook</a></li>
+          <li><a href="https://twitter.com" target="_blank">Twitter</a></li>
+          <li>
+            <a href="https://instagram.com" target="_blank">Instagram</a>
+          </li>
+          <li><a href="https://linkedin.com" target="_blank">LinkedIn</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+  <script>
+    // Updated JavaScript with your scroll effect
+    // document.getElementById('shopTogetherLink').addEventListener('click', async (e) => {
+    //   e.preventDefault();
+
+    //   // Ask for emails (simplified)
+    //   const emails = prompt("Enter comma-separated emails to invite:");
+
+    //   const response = await fetch('/create-room', {
+    //     method: 'POST',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify({ emails: emails.split(',').map(e => e.trim()) })
+    //   });
+
+    //   const data = await response.json();
+    //   if (data.roomLink) {
+    //     window.location.href = data.roomLink;
+    //   }
+    // });
+
+    // Function to handle slider visibility and position on mobile
+    function handleSliderOnMobile() {
+      const sliderContainer = document.querySelector(".slider-container");
+      const navbar = document.querySelector(".navbar-custom");
+      if (!sliderContainer || !navbar) return;
+
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        const navbarHeight = navbar.offsetHeight;
+        const windowWidth = window.innerWidth;
+
+        // Center the slider container below navbar
+        sliderContainer.style.position = 'relative';
+        sliderContainer.style.top = `${navbarHeight}px`;
+        sliderContainer.style.left = '50%';
+        sliderContainer.style.transform = 'translateX(-50%)';
+        sliderContainer.style.width = '100%';
+        sliderContainer.style.maxWidth = '600px';
+        sliderContainer.style.margin = '0 auto';
+
+        // Adjust slider size for mobile
+        const slider = sliderContainer.querySelector('.slider');
+        if (slider) {
+          slider.style.transformOrigin = 'center center';
+          slider.style.transform = `scale(${windowWidth < 480 ? 0.7 : 0.85})`;
+        }
+      } else {
+        // Reset styles for desktop
+        sliderContainer.style.position = '';
+        sliderContainer.style.top = '';
+        sliderContainer.style.left = '';
+        sliderContainer.style.transform = '';
+        sliderContainer.style.width = '';
+        sliderContainer.style.maxWidth = '';
+        sliderContainer.style.margin = '';
+
+        const slider = sliderContainer.querySelector('.slider');
+        if (slider) {
+          slider.style.transform = `rotateY(${angle}deg)`;
+        }
+      }
+    }
+
+    // Existing slider functionality
+    const slider = document.querySelector(".slider");
+    const sliderContainer = document.querySelector(".slider-container");
+    let angle = 0;
+    let autoScrollInterval = null;
+    const autoScrollSpeed = 3000;
+
+    function rotateSlider() {
+      slider.style.transform = `rotateY(${angle}deg)`;
+    }
+
+    function nextSlide() {
+      angle -= 72;
+      rotateSlider();
+    }
+
+    function prevSlide() {
+      angle += 72;
+      rotateSlider();
+    }
+
+    function startAutoScroll() {
+      if (!autoScrollInterval) {
+        autoScrollInterval = setInterval(nextSlide, autoScrollSpeed);
+      }
+    }
+
+    function stopAutoScroll() {
+      if (autoScrollInterval) {
+        clearInterval(autoScrollInterval);
+        autoScrollInterval = null;
+      }
+    }
+
+    startAutoScroll();
+    sliderContainer.addEventListener("mouseenter", stopAutoScroll);
+    sliderContainer.addEventListener("mouseleave", startAutoScroll);
+
+    document
+      .querySelector(".cart-icon")
+      .addEventListener("click", function () {
+        // Add pulse effect
+        const pulse = this.querySelector(".cart-pulse");
+        pulse.style.opacity = 1;
+        pulse.style.transform = "scale(1)";
+        pulse.style.transition = "all 0.5s ease-out";
+
+        setTimeout(() => {
+          pulse.style.opacity = 0;
+          pulse.style.transform = "scale(1.5)";
+        }, 50);
+      });
+
+    // Only for active link highlighting
+    document.querySelectorAll(".nav-link").forEach((link) => {
+      link.addEventListener("click", function () {
+        document
+          .querySelectorAll(".nav-link")
+          .forEach((l) => l.classList.remove("active"));
+        this.classList.add("active");
+      });
+    });
+
+    document
+      .getElementById("contactForm")
+      .addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        // Simulate form submission
+        const submitBtn = this.querySelector(".submit-btn");
+        submitBtn.innerHTML =
+          '<i class="fas fa-spinner fa-spin"></i> Sending...';
+        submitBtn.disabled = true;
+
+        setTimeout(() => {
+          document.getElementById("successMessage").style.display = "block";
+          this.reset();
+          submitBtn.innerHTML =
+            'Send Message <i class="fas fa-paper-plane"></i>';
+          submitBtn.disabled = false;
+
+          setTimeout(() => {
+            document.getElementById("successMessage").style.display = "none";
+          }, 5000);
+        }, 1500);
+      });
+
+    // Add input animations
+    document.querySelectorAll(".form-control").forEach((input) => {
+      input.addEventListener("focus", function () {
+        this.parentElement.style.transform = "translateY(-3px)";
+      });
+
+      input.addEventListener("blur", function () {
+        this.parentElement.style.transform = "translateY(0)";
+      });
+    });
+
+    // Add particle creation
+    document.addEventListener("DOMContentLoaded", function () {
+      const bgParticles = document.querySelector(".bg-particles");
+      for (let i = 0; i < 10; i++) {
+        const particle = document.createElement("div");
+        particle.classList.add("particle");
+        particle.style.width = `${Math.random() * 100 + 50}px`;
+        particle.style.height = particle.style.width;
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.top = `${Math.random() * 100}%`;
+        particle.style.animationDuration = `${Math.random() * 20 + 10}s`;
+        particle.style.animationDelay = `${Math.random() * 10}s`;
+        particle.style.opacity = Math.random() * 0.2 + 0.05;
+        bgParticles.appendChild(particle);
+      }
+    });
+
+    // Add this to your existing JavaScript
+    document
+      .querySelector(".profile-btn")
+      .addEventListener("click", function (e) {
+        e.stopPropagation();
+        const dropdown = this.querySelector(".profile-dropdown");
+        dropdown.classList.toggle("active");
+      });
+
+    // Prevent dropdown from closing when clicking inside it
+    document
+      .querySelector(".profile-dropdown")
+      .addEventListener("click", function (e) {
+        e.stopPropagation();
+      });
+
+    // Close dropdown only when clicking outside
+    document.addEventListener("click", function (e) {
+      const dropdown = document.querySelector(".profile-dropdown");
+      const profileBtn = document.querySelector(".profile-btn");
+
+      if (!profileBtn.contains(e.target)) {
+        dropdown.classList.remove("active");
+      }
+    });
+
+    // Smooth scrolling for navigation links
+    document.querySelectorAll(".nav-link").forEach((link) => {
+      link.addEventListener("click", function (e) {
+        const href = this.getAttribute("href");
+
+        // Skip smooth scroll for "OFFERS" link or full-page navigations (e.g., starts with "/")
+        if (this.textContent === "OFFERS" || href.startsWith("/")) {
+          return; // Allow default navigation
+        }
+
+        e.preventDefault();
+
+        // Remove active class from all links
+        document.querySelectorAll(".nav-link").forEach((l) => l.classList.remove("active"));
+        // Add active class to clicked link
+        this.classList.add("active");
+
+        // Scroll to section
+        const targetSection = document.querySelector(href);
+        if (targetSection) {
+          const navbarHeight = document.querySelector(".navbar-custom").offsetHeight;
+          const targetPosition = targetSection.offsetTop - navbarHeight;
+
+          window.scrollTo({
+            top: targetPosition,
+            behavior: "smooth",
+          });
+        }
+      });
+    });
+
+
+    // Keep all your existing JavaScript code below
+
+    function rotateSlider() {
+      slider.style.transform = `rotateY(${angle}deg)`;
+    }
+
+    function nextSlide() {
+      angle -= 72;
+      rotateSlider();
+    }
+
+    function prevSlide() {
+      angle += 72;
+      rotateSlider();
+    }
+
+    function startAutoScroll() {
+      if (!autoScrollInterval) {
+        autoScrollInterval = setInterval(nextSlide, autoScrollSpeed);
+      }
+    }
+
+    function stopAutoScroll() {
+      if (autoScrollInterval) {
+        clearInterval(autoScrollInterval);
+        autoScrollInterval = null;
+      }
+    }
+
+    startAutoScroll();
+    sliderContainer.addEventListener("mouseenter", stopAutoScroll);
+    sliderContainer.addEventListener("mouseleave", startAutoScroll);
+
+    document
+      .querySelector(".cart-icon")
+      .addEventListener("click", function () {
+        const pulse = this.querySelector(".cart-pulse");
+        pulse.style.opacity = 1;
+        pulse.style.transform = "scale(1)";
+        pulse.style.transition = "all 0.5s ease-out";
+
+        setTimeout(() => {
+          pulse.style.opacity = 0;
+          pulse.style.transform = "scale(1.5)";
+        }, 50);
+      });
+
+    document
+      .getElementById("contactForm")
+      .addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const submitBtn = this.querySelector(".submit-btn");
+        submitBtn.innerHTML =
+          '<i class="fas fa-spinner fa-spin"></i> Sending...';
+        submitBtn.disabled = true;
+
+        setTimeout(() => {
+          document.getElementById("successMessage").style.display = "block";
+          this.reset();
+          submitBtn.innerHTML =
+            'Send Message <i class="fas fa-paper-plane"></i>';
+          submitBtn.disabled = false;
+
+          setTimeout(() => {
+            document.getElementById("successMessage").style.display = "none";
+          }, 5000);
+        }, 1500);
+      });
+
+    document.querySelectorAll(".form-control").forEach((input) => {
+      input.addEventListener("focus", function () {
+        this.parentElement.style.transform = "translateY(-3px)";
+      });
+
+      input.addEventListener("blur", function () {
+        this.parentElement.style.transform = "translateY(0)";
+      });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const bgParticles = document.querySelector(".bg-particles");
+      for (let i = 0; i < 10; i++) {
+        const particle = document.createElement("div");
+        particle.classList.add("particle");
+        particle.style.width = `${Math.random() * 100 + 50}px`;
+        particle.style.height = particle.style.width;
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.top = `${Math.random() * 100}%`;
+        particle.style.animationDuration = `${Math.random() * 20 + 10}s`;
+        particle.style.animationDelay = `${Math.random() * 10}s`;
+        particle.style.opacity = Math.random() * 0.2 + 0.05;
+        bgParticles.appendChild(particle);
+      }
+    });
+
+    // Function to handle slider visibility on mobile
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+      // Handle slider on mobile devices
+
+      // Create modal element
+      const modal = document.createElement("div");
+      modal.className = "product-modal";
+      modal.innerHTML = `
+    <div class="modal-content">
+      <button class="close-modal">&times;</button>
+      <div class="product-view-container">
+        <div class="product-images">
+          <img src="" alt="Product Image" class="main-image" id="mainProductImage">
+          <div class="thumbnail-container" id="thumbnailContainer"></div>
+        </div>
+        <div class="product-details">
+          <h2 class="product-title" id="productTitle"></h2>
+          <div class="product-price" id="productPrice"></div>
+          <div class="product-rating">
+            <div class="stars">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star-half-alt"></i>
+            </div>
+            <span class="review-count">(42 Reviews)</span>
+          </div>
+          <p class="product-description" id="productDescription">
+            Loading product description...
+          </p>
+          
+          
+          <div class="action-section">
+            <div class="quantity-selector">
+              <button class="quantity-btn minus">-</button>
+              <input type="number" value="1" min="1" class="quantity-input">
+              <button class="quantity-btn plus">+</button>
+            </div>
+            <div class="action-buttons">
+              <button class="add-to-cart">
+                <i class="fas fa-shopping-cart"></i> Add to Cart
+              </button>
+              <button class="buy-now" onclick="window.location.href='/buy_page';">
+                <i class="fas fa-bolt"></i> Buy Now
+              </button>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="recommendations">
+        <div class="section-header">
+          <h3 class="section-title">You May Also Like</h3>
+          <a href="/main_page" class="view-all">View All <i class="fas fa-chevron-right"></i></a>
+        </div>
+        <div class="recommendation-grid" id="recommendationGrid"></div>
+      </div>
+    </div>
+  `;
+      document.body.appendChild(modal);
+
+      // Comprehensive product database for all categories
+      const productsDatabase = {
+        // Fashion Products
+        "Silk Evening Gown": {
+          price: "₹24,999",
+          originalPrice: "₹32,999",
+          discount: "24% OFF",
+          description:
+            "This exquisite evening gown is crafted from the finest silk with delicate embroidery. The flowing silhouette and impeccable tailoring create a timeless elegance perfect for special occasions.",
+          colors: ["#5e4a3e", "#2c3e50", "#c0a8a0", "#e6d5c3"],
+          sizes: ["XS", "S", "M", "L", "XL"],
+          images: [
+            "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=800&q=80",
+            "https://images.unsplash.com/photo-1551232864-3f0890e580d9?w=800&q=80",
+            "https://images.unsplash.com/photo-1585487000160-6ebcfceb0d03?w=800&q=80",
+          ],
+          category: "fashion",
+        },
+        "Leather Biker Jacket": {
+          price: "₹37,999",
+          originalPrice: "₹42,999",
+          discount: "12% OFF",
+          description:
+            "Premium genuine leather biker jacket with quilted lining and multiple pockets. Designed for both style and durability with adjustable waist belt and zippered sleeves.",
+          colors: ["#000000", "#333333", "#8B0000"],
+          sizes: ["S", "M", "L", "XL"],
+          images: [
+            "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=800&q=80",
+            "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=800&q=80",
+          ],
+          category: "fashion",
+        },
+        "Chronograph Watch": {
+          price: "₹74,999",
+          originalPrice: "₹89,999",
+          discount: "17% OFF",
+          description:
+            "Luxury chronograph watch with sapphire crystal glass and stainless steel case. Water resistant up to 100m with precise automatic movement and date display.",
+          colors: ["#000000", "#333333", "#C0C0C0"],
+          sizes: ["Standard", "Large"],
+          images: [
+            "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=800&q=80",
+            "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=800&q=80",
+          ],
+          category: "fashion",
+        },
+
+        // Electronics Products
+        'MacBook Pro 14"': {
+          price: "₹1,64,999",
+          originalPrice: "₹1,79,999",
+          discount: "8% OFF",
+          description:
+            "Apple M1 Pro chip with 8-core CPU, 14-core GPU, 16GB unified memory, and 512GB SSD storage. Stunning 14-inch Liquid Retina XDR display with ProMotion.",
+          colors: ["#333333", "#C0C0C0"],
+          sizes: ["8GB/256GB", "16GB/512GB", "32GB/1TB"],
+          images: [
+            "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&q=80",
+            "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&q=80",
+          ],
+          category: "electronics",
+        },
+        "iPhone 15 Pro": {
+          price: "₹1,29,999",
+          originalPrice: "₹1,39,999",
+          discount: "7% OFF",
+          description:
+            "6.1-inch Super Retina XDR display with ProMotion. A16 Bionic chip. Pro camera system with 48MP Main, Ultra Wide, and Telephoto cameras.",
+          colors: ["#333333", "#C0C0C0", "#4169E1", "#8B0000"],
+          sizes: ["128GB", "256GB", "512GB"],
+          images: [
+            "https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?w=800&q=80",
+            "https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?w=800&q=80",
+          ],
+          category: "electronics",
+        },
+
+        // Groceries Products
+        "Organic Apples": {
+          price: "₹299",
+          originalPrice: "₹349",
+          discount: "14% OFF",
+          description:
+            "Certified organic apples grown without synthetic pesticides or fertilizers. Crisp texture with perfect balance of sweetness and tartness. 1kg pack.",
+          colors: ["#FF0000", "#FFA500", "#008000"],
+          sizes: ["500g", "1kg", "2kg"],
+          images: [
+            "https://images.unsplash.com/photo-1586201375761-83865001e1ef?w=800&q=80",
+            "https://images.unsplash.com/photo-1586201375761-83865001e1ef?w=800&q=80",
+          ],
+          category: "groceries",
+        },
+        "Fresh Carrots": {
+          price: "₹49",
+          originalPrice: "₹59",
+          discount: "17% OFF",
+          description:
+            "Freshly harvested carrots, rich in beta-carotene and vitamins. Sweet and crunchy, perfect for salads, juices or cooking. 500g bunch.",
+          colors: ["#FFA500"],
+          sizes: ["250g", "500g", "1kg"],
+          images: [
+            "https://images.unsplash.com/photo-1601493700631-2b16ec4b4716?w=800&q=80",
+            "https://images.unsplash.com/photo-1601493700631-2b16ec4b4716?w=800&q=80",
+          ],
+          category: "groceries",
+        },
+
+        // Health & Beauty Products
+        "Luxury Eau de Parfum": {
+          price: "₹7,299",
+          originalPrice: "₹8,499",
+          discount: "14% OFF",
+          description:
+            "Premium fragrance with top notes of bergamot, middle notes of jasmine, and base notes of sandalwood. Long-lasting scent in elegant glass bottle.",
+          colors: ["#4169E1", "#000000"],
+          sizes: ["50ml", "100ml"],
+          images: [
+            "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&q=80",
+            "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&q=80",
+          ],
+          category: "health_beauty",
+        },
+        "Anti-Aging Serum": {
+          price: "₹5,399",
+          originalPrice: "₹6,299",
+          discount: "14% OFF",
+          description:
+            "Advanced anti-aging serum with retinol and hyaluronic acid. Reduces fine lines and wrinkles while deeply hydrating skin. Dermatologist tested.",
+          colors: ["#4169E1"],
+          sizes: ["30ml", "50ml"],
+          images: [
+            "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&q=80",
+            "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800&q=80",
+          ],
+          category: "health_beauty",
+        },
+
+        // Kids Zone Products
+        "Cuddly Teddy Bear": {
+          price: "₹1,999",
+          originalPrice: "₹2,499",
+          discount: "20% OFF",
+          description:
+            "Super soft plush teddy bear with safety eyes. Machine washable and perfect for cuddling. Height: 45cm. Suitable for ages 0+.",
+          colors: ["#8B4513", "#FFFFFF", "#FFD700"],
+          sizes: ["Small (30cm)", "Medium (45cm)", "Large (60cm)"],
+          images: [
+            "https://images.unsplash.com/photo-1594782915050-3a8d5695e8ab?w=800&q=80",
+            "https://images.unsplash.com/photo-1594782915050-3a8d5695e8ab?w=800&q=80",
+          ],
+          category: "kids",
+        },
+        "Educational Blocks": {
+          price: "₹2,699",
+          originalPrice: "₹3,199",
+          discount: "16% OFF",
+          description:
+            "100-piece educational building blocks set with numbers and letters. Made from non-toxic, BPA-free plastic. Encourages creativity and learning.",
+          colors: ["#FF0000", "#00FF00", "#0000FF", "#FFFF00"],
+          sizes: ["50 pieces", "100 pieces", "150 pieces"],
+          images: [
+            "https://images.unsplash.com/photo-1581093450021-4a7360e9a9e9?w=800&q=80",
+            "https://images.unsplash.com/photo-1581093450021-4a7360e9a9e9?w=800&q=80",
+          ],
+          category: "kids",
+        },
+      };
+
+      // Recommendations by category (4 items per category)
+      const recommendationsByCategory = {
+        fashion: [
+          {
+            title: "Designer Silk Saree",
+            price: "₹1,999",
+            originalPrice: "₹2,999",
+            image: "fashion-pics/womens/w3.jpeg",
+          },
+          {
+            title: "Embroidered Lehenga",
+            price: "₹2,500",
+            originalPrice: "₹8,000",
+            image: "fashion-pics/womens/w11jpeg",
+          },
+          {
+            title: "mens shirt",
+            price: "₹800",
+            originalPrice: "₹1,500",
+            image: "fashion-pics/mens/m13.jpeg",
+          },
+          {
+            title: "Sequin Party Dress",
+            price: "₹5,750",
+            originalPrice: "₹9,999",
+            image: "fashion-pics/mens/m3.jpeg",
+          },
+        ],
+        electronics: [
+          {
+            title: "Wireless Earbuds Pro",
+            price: "₹3,499",
+            originalPrice: "₹5,999",
+            image: "electronics/computer components/c4.jpeg",
+          },
+          {
+            title: "pendrives",
+            price: "₹599",
+            originalPrice: "₹999",
+            image: "electronics/computer components/c6.jpeg",
+          },
+          {
+            title: "Mouse",
+            price: "₹499",
+            originalPrice: "₹999",
+            image: "electronics/computer components/c7.jpeg",
+          },
+          {
+            title: "powerBank",
+            price: "₹1,199",
+            originalPrice: "₹2,999",
+            image: "electronics/computer components/c2.jpeg",
+          },
+        ],
+
+        groceries: [
+          {
+            title: "Oil",
+            price: "₹89",
+            originalPrice: "₹99",
+            image: "groceries/cerals&pulses/c1.jpeg",
+          },
+          {
+            title: "Fresh Strawberries",
+            price: "₹199",
+            originalPrice: "₹249",
+            image: "groceries/fruits &vegetables/f1.jpeg",
+          },
+          {
+            title: "Mango",
+            price: "₹90",
+            originalPrice: "₹110",
+            image: "groceries/fruits &vegetables/f5.jpeg",
+          },
+          {
+            title: "kur kure",
+            price: "₹10",
+            originalPrice: "₹20",
+            image: "groceries/sweet&snacks/sna6.jpeg",
+          },
+        ],
+        health_beauty: [
+          {
+            title: "perfumes",
+            price: "₹1,299",
+            originalPrice: "₹1,599",
+            image: "health-beauty/fragrance/f1.jpeg",
+          },
+          {
+            title: "Hydrating Face Cream",
+            price: "₹1,899",
+            originalPrice: "₹2,199",
+            image: "health-beauty/skin care/57.jpeg",
+          },
+          {
+            title: "SkinCare",
+            price: "₹3,699",
+            originalPrice: "₹4,299",
+            image: "health-beauty/skin care/s6.jpeg",
+          },
+          {
+            title: "Hair Growth Oil",
+            price: "₹899",
+            originalPrice: "₹1,099",
+            image: "health-beauty/hair care/h6.jpeg",
+          },
+        ],
+
+        kids: [
+          {
+            title: "Toys",
+            price: "₹499",
+            originalPrice: "₹999",
+            image: "kidszone/toys/t2.jpeg",
+          },
+          {
+            title: "Art & Craft Kit",
+            price: "₹1,649",
+            originalPrice: "₹1,999",
+            image: "kidszone/toys/t4.jpeg",
+          },
+          {
+            title: "Interactive Robot Toy",
+            price: "₹299",
+            originalPrice: "₹599",
+            image: "kidszone/toys/t7.jpeg",
+          },
+          {
+            title: "Children's Storybook Set",
+            price: "₹199",
+            originalPrice: "₹399",
+            image: "kidszone/books/b4.jpeg",
+          },
+        ],
+      };
+
+      // Add click handlers to all product items across all categories
+      document.querySelectorAll(".product-item").forEach((product) => {
+        product.addEventListener("click", function () {
+          const title = this.querySelector(".item-name").textContent;
+          const price = this.querySelector(".item-price").textContent;
+          const imgSrc = this.querySelector(".item-image").src;
+
+          // Get product data from database or use default
+          const productData = productsDatabase[title] || {
+            price: price,
+            originalPrice: Math.round(
+              parseInt(price.replace(/[^0-9]/g, "")) * 1.2
+            )
+              .toLocaleString("en-IN", {
+                style: "currency",
+                currency: "INR",
+                maximumFractionDigits: 0,
+              })
+              .replace(".00", ""),
+            discount: "20% OFF",
+            description:
+              "Premium quality product with excellent features and durability. Designed for maximum comfort and style.",
+            colors: ["#333333", "#000000", "#C0C0C0"],
+            sizes: ["S", "M", "L", "XL"],
+            images: [imgSrc, imgSrc, imgSrc], // Use main image as fallback
+            category: "fashion", // Default category
+          };
+
+          // Set modal content
+          document.getElementById("productTitle").textContent = title;
+          document.getElementById("productPrice").innerHTML = `
+        <span class="original-price">${productData.originalPrice}</span>
+        ${price}
+        <span class="discount-badge">${productData.discount}</span>
+      `;
+          document.getElementById("productDescription").textContent =
+            productData.description;
+
+          const mainImage = document.getElementById("mainProductImage");
+          mainImage.src = imgSrc;
+
+          // Add thumbnails
+          const thumbnailContainer =
+            document.getElementById("thumbnailContainer");
+          thumbnailContainer.innerHTML = "";
+          productData.images.forEach((img, index) => {
+            const thumb = document.createElement("img");
+            thumb.src = img;
+            thumb.className = `thumbnail ${index === 0 ? "active" : ""}`;
+            thumb.addEventListener("click", () => {
+              mainImage.src = img;
+              document
+                .querySelectorAll(".thumbnail")
+                .forEach((t) => t.classList.remove("active"));
+              thumb.classList.add("active");
+            });
+            thumbnailContainer.appendChild(thumb);
+          });
+
+          // Add recommendations based on category (show 4 items)
+          const recGrid = document.getElementById("recommendationGrid");
+          recGrid.innerHTML = "";
+          const recommendations =
+            recommendationsByCategory[productData.category] ||
+            recommendationsByCategory.fashion;
+
+          recommendations.slice(0, 4).forEach((rec) => {
+            const item = document.createElement("div");
+            item.className = "recommendation-item";
+            item.innerHTML = `
+          <img src="${rec.image}" class="recommendation-img" alt="${rec.title}">
+          <button class="quick-view">Quick View</button>
+          <div class="recommendation-details">
+            <h4 class="recommendation-title">${rec.title}</h4>
+            <div class="recommendation-price">
+              ${rec.price}
+              <span class="recommendation-original-price">${rec.originalPrice}</span>
+            </div>
+          </div>
+        `;
+            recGrid.appendChild(item);
+          });
+
+          // Show modal
+          modal.style.display = "block";
+          document.body.style.overflow = "hidden";
+        });
+      });
+
+      // Close modal
+      document.querySelector(".close-modal").addEventListener("click", () => {
+        modal.style.display = "none";
+        document.body.style.overflow = "auto";
+      });
+
+      // Close modal when clicking outside
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+          modal.style.display = "none";
+          document.body.style.overflow = "auto";
+        }
+      });
+
+      // Image zoom functionality
+      document.addEventListener("click", function (e) {
+        if (e.target.classList.contains("main-image")) {
+          e.target.classList.toggle("zoomed");
+        }
+      });
+
+      // Quantity selector
+      document.addEventListener("click", function (e) {
+        if (e.target.classList.contains("quantity-btn")) {
+          const input =
+            e.target.parentElement.querySelector(".quantity-input");
+          if (e.target.classList.contains("minus")) {
+            input.value = Math.max(1, parseInt(input.value) - 1);
+          } else {
+            input.value = parseInt(input.value) + 1;
+          }
+        }
+      });
+
+      // Add to cart functionality
+      // Add to cart functionality
+      // Replace the existing add to cart event handler with this one
+      document.addEventListener("click", async function (e) {
+        if (e.target.classList.contains("add-to-cart")) {
+          const productTitle =
+            document.getElementById("productTitle").textContent;
+          const productPrice = document
+            .getElementById("productPrice")
+            .textContent.split("\n")[1]
+            .trim();
+          const mainImage = document.getElementById("mainProductImage").src;
+          const quantity = parseInt(
+            document.querySelector(".quantity-input").value
+          );
+
+          try {
+            const response = await fetch("/add-to-cart", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                productImage: mainImage,
+                productTitle: productTitle,
+                productPrice: productPrice,
+                quantity: quantity,
+              }),
+            });
+
+            if (response.ok) {
+              // Pulse the cart icon
+              const cartIcon = document.querySelector(".cart-icon");
+              const pulse = cartIcon.querySelector(".cart-pulse");
+              pulse.style.opacity = "1";
+              pulse.style.transform = "scale(1)";
+
+              setTimeout(() => {
+                pulse.style.opacity = "0";
+                pulse.style.transform = "scale(1.5)";
+              }, 300);
+
+              // Create and show notification
+              const notification = document.createElement("div");
+              notification.className = "notification";
+              notification.innerHTML = `
+                    <div class="notification-icon">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-title">Added to Cart</div>
+                        <div class="notification-message">${quantity} x ${productTitle}</div>
+                    </div>
+                `;
+              document.body.appendChild(notification);
+
+              // Show notification with animation
+              setTimeout(() => notification.classList.add("show"), 100);
+
+              // Remove notification after delay
+              setTimeout(() => {
+                notification.classList.remove("show");
+                setTimeout(() => notification.remove(), 500);
+              }, 3000);
+
+              // Reset quantity input to 1
+              document.querySelector(".quantity-input").value = 1;
+
+              // Don't close the modal
+              // Leave the modal open for more shopping
+            } else {
+              throw new Error("Failed to add to cart");
+            }
+          } catch (error) {
+            console.error("Error adding to cart:", error);
+
+            // Show error notification
+            const notification = document.createElement("div");
+            notification.className = "notification error";
+            notification.innerHTML = `
+                <div class="notification-icon" style="background: #ffebee; color: #f44336;">
+                    <i class="fas fa-times"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">Error</div>
+                    <div class="notification-message">Failed to add item to cart</div>
+                </div>
+            `;
+            document.body.appendChild(notification);
+
+            setTimeout(() => notification.classList.add("show"), 100);
+            setTimeout(() => {
+              notification.classList.remove("show");
+              setTimeout(() => notification.remove(), 500);
+            }, 3000);
+          }
+        }
+      });
+      // Quick view functionality for recommended products
+      document.addEventListener("click", function (e) {
+        if (e.target.classList.contains("quick-view")) {
+          const productCard = e.target.closest(".recommendation-item");
+          const productTitle = productCard.querySelector(
+            ".recommendation-title"
+          ).textContent;
+          const productPrice = productCard.querySelector(
+            ".recommendation-price"
+          ).textContent;
+          const productImage = productCard.querySelector(
+            ".recommendation-img"
+          ).src;
+
+          // Find product in database
+          const productData = productsDatabase[productTitle] || {
+            price: productPrice,
+            originalPrice: Math.round(
+              parseInt(productPrice.replace(/[^0-9]/g, "")) * 1.2
+            )
+              .toLocaleString("en-IN", {
+                style: "currency",
+                currency: "INR",
+                maximumFractionDigits: 0,
+              })
+              .replace(".00", ""),
+            discount: "20% OFF",
+            description:
+              "Premium quality product with excellent features and durability. Designed for maximum comfort and style.",
+            colors: ["#333333", "#000000", "#C0C0C0"],
+            sizes: ["S", "M", "L", "XL"],
+            images: [productImage, productImage, productImage],
+            category: "fashion",
+          };
+
+          // Update modal with quick-view product
+          document.getElementById("productTitle").textContent = productTitle;
+          document.getElementById("productPrice").innerHTML = `
+        <span class="original-price">${productData.originalPrice}</span>
+        ${productPrice}
+        <span class="discount-badge">${productData.discount}</span>
+      `;
+          document.getElementById("productDescription").textContent =
+            productData.description;
+
+          const mainImage = document.getElementById("mainProductImage");
+          mainImage.src = productImage;
+
+          // Update thumbnails
+          const thumbnailContainer =
+            document.getElementById("thumbnailContainer");
+          thumbnailContainer.innerHTML = "";
+          productData.images.forEach((img, index) => {
+            const thumb = document.createElement("img");
+            thumb.src = img;
+            thumb.className = `thumbnail ${index === 0 ? "active" : ""}`;
+            thumb.addEventListener("click", () => {
+              mainImage.src = img;
+              document
+                .querySelectorAll(".thumbnail")
+                .forEach((t) => t.classList.remove("active"));
+              thumb.classList.add("active");
+            });
+            thumbnailContainer.appendChild(thumb);
+          });
+
+          // Update color options
+          const colorOptions = document.getElementById("colorOptions");
+          colorOptions.innerHTML = "";
+          productData.colors.forEach((color, index) => {
+            const colorOption = document.createElement("div");
+            colorOption.className = `color-option ${index === 0 ? "selected" : ""
+              }`;
+            colorOption.style.setProperty("--color", color);
+            colorOption.addEventListener("click", () => {
+              document
+                .querySelectorAll(".color-option")
+                .forEach((c) => c.classList.remove("selected"));
+              colorOption.classList.add("selected");
+            });
+            colorOptions.appendChild(colorOption);
+          });
+
+          // Update size options
+          const sizeOptions = document.getElementById("sizeOptions");
+          sizeOptions.innerHTML = "";
+          productData.sizes.forEach((size, index) => {
+            const sizeOption = document.createElement("div");
+            sizeOption.className = `size-option ${index === 2 ? "selected" : ""
+              }`;
+            sizeOption.textContent = size;
+            sizeOption.addEventListener("click", () => {
+              document
+                .querySelectorAll(".size-option")
+                .forEach((s) => s.classList.remove("selected"));
+              sizeOption.classList.add("selected");
+            });
+            sizeOptions.appendChild(sizeOption);
+          });
+
+          // Scroll to top of modal
+          modal.scrollTo(0, 0);
+        }
+      });
+    });
+
+    // Hamburger Menu Functionality
+    // Update the existing hamburger menu JavaScript
+    document.addEventListener("DOMContentLoaded", function () {
+      const hamburger = document.querySelector(".hamburger-menu");
+      const mobileNav = document.querySelector(".mobile-nav");
+      const closeBtn = document.querySelector(".mobile-nav-close");
+      const mobileNavLinks = document.querySelectorAll(".mobile-nav-link");
+
+      hamburger.addEventListener("click", function () {
+        mobileNav.classList.add("active");
+        this.classList.add("active");
+        document.body.classList.add("menu-open");
+        // Store current scroll position
+        document.body.style.top = `-${window.scrollY}px`;
+      });
+
+      closeBtn.addEventListener("click", function () {
+        mobileNav.classList.remove("active");
+        hamburger.classList.remove("active");
+        document.body.classList.remove("menu-open");
+        // Restore scroll position
+        const scrollY = document.body.style.top;
+        document.body.style.top = "";
+        window.scrollTo(0, parseInt(scrollY || "0") * -1);
+      });
+
+      mobileNavLinks.forEach((link) => {
+        link.addEventListener("click", function (e) {
+          mobileNav.classList.remove("active");
+          hamburger.classList.remove("active");
+          document.body.style.overflow = "auto";
+
+          // Smooth scroll for anchor links
+          const href = this.getAttribute("href");
+          if (href.startsWith("#")) {
+            e.preventDefault();
+            const element = document.querySelector(href);
+            if (element) {
+              element.scrollIntoView({
+                behavior: "smooth"
+              });
+            }
+          }
+        });
+      });
+
+      // Close mobile nav when clicking outside
+      document.addEventListener("click", function (e) {
+        if (!mobileNav.contains(e.target) &&
+          !hamburger.contains(e.target) &&
+          mobileNav.classList.contains("active")) {
+          mobileNav.classList.remove("active");
+          hamburger.classList.remove("active");
+          document.body.classList.remove("menu-open");
+          // Restore scroll position
+          const scrollY = document.body.style.top;
+          document.body.style.top = "";
+          window.scrollTo(0, parseInt(scrollY || "0") * -1);
+        }
+      });
+    });
+
+    function confirmLogout() {
+      Swal.fire({
+        title:
+          '<span style="color: #0061ff; font-size: 1.5rem; font-weight: 600;">Ready to Leave?</span>',
+        html: `
+              <div style="padding: 1.5rem;">
+                  <div style="margin-bottom: 1.5rem;">
+                      <i class="fas fa-sign-out-alt" style="font-size: 3.5rem; color: #0061ff; border: 3px solid #0061ff; border-radius: 50%; padding: 1.2rem; box-shadow: 0 4px 20px rgba(0, 97, 255, 0.2);"></i>
+                  </div>
+                  <p style="font-size: 1.1rem; color: #444; line-height: 1.5;">
+                      You are about to logout from your account.<br>
+                      Would you like to continue?
+                  </p>
+              </div>
+          `,
+        showCancelButton: true,
+        confirmButtonText: '<i class="fas fa-sign-out-alt me-2"></i>Logout',
+        cancelButtonText: '<i class="fas fa-times me-2"></i>Cancel',
+        customClass: {
+          popup: "animate__animated animate__fadeInDown",
+          title: "text-primary",
+          confirmButton: "btn btn-danger",
+          cancelButton: "btn btn-primary",
+        },
+        buttonsStyling: true,
+        showClass: {
+          popup: "animate__animated animate__fadeInDown",
+        },
+        hideClass: {
+          popup: "animate__animated animate__fadeOutUp",
+        },
+        confirmButtonColor: "#ff4757",
+        cancelButtonColor: "#0061ff",
+        background: "rgba(255, 255, 255, 0.98)",
+        width: "24em",
+        padding: "1.25em",
+        customClass: {
+          confirmButton: "custom-logout-btn",
+          cancelButton: "custom-cancel-btn",
+          popup: "custom-popup",
+        },
+        buttonsStyling: true,
+        reverseButtons: true,
+        backdrop: `
+              rgba(0, 0, 0, 0.5)
+              left top
+              no-repeat
+          `,
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        allowEnterKey: false,
+        showLoaderOnConfirm: true,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            title: "Logging Out...",
+            html: '<div style="color: #0061ff;">Redirecting you in a moment...</div>',
+            timer: 1500,
+            timerProgressBar: true,
+            showConfirmButton: false,
+            background: "rgba(255, 255, 255, 0.98)",
+            didOpen: () => {
+              Swal.showLoading();
+            },
+          }).then(() => {
+            window.location.href = "/logout";
+          });
+        }
+      });
+    }
+
+    const style = document.createElement("style");
+    style.textContent = `
+      .custom-logout-btn {
+          padding: 12px 28px !important;
+          font-weight: 600 !important;
+          letter-spacing: 0.5px !important;
+          border-radius: 8px !important;
+          background: linear-gradient(135deg, #ff4757 0%, #ff6b81 100%) !important;
+          border: none !important;
+          box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3) !important;
+          transition: all 0.3s ease !important;
+      }
+
+      .custom-logout-btn:hover {
+          transform: translateY(-2px) !important;
+          box-shadow: 0 8px 25px rgba(255, 71, 87, 0.4) !important;
+          background: linear-gradient(135deg, #ff6b81 0%, #ff4757 100%) !important;
+      }
+
+      .custom-cancel-btn {
+          padding: 12px 28px !important;
+          font-weight: 600 !important;
+          letter-spacing: 0.5px !important;
+          border-radius: 8px !important;
+          background: linear-gradient(135deg, #0061ff 0%, #60efff 100%) !important;
+          border: none !important;
+          box-shadow: 0 4px 15px rgba(0, 97, 255, 0.3) !important;
+          transition: all 0.3s ease !important;
+      }
+
+      .custom-cancel-btn:hover {
+          transform: translateY(-2px) !important;
+          box-shadow: 0 8px 25px rgba(0, 97, 255, 0.4) !important;
+          background: linear-gradient(135deg, #60efff 0%, #0061ff 100%) !important;
+      }
+
+      .custom-popup {
+          border-radius: 16px !important;
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+      }
+  `;
+    document.head.appendChild(style);
+
+  </script>
+</body>
+
+</html>

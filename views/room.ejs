@@ -1,0 +1,68 @@
+<h2>Room: <%= room.roomId %></h2>
+
+<div id="chat">
+  <% room.activityLog
+    .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp))
+    .forEach(log => { %>
+
+    <% if (log.type === 'message') { %>
+      <div>
+        <strong><%= log.sender %>:</strong> <%= log.content %>
+        <%= log.reactions?.join(' ') || '' %>
+        <div>
+          <button onclick="react('<%= log._id %>', '❤️')">❤️</button>
+          <button onclick="react('<%= log._id %>', '😂')">😂</button>
+        </div>
+      </div>
+    <% } else if (log.type === 'product') { %>
+      <div>
+        <strong><%= log.sharedBy %> shared a product:</strong>
+        <div>
+          <img src="<%= log.image %>" width="100" />
+          <p><%= log.title %></p>
+          <p>₹<%= log.price %></p>
+          <%= log.reactions?.join(' ') || '' %>
+          <div>
+            <button onclick="react('<%= log._id %>', '🔥')">🔥</button>
+            <button onclick="react('<%= log._id %>', '👍')">👍</button>
+          </div>
+        </div>
+      </div>
+    <% } %>
+
+<% }) %>
+</div>
+
+<!-- Message Form -->
+<form action="/room/<%= room.roomId %>/message" method="POST">
+  <input name="content" placeholder="Type a message" required>
+  <button type="submit">Send</button>
+</form>
+
+<!-- Share Product (fake UI for now) -->
+<form action="/room/<%= room.roomId %>/share" method="POST">
+  <input name="title" placeholder="Product Title" required />
+  <input name="image" placeholder="Image URL" required />
+  <input name="price" placeholder="Price" required />
+  <button type="submit">Share Product</button>
+</form>
+
+<!-- End Room -->
+<form action="/room/<%= room.roomId %>/end" method="POST">
+  <button>End Room</button>
+</form>
+
+<!-- Voice Call Icon -->
+<a href="#" title="Voice Call">
+  <img src="/images/voice-icon.png" width="30" />
+</a>
+
+<script>
+function react(id, emoji) {
+  fetch('/room/react', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ roomId: '<%= room.roomId %>', activityId: id, emoji })
+  });
+}
+</script>
