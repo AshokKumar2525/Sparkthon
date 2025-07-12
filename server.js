@@ -358,6 +358,7 @@ app.get('/main_page', async (req, res) => {
             email: req.session.user.email,
             address: req.session.user.address
         });
+        console.log(req.session.user);
     } catch (error) {
         console.error(error);
         res.status(500).send('Error loading main page');
@@ -1226,6 +1227,29 @@ app.get('/shop-together', async (req, res) => {
 });
 
 
+app.get('/room/:roomId', async (req, res) => {
+    const room = await Room.findOne({ roomId: req.params.roomId });
+    const user = await User.findOne({roomId: req.params.roomId});
+  if (!room) {
+    return res.status(404).send('Room not found');
+  }
+
+  res.render('room', { room });
+});
+
+app.get("/video/:roomId", async (req, res) => {
+  const roomID = req.params.roomId ;
+// console.log(roomID);
+  const user = req.session.user;
+
+  console.log(user);
+  const userID = user.id; 
+  const userName = user.fullName;
+  const appID = "679839770"; // replace with your actual AppID
+  const serverSecret = "aaa413ce9c8721cb9e93a2ba6ae6465a"; // only in dev, move to token gen in prod
+    
+  res.render("video-call", { roomID, userID, userName, appID, serverSecret });
+});
 
 app.post('/room/:roomId/end', async (req, res) => {
     const room = await Room.findOne({ roomId: req.params.roomId });
@@ -1304,6 +1328,7 @@ app.post('/room/react', async (req, res) => {
 
     res.sendStatus(200);
 });
+
 
 app.get('/room/:roomId', async (req, res) => {
     const room = await Room.findOne({ roomId: req.params.roomId });

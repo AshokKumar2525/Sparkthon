@@ -86,7 +86,15 @@
     const roomId = "<%= room.roomId %>";
     socket.emit('join-room', roomId);
 
-    socket.on('new-activity', data => {
+  
+function react(id, emoji) {
+  fetch('/room/react', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ roomId: '<%= room.roomId %>', activityId: id, emoji })
+  });
+}
+socket.on('new-activity', data => {
       const chat = document.getElementById('chat');
       const wrapper = document.createElement('div');
       wrapper.innerHTML = data.html;
