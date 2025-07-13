@@ -108,7 +108,7 @@ const orderSchema = new mongoose.Schema({
     contactNumber: { type: String, required: true },
     orderDate: { type: Date, default: Date.now },
     status: { type: String, default: 'Processing' },
-      roomId: String  // ✅ This must exist in the schema!
+    roomId: String  // ✅ This must exist in the schema!
 
 });
 
@@ -1142,17 +1142,17 @@ app.post('/buy-now', async (req, res) => {
 });
 
 app.get('/order-confirmation/:id', async (req, res) => {
-  if (!req.session.user) return res.redirect('/login');
+    if (!req.session.user) return res.redirect('/login');
 
-  try {
-    const order = await Order.findById(req.params.id);
-    if (!order) return res.status(404).send('Order not found');
+    try {
+        const order = await Order.findById(req.params.id);
+        if (!order) return res.status(404).send('Order not found');
 
-    res.render('order_confirmation', { order, roomId: order.roomId }); // ✅ add roomId!
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Server error');
-  }
+        res.render('order_confirmation', { order, roomId: order.roomId }); // ✅ add roomId!
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error');
+    }
 });
 
 
@@ -1381,31 +1381,35 @@ app.post('/shop-together/share', async (req, res) => {
             sharedBy
         };
 
-        // Save to each room
         for (const roomId of Array.isArray(roomIds) ? roomIds : [roomIds]) {
             const room = await Room.findOne({ roomId });
             if (room) {
                 room.activityLog.push(activity);
                 await room.save();
 
-                // ✅ Emit to the room's sockets
                 io.to(roomId).emit('new-activity', {
                     html: `
-            <div class="product-item">
-              <div class="item-image-container">
-                <img src="/${image}" alt="Product Image" class="item-image" width="200" height="300">
-              </div>
-              <div class="item-info">
-                <h3 class="item-name">${title}</h3>
-                <p class="item-price">${price}</p>
-                ${detail ? `<p class="item-detail">${detail}</p>` : ''}
-                <span class="item-detail">Shared by ${sharedBy}</span>
-              </div>
-            </div>
-          `
+        <div class="product-item"
+          data-title="${title}"
+          data-price="${price}"
+          data-image="/${image}"
+          data-detail="${detail || ''}"
+          data-sharedby="${sharedBy}">
+          <div class="item-image-container">
+            <img src="/${image}" alt="Product Image" class="item-image" width="200" height="300">
+          </div>
+          <div class="item-info">
+            <h3 class="item-name">${title}</h3>
+            <p class="item-price">${price}</p>
+            ${detail ? `<p class="item-detail">${detail}</p>` : ''}
+            <span class="item-detail">Shared by ${sharedBy}</span>
+          </div>
+        </div>
+      `
                 });
             }
         }
+
 
         res.redirect('/shop-together');
     } catch (err) {

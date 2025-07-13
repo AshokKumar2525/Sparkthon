@@ -53,6 +53,8 @@
     .video-call-btn:hover {
       background: #0056b3;
     }
+
+    
   </style>
 </head>
 
@@ -71,7 +73,7 @@
       <% if (activity.type==='product' ) { %>
         <div class="product-item" data-title="<%= activity.title %>" data-price="<%= activity.price %>"
           data-image="/<%= activity.image %>" data-detail="<%= activity.detail %>"
-          data-sharedby="<%= activity.sharedBy %>" onclick="openProductModal(this)">
+          data-sharedby="<%= activity.sharedBy %>">
           <div class="item-image-container">
             <img src="/<%= activity.image %>" alt="Product Image" class="item-image" width="200" height="300">
           </div>
@@ -272,15 +274,23 @@
 
 <script>
 
-
-document.addEventListener('DOMContentLoaded', () => {
-    const chat = document.getElementById('chat');
-    chat.scrollTop = chat.scrollHeight; // Scroll to bottom on load
+  
+  // ✅ Attach click handler for ALL existing product items
+  document.querySelectorAll('.product-item').forEach(item => {
+    item.addEventListener('click', () => openProductModal(item));
   });
+
   document.querySelector('.end').addEventListener('click', (e) => {
     if (!confirm("Are you sure you want to end this room?")) {
       e.preventDefault();
     }
+  });
+  document.addEventListener('DOMContentLoaded', () => {
+    // Scroll to bottom
+    const chat = document.getElementById('chat');
+    requestAnimationFrame(() => {
+      chat.scrollTop = chat.scrollHeight;
+    });
   });
 </script>
 <script src="/socket.io/socket.io.js"></script>
@@ -288,30 +298,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const socket = io();
   const roomId = "<%= room.roomId %>";
   socket.emit('join-room', roomId);
-
   socket.on('new-activity', data => {
     const chat = document.getElementById('chat');
     const wrapper = document.createElement('div');
     wrapper.innerHTML = data.html;
     chat.appendChild(wrapper);
+    chat.scrollTop = chat.scrollHeight;
 
-    socket.on('new-activity', data => {
-  const chat = document.getElementById('chat');
-  const wrapper = document.createElement('div');
-  wrapper.innerHTML = data.html;
-  chat.appendChild(wrapper);
-
-  // ✅ Re-attach: find any product-item that needs openProductModal
-  wrapper.querySelectorAll('.product-item').forEach(item => {
-    item.onclick = () => openProductModal(item);
+    wrapper.querySelectorAll('.product-item').forEach(item => {
+      console.log("Adding click listener to item:", item.dataset.title);
+      item.addEventListener('click', () => openProductModal(item));
+    });
   });
-
-  console.log("New activity received:", data);
-});
-
-    console.log("New activity received:", data);
-  });
-
 </script>
 
 </html>
