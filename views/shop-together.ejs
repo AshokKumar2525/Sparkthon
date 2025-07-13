@@ -8,7 +8,7 @@
     <% } else { %>
       <span>(Ongoing)</span>
     <% } %>
-    <% if (room.createdBy === userEmail) { %>
+    <% if (room.createdBy === currentUser) { %>
       <span> - You created this</span>
     <% } %>
   </div>

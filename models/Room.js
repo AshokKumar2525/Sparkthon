@@ -18,7 +18,7 @@ const activitySchema = new mongoose.Schema({
 });
 
 const roomSchema = new mongoose.Schema({
-    roomId: [String],
+    roomId: String,
     participants: [String],
     createdBy: String,
     activityLog: [activitySchema],

@@ -306,7 +306,7 @@
     chat.scrollTop = chat.scrollHeight;
 
     wrapper.querySelectorAll('.product-item').forEach(item => {
-      console.log("Adding click listener to item:", item.dataset.title);
+      // console.log("Adding click listener to item:", item.dataset.title);
       item.addEventListener('click', () => openProductModal(item));
     });
   });

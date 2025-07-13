@@ -9,7 +9,7 @@
   <input type="hidden" name="image" id="image">
   <input type="hidden" name="title" id="title">
   <input type="hidden" name="price" id="price">
-  <input type="hidden" name="detail" id="detail">>
+  <input type="hidden" name="detail" id="detail">
   <button type="submit">Share</button>
 </form>
 
@@ -20,12 +20,10 @@
     if (!product) {
       alert("⚠️ Product data not found. Please try sharing again.");
     } else {
-      // ✅ Ensure IDs exist
-      document.getElementById("image").value = product.image?.replace('/^\\/?/', '');
+      document.getElementById("image").value = product.image?.replace(/^\/?/, '');
       document.getElementById("title").value = product.title;
       document.getElementById("price").value = product.price;
       document.getElementById("detail").value = product.detail || "";
-      // console.log("✅ Product ready to share:", product);
     }
   });
 </script>

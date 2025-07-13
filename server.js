@@ -1165,11 +1165,20 @@ app.post('/create-room', async (req, res) => {
 
     const roomId = uuidv4();
     const roomLink = `${req.protocol}://${req.get('host')}/room/${roomId}`;
+    const allEmails = [...emails, req.session.user.email];
+
+    // 👇 Fetch full names:
+    const participants = [];
+    for (const email of allEmails) {
+        const user = await User.findOne({ email });
+        if (user) participants.push(user.fullName);
+        else participants.push(email); // fallback
+    }
 
     await Room.create({
         roomId,
-        participants: [...emails, req.session.user.email],
-        createdBy: req.session.user.id
+        participants, // ✅ store names not emails
+        createdBy: req.session.user.fullName
     });
 
     for (const email of emails) {
@@ -1186,6 +1195,7 @@ app.post('/create-room', async (req, res) => {
     res.json({ success: true, roomLink });
 });
 
+
 app.post('/shop-together/invite', async (req, res) => {
     const { emails } = req.body;
     const emailList = emails.split(',').map(e => e.trim().toLowerCase());
@@ -1196,13 +1206,19 @@ app.post('/shop-together/invite', async (req, res) => {
     }
     const allEmails = [...new Set([req.session.user.email.toLowerCase(), ...emailList])];
 
-    // ✅ Create roomId from usernames
-    const usernames = allEmails.map(email => email.split('@')[0]);
-    const roomId = usernames.sort().join('-');  // e.g., "ashok-jane-john"
+    const participants = [];
+
+    for (const email of allEmails) {
+        const user = await User.findOne({ email });
+        if (user) participants.push(user.fullName);
+    }
+
+    const roomId = participants.map(name => name.split(' ')[0]).sort().join('-'); // e.g. Ashok-Jane-John
+
 
     // ✅ Check if a room with the same participants already exists
     const existingRoom = await Room.findOne({
-        participants: { $all: allEmails, $size: allEmails.length },
+        participants: { $all: participants, $size: participants.length },
         roomId // use same name if already present
     });
 
@@ -1212,8 +1228,8 @@ app.post('/shop-together/invite', async (req, res) => {
 
     const room = new Room({
         roomId,
-        participants: allEmails,
-        createdBy: req.session.user.email,
+        participants,
+        createdBy: req.session.user.fullName,
         activityLog: [],
         ended: false
     });
@@ -1233,16 +1249,20 @@ app.post('/shop-together/invite', async (req, res) => {
     res.redirect(`/room/${roomId}`);
 });
 
-
 app.get('/shop-together', async (req, res) => {
+    if (!req.session.user) return res.redirect('/login');
+
+    // ✅ Use fullName not email now:
     const rooms = await Room.find({
-        participants: req.session.user.email
+        participants: req.session.user.fullName
     }).sort({ createdAt: -1 });
+
     res.render('shop-together', {
         rooms,
-        userEmail: req.session.user.email // ✅ pass userEmail to EJS
+        currentUser: req.session.user.fullName // ✅ pass for EJS if needed
     });
 });
+
 
 
 app.get('/room/:roomId', async (req, res) => {
@@ -1260,7 +1280,7 @@ app.get("/video/:roomId", async (req, res) => {
     // console.log(roomID);
     const user = req.session.user;
 
-    console.log(user);
+    // console.log(user);
     const userID = user.id;
     const userName = user.fullName;
     const appID = "679839770"; // replace with your actual AppID
@@ -1284,7 +1304,7 @@ app.post('/room/:roomId/message', async (req, res) => {
     const room = await Room.findOne({ roomId });
     const newMessage = {
         type: 'message',
-        sender: req.session.user.email,
+        sender: req.session.user.fullName,
         content,
         timestamp: new Date()
     };
@@ -1303,13 +1323,12 @@ app.post('/room/:roomId/share', async (req, res) => {
     const room = await Room.findOne({ roomId: req.params.roomId });
     room.activityLog.push({
         type: 'product',
-        sharedBy: req.session.user.email,
+        sharedBy: req.session.user.fullName,
         title: req.body.title,
         image: req.body.image,
         price: req.body.price
     });
     await room.save();
-
     const productHtml = `
         <div><strong>${product.sharedBy} shared a product:</strong>
         <div><img src="${product.image}" width="100"><p>${product.title}</p><p>₹${product.price}</p></div>
@@ -1347,76 +1366,72 @@ app.post('/room/react', async (req, res) => {
     res.sendStatus(200);
 });
 
-
-app.get('/room/:roomId', async (req, res) => {
-    const room = await Room.findOne({ roomId: req.params.roomId });
-
-    if (!room) {
-        return res.status(404).send('Room not found');
-    }
-
-    res.render('room', { room });
-});
-
 app.get('/shop-together/share', async (req, res) => {
-    const email = req.session.user?.email;
-    if (!email) return res.redirect('/login');
+  const fullName = req.session.user?.fullName;
+//   console.log("Searching rooms for:", fullName);  // ✅ See what’s actually used
 
-    const rooms = await Room.find({ participants: email });
+  if (!fullName) return res.redirect('/login');
 
-    res.render('shop-together-share', { rooms });
+  const rooms = await Room.find({ participants: fullName });
+//   console.log("Found rooms:", rooms); // ✅ See what’s found
+
+  res.render('shop-together-share', { rooms });
 });
 
 app.post('/shop-together/share', async (req, res) => {
-    const { roomIds, image, title, price, detail } = req.body;
-    const sharedBy = req.session.user.email;
+  const { roomIds, image, title, price, detail } = req.body;
+  const sharedBy = req.session.user.fullName;
 
-    try {
-        const activity = {
-            type: 'product',
-            title,
-            image,
-            price,
-            detail,
-            sharedBy
-        };
+  try {
+    const activity = {
+      type: 'product',
+      title,
+      image,
+      price,
+      detail,
+      sharedBy
+    };
 
-        for (const roomId of Array.isArray(roomIds) ? roomIds : [roomIds]) {
-            const room = await Room.findOne({ roomId });
-            if (room) {
-                room.activityLog.push(activity);
-                await room.save();
+    const ids = Array.isArray(roomIds) ? roomIds : [roomIds];
+    for (const roomId of ids) {
+      const room = await Room.findOne({ roomId });
+      if (room) {
+        room.activityLog.push(activity);
+        await room.save();
 
-                io.to(roomId).emit('new-activity', {
-                    html: `
-        <div class="product-item"
-          data-title="${title}"
-          data-price="${price}"
-          data-image="/${image}"
-          data-detail="${detail || ''}"
-          data-sharedby="${sharedBy}">
-          <div class="item-image-container">
-            <img src="/${image}" alt="Product Image" class="item-image" width="200" height="300">
-          </div>
-          <div class="item-info">
-            <h3 class="item-name">${title}</h3>
-            <p class="item-price">${price}</p>
-            ${detail ? `<p class="item-detail">${detail}</p>` : ''}
-            <span class="item-detail">Shared by ${sharedBy}</span>
-          </div>
-        </div>
-      `
-                });
-            }
-        }
-
-
-        res.redirect('/shop-together');
-    } catch (err) {
-        console.error(err);
-        res.status(500).send("Error sharing product");
+        io.to(roomId).emit('new-activity', {
+          html: `
+            <div class="product-item"
+              data-title="${title}"
+              data-price="${price}"
+              data-image="/${image}"
+              data-detail="${detail || ''}"
+              data-sharedby="${sharedBy}">
+              <div class="item-image-container">
+                <img src="/${image}" alt="Product Image" class="item-image" width="200" height="300">
+              </div>
+              <div class="item-info">
+                <h3 class="item-name">${title}</h3>
+                <p class="item-price">${price}</p>
+                ${detail ? `<p class="item-detail">${detail}</p>` : ''}
+                <span class="item-detail">Shared by ${sharedBy}</span>
+              </div>
+            </div>
+          `
+        });
+      }
     }
+
+    // ✅ Redirect safely:
+    res.redirect('/shop-together');
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error sharing product");
+  }
 });
+
+
 
 // 404 Route (Keep this as the last route)
 app.use((req, res) => {
