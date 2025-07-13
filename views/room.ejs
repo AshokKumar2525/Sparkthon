@@ -35,11 +35,34 @@
     .product-item {
       max-width: 300px;
     }
+
+
+    .video-call-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #007bff;
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .video-call-btn:hover {
+      background: #0056b3;
+    }
   </style>
 </head>
 
 <body>
   <a href="/main_page"><button>Back to Main Page</button></a>
+  <!-- Video Call button at top-right -->
+  <a href="/video/<%= room.roomId %>" class="video-call-btn">
+    📹 Video Call
+  </a>
+
   <h2>Room ID: <%= room.roomId %>
   </h2>
 
@@ -145,6 +168,8 @@
 </body>
 
 <script>
+
+
   let unitPrice = 0;
 
   function openProductModal(el) {
@@ -225,8 +250,7 @@
       productTitle: window.currentProduct.productTitle,
       productPrice: window.currentProduct.productPrice,
       quantity: parseInt(document.getElementById('modalQuantity').value),
-      roomId: "<%= room.roomId %>" // ✅ add this!
-
+      roomId: "<%= room.roomId %>"
     };
 
     fetch('/buy-now', {
@@ -247,7 +271,9 @@
 
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
+
+
+document.addEventListener('DOMContentLoaded', () => {
     const chat = document.getElementById('chat');
     chat.scrollTop = chat.scrollHeight; // Scroll to bottom on load
   });
@@ -268,6 +294,21 @@
     const wrapper = document.createElement('div');
     wrapper.innerHTML = data.html;
     chat.appendChild(wrapper);
+
+    socket.on('new-activity', data => {
+  const chat = document.getElementById('chat');
+  const wrapper = document.createElement('div');
+  wrapper.innerHTML = data.html;
+  chat.appendChild(wrapper);
+
+  // ✅ Re-attach: find any product-item that needs openProductModal
+  wrapper.querySelectorAll('.product-item').forEach(item => {
+    item.onclick = () => openProductModal(item);
+  });
+
+  console.log("New activity received:", data);
+});
+
     console.log("New activity received:", data);
   });
 
