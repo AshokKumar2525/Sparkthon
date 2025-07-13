@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <title>Room - <%= room.roomId %></title>
+  <title>Room - <%= room.roomId %>
+  </title>
   <link rel="stylesheet" href="/css/five_sections.css">
   <style>
     body {
@@ -10,15 +12,18 @@
       background-color: #f0f8ff;
       padding: 20px;
     }
+
     h2 {
       text-align: center;
     }
+
     #chat {
       display: flex;
       flex-direction: column;
       gap: 30px;
       margin-top: 30px;
     }
+
     .chat-message {
       background: white;
       padding: 10px;
@@ -26,37 +31,51 @@
       width: fit-content;
       box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
     }
+
     .product-item {
       max-width: 300px;
     }
   </style>
 </head>
+
 <body>
   <a href="/main_page"><button>Back to Main Page</button></a>
-  <h2>Room ID: <%= room.roomId %></h2>
+  <h2>Room ID: <%= room.roomId %>
+  </h2>
 
   <div id="chat">
-    <% room.activityLog.forEach(activity => { %>
-      <% if (activity.type === 'product') { %>
-        <div class="product-item">
+    <% room.activityLog.forEach(activity=> { %>
+      <% if (activity.type==='product' ) { %>
+        <div class="product-item" data-title="<%= activity.title %>" data-price="<%= activity.price %>"
+          data-image="/<%= activity.image %>" data-detail="<%= activity.detail %>"
+          data-sharedby="<%= activity.sharedBy %>" onclick="openProductModal(this)">
           <div class="item-image-container">
-            <img src="/<%= activity.image %>" alt="Product Image" class="item-image" width="200" height = "300">
+            <img src="/<%= activity.image %>" alt="Product Image" class="item-image" width="200" height="300">
           </div>
           <div class="item-info">
-            <h3 class="item-name"><%= activity.title %></h3>
-            <p class="item-price"><%= activity.price %></p>
+            <h3 class="item-name">
+              <%= activity.title %>
+            </h3>
+            <p class="item-price">
+              <%= activity.price %>
+            </p>
             <% if (activity.detail) { %>
-              <p class="item-detail"><%= activity.detail %></p>
-            <% } %>
-            <span class="item-detail">Shared by <%= activity.sharedBy %></span>
+              <p class="item-detail">
+                <%= activity.detail %>
+              </p>
+              <% } %>
+                <span class="item-detail">Shared by <%= activity.sharedBy %></span>
           </div>
         </div>
-      <% } else if (activity.type === 'message') { %>
-        <div class="chat-message">
-          <strong><%= activity.sender %>:</strong> <%= activity.content %>
-        </div>
-      <% } %>
-    <% }) %>
+        <% } else if (activity.type==='message' ) { %>
+          <div class="chat-message">
+            <strong>
+              <%= activity.sender %>:
+            </strong>
+            <%= activity.content %>
+          </div>
+          <% } %>
+            <% }) %>
   </div>
 
   <form action="/room/<%= room.roomId %>/message" method="POST">
@@ -68,38 +87,190 @@
     <button class="end">End Room</button>
   </form>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const chat = document.getElementById('chat');
-      chat.scrollTop = chat.scrollHeight; // Scroll to bottom on load
-    });
-    document.querySelector('.end').addEventListener('click', (e) => {
-      if (!confirm("Are you sure you want to end this room?")) {
-        e.preventDefault();
-      }
-    }); 
-    document.querySelector()
-  </script>
-  <script src="/socket.io/socket.io.js"></script>
-  <script>
-    const socket = io();
-    const roomId = "<%= room.roomId %>";
-    socket.emit('join-room', roomId);
+  <!-- ✅ Product Modal (fixed IDs) -->
+  <div class="product-modal" id="productModal" style="display:none;">
+    <div class="modal-content">
+      <button class="close-modal" onclick="closeProductModal()">&times;</button>
+      <div class="product-view-container">
+        <div class="product-images">
+          <img src="" alt="Product Image" class="main-image" id="mainProductImage">
+        </div>
+        <div class="product-details">
+          <h2 class="product-title" id="productTitle"></h2>
 
-  
-function react(id, emoji) {
-  fetch('/room/react', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ roomId: '<%= room.roomId %>', activityId: id, emoji })
-  });
-}
-socket.on('new-activity', data => {
-      const chat = document.getElementById('chat');
-      const wrapper = document.createElement('div');
-      wrapper.innerHTML = data.html;
-      chat.appendChild(wrapper);
-    });
-  </script>
+          <div class="product-price">
+            <span id="modalProductPrice"></span>
+            <span class="original-price" id="modalProductOriginalPrice"></span>
+            <span class="discount-badge">20% OFF</span>
+          </div>
+
+          <div class="product-rating">
+            <div class="stars">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star-half-alt"></i>
+            </div>
+            <span class="review-count">(42 Reviews)</span>
+          </div>
+
+          <p class="product-description" id="productDescription"></p>
+
+          <div class="action-section">
+            <div class="quantity-selector">
+              <button class="quantity-btn" onclick="adjustQuantity(-1)">-</button>
+              <input type="number" value="1" min="1" class="quantity-input" id="modalQuantity">
+              <button class="quantity-btn" onclick="adjustQuantity(1)">+</button>
+            </div>
+
+            <div class="product-total">
+              <strong>Total:</strong> <span id="modalTotalPrice">₹0.00</span>
+            </div>
+
+            <div class="action-buttons">
+              <button class="add-to-cart" onclick="addToCart()">
+                <i class="fas fa-shopping-cart"></i> Add to Cart
+              </button>
+              <button class="buy-now" onclick="buyNow()">
+                <i class="fas fa-bolt"></i> Buy Now
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </body>
+
+<script>
+  let unitPrice = 0;
+
+  function openProductModal(el) {
+    const title = el.dataset.title;
+    const price = parseFloat(el.dataset.price.replace(/[^0-9.]/g, ""));
+    const image = el.dataset.image;
+    const detail = el.dataset.detail || "No description available.";
+
+    const originalPrice = (price * 1.2).toFixed(2);
+
+    document.getElementById('productTitle').innerText = title;
+    document.getElementById('modalProductPrice').innerText = `₹${price.toFixed(2)}`;
+    document.getElementById('modalProductOriginalPrice').innerText = `₹${originalPrice}`;
+    document.getElementById('productDescription').innerText = detail;
+    document.getElementById('mainProductImage').src = image;
+
+    unitPrice = price;
+
+    document.getElementById('modalQuantity').value = 1;
+    updateTotal();
+
+    document.getElementById('productModal').style.display = 'block';
+
+    window.currentProduct = {
+      productTitle: title,
+      productPrice: `₹${price.toFixed(2)}`,
+      productImage: image
+    };
+  }
+
+  function closeProductModal() {
+    document.getElementById('productModal').style.display = 'none';
+  }
+
+  function adjustQuantity(change) {
+    const input = document.getElementById('modalQuantity');
+    let qty = parseInt(input.value);
+    qty = isNaN(qty) ? 1 : qty + change;
+    if (qty < 1) qty = 1;
+    input.value = qty;
+    updateTotal();
+  }
+
+  function updateTotal() {
+    const qty = parseInt(document.getElementById('modalQuantity').value) || 1;
+    const total = unitPrice * qty;
+    document.getElementById('modalTotalPrice').innerText = `₹${total.toFixed(2)}`;
+  }
+
+  function addToCart() {
+    const payload = {
+      productImage: window.currentProduct.productImage,
+      productTitle: window.currentProduct.productTitle,
+      productPrice: window.currentProduct.productPrice,
+      quantity: parseInt(document.getElementById('modalQuantity').value)
+    };
+
+    fetch('/add-to-cart', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          alert("✅ Added to cart!");
+          closeProductModal();
+        } else {
+          alert(data.message);
+        }
+      })
+      .catch(err => console.error(err));
+  }
+
+  function buyNow() {
+    const payload = {
+      productImage: window.currentProduct.productImage,
+      productTitle: window.currentProduct.productTitle,
+      productPrice: window.currentProduct.productPrice,
+      quantity: parseInt(document.getElementById('modalQuantity').value),
+      roomId: "<%= room.roomId %>" // ✅ add this!
+
+    };
+
+    fetch('/buy-now', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+      .then(res => {
+        if (res.redirected) {
+          window.location.href = res.url;
+        } else {
+          alert("❌ Buy Now failed.");
+        }
+      })
+      .catch(err => console.error(err));
+  }
+</script>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const chat = document.getElementById('chat');
+    chat.scrollTop = chat.scrollHeight; // Scroll to bottom on load
+  });
+  document.querySelector('.end').addEventListener('click', (e) => {
+    if (!confirm("Are you sure you want to end this room?")) {
+      e.preventDefault();
+    }
+  });
+</script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io();
+  const roomId = "<%= room.roomId %>";
+  socket.emit('join-room', roomId);
+
+  socket.on('new-activity', data => {
+    const chat = document.getElementById('chat');
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = data.html;
+    chat.appendChild(wrapper);
+    console.log("New activity received:", data);
+  });
+
+</script>
+
 </html>

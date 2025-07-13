@@ -42,10 +42,8 @@
           <h3 class="item-name">onePlus</h3>
           <p class="item-price">₹19,999</p>
           <span class="item-detail">Exclusive</span>
-          <button class="share-to-room-btn" data-title="onePlus" data-price="₹19,999"
-            data-image="electronics/mobiles/m6.jpeg">
-            📤 Share
-          </button>
+          <button class="share-to-room-btn">📤 Share</button>
+
         </div>
       </div>
 
@@ -57,10 +55,8 @@
           <h3 class="item-name">oppo</h3>
           <p class="item-price">₹12,999</p>
           <span class="item-detail">New</span>
-          <button class="share-to-room-btn" data-title="oppo" data-price="₹12,999"
-            data-image="electronics/mobiles/m2.jpeg">
-            📤 Share
-          </button>
+          <button class="share-to-room-btn">📤 Share</button>
+
         </div>
       </div>
 
@@ -72,10 +68,8 @@
           <h3 class="item-name">iphone pro max</h3>
           <p class="item-price">₹58,999</p>
           <span class="item-detail">Limited</span>
-                    <button class="share-to-room-btn" data-title="iphone pro max" data-price="₹58,999"
-            data-image="electronics/mobiles/m4.jpeg">
-            📤 Share
-          </button>
+          <button class="share-to-room-btn">📤 Share</button>
+
         </div>
       </div>
 
@@ -87,10 +81,8 @@
           <h3 class="item-name">vivo v20</h3>
           <p class="item-price">₹25,999</p>
           <span class="item-detail">Popular</span>
-                    <button class="share-to-room-btn" data-title="vivo v20" data-price="₹25,999"
-            data-image="electronics/mobiles/m3.jpeg">
-            📤 Share
-          </button>
+          <button class="share-to-room-btn">📤 Share</button>
+
         </div>
       </div>
 
@@ -102,10 +94,8 @@
           <h3 class="item-name">Redmi note9</h3>
           <p class="item-price">₹14,999</p>
           <span class="item-detail">Premium</span>
-                    <button class="share-to-room-btn" data-title="Redmi note9" data-price="₹14,999"
-            data-image="electronics/mobiles/m7.jpeg">
-            📤 Share
-          </button>
+          <button class="share-to-room-btn">📤 Share</button>
+
         </div>
       </div>
     </div>
@@ -128,6 +118,8 @@
           <h3 class="item-name">Dell laptop</h3>
           <p class="item-price">₹39,499</p>
           <span class="item-detail">Sale</span>
+          <button class="share-to-room-btn">📤 Share</button>
+
         </div>
       </div>
 
@@ -139,6 +131,8 @@
           <h3 class="item-name">Apple Laptop</h3>
           <p class="item-price">₹87,999</p>
           <span class="item-detail">Bestseller</span>
+          <button class="share-to-room-btn">📤 Share</button>
+
         </div>
       </div>
 
@@ -150,6 +144,7 @@
           <h3 class="item-name">Lenovo laptop</h3>
           <p class="item-price">₹45,999</p>
           <span class="item-detail">New</span>
+          <button class="share-to-room-btn">📤 Share</button>
         </div>
       </div>
 
@@ -161,6 +156,8 @@
           <h3 class="item-name">samsung laptop</h3>
           <p class="item-price">₹50,999</p>
           <span class="item-detail">Trending</span>
+          <button class="share-to-room-btn">📤 Share</button>
+
         </div>
       </div>
 
@@ -172,6 +169,8 @@
           <h3 class="item-name">Apple Laptop</h3>
           <p class="item-price">₹99,999</p>
           <span class="item-detail">Basic</span>
+          <button class="share-to-room-btn">📤 Share</button>
+
         </div>
       </div>
     </div>
@@ -194,6 +193,8 @@
           <h3 class="item-name">PowerBank</h3>
           <p class="item-price">₹2,999</p>
           <span class="item-detail">components</span>
+          <button class="share-to-room-btn">📤 Share</button>
+
         </div>
       </div>
 
@@ -205,6 +206,8 @@
           <h3 class="item-name">wireless</h3>
           <p class="item-price">₹3,999</p>
           <span class="item-detail">Hot</span>
+          <button class="share-to-room-btn">📤 Share</button>
+
         </div>
       </div>
 
@@ -216,6 +219,8 @@
           <h3 class="item-name">power Bank</h3>
           <p class="item-price">₹1,499</p>
           <span class="item-detail">Fresh</span>
+          <button class="share-to-room-btn">📤 Share</button>
+
         </div>
       </div>
 
@@ -227,6 +232,8 @@
           <h3 class="item-name">USB chips</h3>
           <p class="item-price">₹499</p>
           <span class="item-detail">Utility</span>
+          <button class="share-to-room-btn">📤 Share</button>
+
         </div>
       </div>
 
@@ -238,65 +245,29 @@
           <h3 class="item-name">Mouse</h3>
           <p class="item-price">₹1,499</p>
           <span class="item-detail">Special</span>
+          <button class="share-to-room-btn">📤 Share</button>
+
         </div>
       </div>
     </div>
   </section>
-  <div id="roomPicker" class="room-picker-modal" style="display:none;">
-    <div class="room-picker-content">
-      <h3>Select Room to Share Product</h3>
-      <select id="roomSelect">
-        <% rooms.forEach(room=> { %>
-          <option value="<%= room.roomId %>">
-            <%= room.roomId %>
-          </option>
-          <% }) %>
-      </select>
-      <button id="confirmShare">Share Now</button>
-      <button onclick="document.getElementById('roomPicker').style.display='none'">Cancel</button>
-    </div>
-  </div>
 
   <script>
     document.querySelectorAll('.share-to-room-btn').forEach(button => {
-  button.addEventListener('click', function (e) {
-    const productItem = this.closest('.product-item');
-    const product = {
-      title: productItem.querySelector('.item-name')?.innerText,
-      price: productItem.querySelector('.item-price')?.innerText,
-      image: productItem.querySelector('.item-image')?.getAttribute('src'),
-      detail: productItem.querySelector('.item-detail')?.innerText || ""
-    };
-    console.log("💾 Storing product:", product); // Debug log
-    sessionStorage.setItem('sharedProductObject', JSON.stringify(product));
-    window.location.href = '/shop-together/share';
-  });
-});
+      button.addEventListener('click', function (e) {
+        e.stopPropagation(); // ✅ This stops the parent `.product-item` click!
 
-
-
-
-    document.getElementById('confirmShare').addEventListener('click', async function () {
-      const roomId = document.getElementById('roomSelect').value;
-      if (!roomId || !selectedProduct) return;
-
-      try {
-        const res = await fetch('/room/share', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ...selectedProduct, roomId })
-        });
-
-        if (res.ok) {
-          alert("Product shared!");
-        } else {
-          alert("Failed to share");
-        }
-      } catch (err) {
-        console.error(err);
-      }
-
-      document.getElementById('roomPicker').style.display = 'none';
+        const productItem = this.closest('.product-item');
+        const product = {
+          title: productItem.querySelector('.item-name')?.innerText,
+          price: productItem.querySelector('.item-price')?.innerText,
+          image: productItem.querySelector('.item-image')?.getAttribute('src'),
+          detail: productItem.querySelector('.item-detail')?.innerText || ""
+        };
+        console.log("💾 Storing product:", product); // Debug log
+        sessionStorage.setItem('sharedProductObject', JSON.stringify(product));
+        window.location.href = '/shop-together/share';
+      });
     });
 
     document.addEventListener('DOMContentLoaded', function () {

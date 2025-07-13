@@ -107,7 +107,9 @@ const orderSchema = new mongoose.Schema({
     shippingAddress: { type: String, required: true },
     contactNumber: { type: String, required: true },
     orderDate: { type: Date, default: Date.now },
-    status: { type: String, default: 'Processing' }
+    status: { type: String, default: 'Processing' },
+      roomId: String  // ✅ This must exist in the schema!
+
 });
 
 // Models
@@ -1109,7 +1111,7 @@ app.post('/buy-now', async (req, res) => {
     }
 
     try {
-        const { productImage, productTitle, productPrice, quantity } = req.body;
+        const { productImage, productTitle, productPrice, quantity, roomId } = req.body;
 
         // Create order directly
         const price = parseFloat(productPrice.replace(/[^0-9.-]+/g, ""));
@@ -1125,7 +1127,9 @@ app.post('/buy-now', async (req, res) => {
             }],
             totalAmount: `₹${total.toFixed(2)}`,
             shippingAddress: req.session.user.address,
-            contactNumber: req.session.user.phone
+            contactNumber: req.session.user.phone,
+            roomId: roomId || null   // ✅ store it in the order if you like
+
         });
 
         await newOrder.save();
@@ -1137,8 +1141,22 @@ app.post('/buy-now', async (req, res) => {
     }
 });
 
-// creating room
+app.get('/order-confirmation/:id', async (req, res) => {
+  if (!req.session.user) return res.redirect('/login');
 
+  try {
+    const order = await Order.findById(req.params.id);
+    if (!order) return res.status(404).send('Order not found');
+
+    res.render('order_confirmation', { order, roomId: order.roomId }); // ✅ add roomId!
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server error');
+  }
+});
+
+
+// creating room
 app.post('/create-room', async (req, res) => {
     if (!req.session.user) return res.status(401).send('Login required');
 
@@ -1229,26 +1247,26 @@ app.get('/shop-together', async (req, res) => {
 
 app.get('/room/:roomId', async (req, res) => {
     const room = await Room.findOne({ roomId: req.params.roomId });
-    const user = await User.findOne({roomId: req.params.roomId});
-  if (!room) {
-    return res.status(404).send('Room not found');
-  }
+    const user = await User.findOne({ roomId: req.params.roomId });
+    if (!room) {
+        return res.status(404).send('Room not found');
+    }
 
-  res.render('room', { room });
+    res.render('room', { room });
 });
 
 app.get("/video/:roomId", async (req, res) => {
-  const roomID = req.params.roomId ;
-// console.log(roomID);
-  const user = req.session.user;
+    const roomID = req.params.roomId;
+    // console.log(roomID);
+    const user = req.session.user;
 
-  console.log(user);
-  const userID = user.id; 
-  const userName = user.fullName;
-  const appID = "679839770"; // replace with your actual AppID
-  const serverSecret = "aaa413ce9c8721cb9e93a2ba6ae6465a"; // only in dev, move to token gen in prod
-    
-  res.render("video-call", { roomID, userID, userName, appID, serverSecret });
+    console.log(user);
+    const userID = user.id;
+    const userName = user.fullName;
+    const appID = "679839770"; // replace with your actual AppID
+    const serverSecret = "aaa413ce9c8721cb9e93a2ba6ae6465a"; // only in dev, move to token gen in prod
+
+    res.render("video-call", { roomID, userID, userName, appID, serverSecret });
 });
 
 app.post('/room/:roomId/end', async (req, res) => {
@@ -1350,45 +1368,51 @@ app.get('/shop-together/share', async (req, res) => {
 });
 
 app.post('/shop-together/share', async (req, res) => {
-    const userEmail = req.session.user?.email;
-    const { roomIds, image, title, price,detail } = req.body;
+    const { roomIds, image, title, price, detail } = req.body;
+    const sharedBy = req.session.user.email;
 
-    if (!roomIds || !image || !title || !price || !userEmail) {
-        return res.status(400).send("Missing product or room data");
-    }
-
-    const roomList = Array.isArray(roomIds) ? roomIds : [roomIds];
-
-    for (const roomId of roomList) {
-        const room = await Room.findOne({ roomId });
-        if (!room) continue;
-
+    try {
         const activity = {
             type: 'product',
-            sharedBy: userEmail,
-            image,  // ✅ for <img src="/<%= activity.image %>">
-            title,  // ✅ for <%= activity.title %>
-            price,  // ✅ for <%= activity.price %>
-            timestamp: new Date(),
+            title,
+            image,
+            price,
             detail,
-            reactions: []
+            sharedBy
         };
 
-        room.activityLog.push(activity);
-        await room.save();
+        // Save to each room
+        for (const roomId of Array.isArray(roomIds) ? roomIds : [roomIds]) {
+            const room = await Room.findOne({ roomId });
+            if (room) {
+                room.activityLog.push(activity);
+                await room.save();
 
-        // OPTIONAL: also send real-time update if desired
-        // You could create product HTML here and emit it
+                // ✅ Emit to the room's sockets
+                io.to(roomId).emit('new-activity', {
+                    html: `
+            <div class="product-item">
+              <div class="item-image-container">
+                <img src="/${image}" alt="Product Image" class="item-image" width="200" height="300">
+              </div>
+              <div class="item-info">
+                <h3 class="item-name">${title}</h3>
+                <p class="item-price">${price}</p>
+                ${detail ? `<p class="item-detail">${detail}</p>` : ''}
+                <span class="item-detail">Shared by ${sharedBy}</span>
+              </div>
+            </div>
+          `
+                });
+            }
+        }
+
+        res.redirect('/shop-together');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error sharing product");
     }
-
-    res.redirect('/shop-together');
 });
-
-app.get('/product/:productId', async (req, res) => {
-  const product = await Product.findById(req.params.productId);
-  res.render('product_detail', { product });
-});
-
 
 // 404 Route (Keep this as the last route)
 app.use((req, res) => {

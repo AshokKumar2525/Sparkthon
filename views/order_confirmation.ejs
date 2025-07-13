@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Order Confirmation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f9f9f9;
+            padding: 40px;
+            color: #333;
+        }
+
+        h1 {
+            color: #2ecc71;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 16px;
+            margin: 5px 0;
+        }
+
+        h3 {
+            margin-top: 30px;
+            margin-bottom: 10px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        ul li {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            border-radius: 5px;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 30px;
+            margin-right: 20px;
+            text-decoration: none;
+            color: #fff;
+            background: #3498db;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+
+        a:hover {
+            background: #2980b9;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Order Placed Successfully!</h1>
+    <p>Order ID: <%= order._id %>
+    </p>
+    <p>Total Amount: <%= order.totalAmount %>
+    </p>
+    <p>Shipping Address: <%= order.shippingAddress %>
+    </p>
+
+    <h3>Items:</h3>
+    <ul>
+        <% order.items.forEach(item=> { %>
+            <li>
+                <%= item.productTitle %> — <%= item.productPrice %> × <%= item.quantity %>
+            </li>
+            <% }) %>
+    </ul>
+
+    <a href="/main_page">← Back to Home</a>
+
+    <% if (order.roomId) { %>
+        <a href="/room/<%= order.roomId %>">← Back to Room</a>
+        <% } %>
+
+</body>
+
+</html>
